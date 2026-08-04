@@ -1,0 +1,55 @@
+$ErrorActionPreference = 'Stop'
+
+$vsDevCmd = 'C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\VsDevCmd.bat'
+if (-not (Test-Path $vsDevCmd)) {
+	throw "Visual Studio developer prompt was not found at $vsDevCmd"
+}
+
+$payloadSources = @(
+	(Join-Path $PSScriptRoot 'src\agp_parenthook.cpp'),
+	(Join-Path $PSScriptRoot 'src\agp_patch_runtime.cpp'),
+	(Join-Path $PSScriptRoot 'src\agp_history.cpp'),
+	(Join-Path $PSScriptRoot 'src\agp_parent_roles.cpp'),
+	(Join-Path $PSScriptRoot 'src\agp_female_father.cpp'),
+	(Join-Path $PSScriptRoot 'src\agp_male_mother.cpp')
+)
+$loaderSource = Join-Path $PSScriptRoot 'src\dxcompiler_loader.cpp'
+$definition = Join-Path $PSScriptRoot 'dxcompiler_proxy.def'
+$buildDirectory = Join-Path $PSScriptRoot 'build'
+$payloadDirectory = Join-Path $buildDirectory 'AGP Native Hook'
+$payloadOutput = Join-Path $payloadDirectory 'agp_parenthook.dll'
+$loaderOutput = Join-Path $buildDirectory 'dxcompiler.dll'
+
+New-Item -ItemType Directory -Force $payloadDirectory | Out-Null
+
+$payloadSourceArguments = ($payloadSources | ForEach-Object { '"' + $_ + '"' }) -join ' '
+Push-Location $buildDirectory
+try {
+	cmd.exe /c "call `"$vsDevCmd`" -arch=x64 -host_arch=x64 >nul && cl.exe /nologo /std:c++17 /EHsc /LD /O2 $payloadSourceArguments /link /OUT:`"$payloadOutput`" /IMPLIB:`"$buildDirectory\agp_parenthook.lib`""
+	if ($LASTEXITCODE -ne 0) { throw 'Parenthook payload build failed.' }
+
+	cmd.exe /c "call `"$vsDevCmd`" -arch=x64 -host_arch=x64 >nul && cl.exe /nologo /std:c++17 /EHsc /LD /O2 `"$loaderSource`" /link /DEF:`"$definition`" /OUT:`"$loaderOutput`" /IMPLIB:`"$buildDirectory\dxcompiler.lib`""
+	if ($LASTEXITCODE -ne 0) { throw 'DXCompiler loader build failed.' }
+}
+finally {
+	Pop-Location
+}
+
+Remove-Item -Force -ErrorAction SilentlyContinue `
+	(Join-Path $buildDirectory 'agp_parenthook.dll'), `
+	(Join-Path $buildDirectory 'agp_parenthook.exp'), `
+	(Join-Path $buildDirectory 'agp_parenthook.lib'), `
+	(Join-Path $buildDirectory 'version.dll'), `
+	(Join-Path $buildDirectory 'version.exp'), `
+	(Join-Path $buildDirectory 'version.lib'), `
+	(Join-Path $buildDirectory 'version_proxy.obj'), `
+	(Join-Path $buildDirectory 'agp_parenthook.obj'), `
+	(Join-Path $buildDirectory 'agp_patch_runtime.obj'), `
+	(Join-Path $buildDirectory 'agp_history.obj'), `
+	(Join-Path $buildDirectory 'agp_parent_roles.obj'), `
+	(Join-Path $buildDirectory 'agp_female_father.obj'), `
+	(Join-Path $buildDirectory 'agp_male_mother.obj'), `
+	(Join-Path $buildDirectory 'dxcompiler_loader.obj'), `
+	(Join-Path $buildDirectory 'dxcompiler.exp'), `
+	(Join-Path $buildDirectory 'dxcompiler.lib')
+Write-Host "Built $loaderOutput and $payloadOutput"

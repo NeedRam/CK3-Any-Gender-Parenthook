@@ -1,0 +1,268 @@
+﻿namespace = agp_native_father_test
+
+# Trigger these through the debug console while playing a normal landed ruler.
+# The visible event panels identify the generated characters immediately; click
+# their portraits to open the character windows before saving or reloading.
+agp_native_father_test.0001 = {
+	type = character_event
+	orphan = yes
+	title = agp_native_father_test.0001.t
+	desc = agp_native_father_test.0001.desc
+	theme = family
+	left_portrait = scope:test_father
+	right_portrait = scope:test_child
+	immediate = {
+		create_character = { gender = female age = 32 employer = root save_scope_as = test_father }
+		create_character = { gender = female age = 12 employer = root save_scope_as = test_child }
+		scope:test_child = { set_father = scope:test_father }
+	}
+	option = { name = agp_native_father_test.close }
+}
+
+agp_native_father_test.0002 = {
+	type = character_event
+	orphan = yes
+	title = agp_native_father_test.0002.t
+	desc = agp_native_father_test.0002.desc
+	theme = family
+	left_portrait = scope:test_father
+	right_portrait = scope:test_child
+	immediate = {
+		create_character = { gender = female age = 32 employer = root save_scope_as = test_father }
+		create_character = { gender = female age = 12 employer = root save_scope_as = test_child }
+	# set_real_father alone does not establish the displayed family parent role.
+	scope:test_child = {
+		set_father = scope:test_father
+		set_real_father = scope:test_father
+	}
+	}
+	option = { name = agp_native_father_test.close }
+}
+
+agp_native_father_test.0003 = {
+	type = character_event
+	orphan = yes
+	title = agp_native_father_test.0003.t
+	desc = agp_native_father_test.0003.desc
+	theme = family
+	left_portrait = scope:test_father
+	center_portrait = scope:test_child
+	right_portrait = scope:test_mother
+	immediate = {
+		create_character = { gender = female age = 32 employer = root save_scope_as = test_father }
+		create_character = { gender = female age = 30 employer = root save_scope_as = test_mother }
+		create_character = {
+			gender = female
+			age = 1
+			employer = root
+			mother = scope:test_mother
+			father = scope:test_father
+			save_scope_as = test_child
+		}
+	}
+	option = { name = agp_native_father_test.close }
+}
+
+agp_native_father_test.0004 = {
+	type = character_event
+	orphan = yes
+	title = agp_native_father_test.0004.t
+	desc = agp_native_father_test.0004.desc
+	theme = family
+	left_portrait = scope:test_father
+	right_portrait = scope:test_mother
+	immediate = {
+		create_character = { gender = female age = 32 employer = root save_scope_as = test_father }
+		create_character = { gender = female age = 25 employer = root save_scope_as = test_mother }
+		scope:test_mother = { make_pregnant = { father = scope:test_father } }
+	}
+	option = { name = agp_native_father_test.close }
+}
+
+# Tests that both native role scopes resolve to the explicitly assigned female father.
+agp_native_father_test.0005 = {
+	type = character_event
+	orphan = yes
+	title = agp_native_father_test.0005.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					has_character_flag = agp_native_father_test_father_scope_ok
+					has_character_flag = agp_native_father_test_real_father_scope_ok
+				}
+				desc = agp_native_father_test.0005.desc.success
+			}
+			triggered_desc = {
+				trigger = { has_character_flag = agp_native_father_test_father_scope_ok }
+				desc = agp_native_father_test.0005.desc.partial
+			}
+			desc = agp_native_father_test.0005.desc.failure
+		}
+	}
+	theme = family
+	left_portrait = scope:test_father
+	right_portrait = scope:test_child
+	immediate = {
+		remove_character_flag = agp_native_father_test_father_scope_ok
+		remove_character_flag = agp_native_father_test_real_father_scope_ok
+		create_character = { gender = female age = 32 employer = root save_scope_as = test_father }
+		create_character = { gender = female age = 12 employer = root save_scope_as = test_child }
+		scope:test_child = {
+			set_father = scope:test_father
+			set_real_father = scope:test_father
+		}
+		if = {
+			limit = { scope:test_child.father = { this = scope:test_father } }
+			add_character_flag = agp_native_father_test_father_scope_ok
+		}
+		if = {
+			limit = { scope:test_child.real_father = { this = scope:test_father } }
+			add_character_flag = agp_native_father_test_real_father_scope_ok
+		}
+	}
+	option = { name = agp_native_father_test.close }
+}
+
+# Builds four female grandparents so the native parent traversal and UI can be checked.
+agp_native_father_test.0006 = {
+	type = character_event
+	orphan = yes
+	title = agp_native_father_test.0006.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					has_character_flag = agp_native_father_test_paternal_grandfather_scope_ok
+					has_character_flag = agp_native_father_test_maternal_grandfather_scope_ok
+				}
+				desc = agp_native_father_test.0006.desc.success
+			}
+			desc = agp_native_father_test.0006.desc.failure
+		}
+	}
+	theme = family
+	left_portrait = scope:test_father
+	center_portrait = scope:test_child
+	right_portrait = scope:test_mother
+	immediate = {
+		remove_character_flag = agp_native_father_test_paternal_grandfather_scope_ok
+		remove_character_flag = agp_native_father_test_maternal_grandfather_scope_ok
+		create_character = { gender = female age = 72 employer = root save_scope_as = test_paternal_father }
+		create_character = { gender = female age = 70 employer = root save_scope_as = test_paternal_mother }
+		create_character = { gender = female age = 72 employer = root save_scope_as = test_maternal_father }
+		create_character = { gender = female age = 70 employer = root save_scope_as = test_maternal_mother }
+		create_character = { gender = female age = 40 employer = root save_scope_as = test_father }
+		create_character = { gender = female age = 38 employer = root save_scope_as = test_mother }
+		scope:test_father = {
+			set_father = scope:test_paternal_father
+			set_mother = scope:test_paternal_mother
+		}
+		scope:test_mother = {
+			set_father = scope:test_maternal_father
+			set_mother = scope:test_maternal_mother
+		}
+		create_character = {
+			gender = female
+			age = 12
+			employer = root
+			father = scope:test_father
+			mother = scope:test_mother
+			save_scope_as = test_child
+		}
+		if = {
+			limit = { scope:test_child.father.father = { this = scope:test_paternal_father } }
+			add_character_flag = agp_native_father_test_paternal_grandfather_scope_ok
+		}
+		if = {
+			limit = { scope:test_child.mother.father = { this = scope:test_maternal_father } }
+			add_character_flag = agp_native_father_test_maternal_grandfather_scope_ok
+		}
+	}
+	option = { name = agp_native_father_test.close }
+}
+
+# Uses CK3's documented father-first dynasty inheritance for create_character.
+agp_native_father_test.0007 = {
+	type = character_event
+	orphan = yes
+	title = agp_native_father_test.0007.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { has_character_flag = agp_native_father_test_dynasty_inheritance_ok }
+				desc = agp_native_father_test.0007.desc.success
+			}
+			desc = agp_native_father_test.0007.desc.failure
+		}
+	}
+	theme = family
+	left_portrait = scope:test_father
+	center_portrait = scope:test_child
+	right_portrait = scope:test_mother
+	immediate = {
+		remove_character_flag = agp_native_father_test_dynasty_inheritance_ok
+		create_character = { template_character = root gender = female age = 32 employer = root save_scope_as = test_father }
+		create_character = { gender = female age = 30 employer = root dynasty = none save_scope_as = test_mother }
+		create_character = {
+			gender = female
+			age = 1
+			employer = root
+			father = scope:test_father
+			mother = scope:test_mother
+			dynasty = inherit
+			save_scope_as = test_child
+		}
+		if = {
+			limit = { scope:test_child = { dynasty = scope:test_father.dynasty } }
+			add_character_flag = agp_native_father_test_dynasty_inheritance_ok
+		}
+	}
+	option = { name = agp_native_father_test.close }
+}
+
+# Creates distinct native mother, father, and real-father roles for interaction visibility tests.
+# The child's real father is deliberately the biological father's mother.
+agp_native_father_test.0008 = {
+	type = character_event
+	orphan = yes
+	title = agp_native_father_test.0008.t
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					has_character_flag = agp_native_father_test_distinct_parent_scopes_ok
+				}
+				desc = agp_native_father_test.0008.desc.success
+			}
+			desc = agp_native_father_test.0008.desc.failure
+		}
+	}
+	theme = family
+	left_portrait = scope:test_father
+	center_portrait = scope:test_child
+	right_portrait = scope:test_mother
+	immediate = {
+		remove_character_flag = agp_native_father_test_distinct_parent_scopes_ok
+		create_character = { gender = female age = 58 employer = root save_scope_as = test_real_father }
+		create_character = { gender = female age = 34 employer = root save_scope_as = test_father }
+		create_character = { gender = female age = 32 employer = root save_scope_as = test_mother }
+		create_character = { gender = female age = 18 employer = root save_scope_as = test_child }
+		scope:test_father = { set_mother = scope:test_real_father }
+		scope:test_child = {
+			set_mother = scope:test_mother
+			set_father = scope:test_father
+			set_real_father = scope:test_real_father
+		}
+		if = {
+			limit = {
+				scope:test_child.mother = { this = scope:test_mother }
+				scope:test_child.father = { this = scope:test_father }
+				scope:test_child.real_father = { this = scope:test_real_father }
+				scope:test_father.mother = { this = scope:test_real_father }
+			}
+			add_character_flag = agp_native_father_test_distinct_parent_scopes_ok
+		}
+	}
+	option = { name = agp_native_father_test.close }
+}

@@ -1,0 +1,72 @@
+﻿l_english:
+ agp_native_mother_test.0001.t:0 "Native Mother Test 1: set_mother"
+ agp_native_mother_test.0001.desc.success:0 "PASS: set_mother accepted a male character and the child resolves both native parent slots.
+
+Left portrait: father, [mother_test_father.GetFullNameNoTooltip]
+Center portrait: child, [mother_test_child.GetFullNameNoTooltip]
+Right portrait: male mother, [mother_test_mother.GetFullNameNoTooltip]
+
+Inspect the child immediately; persistence is tested separately."
+ agp_native_mother_test.0001.desc.failure:0 "FAIL: set_mother did not resolve the male character as the child's native mother."
+ agp_native_mother_test.0002.t:0 "Native Mother Test 2: set_real_mother"
+ agp_native_mother_test.0002.desc.success:0 "PASS: set_real_mother accepted a distinct male character.
+
+Left portrait: male mother, [mother_test_mother.GetFullNameNoTooltip]
+Center portrait: child, [mother_test_child.GetFullNameNoTooltip]
+Right portrait: male real mother, [mother_test_real_mother.GetFullNameNoTooltip]"
+ agp_native_mother_test.0002.desc.failure:0 "FAIL: the male real mother did not resolve through the native real_mother scope."
+ agp_native_mother_test.0003.t:0 "Native Mother Test 3: create_character"
+ agp_native_mother_test.0003.desc.success:0 "PASS: create_character accepted a male mother and preserved the requested father/mother roles.
+
+Left portrait: father, [mother_test_father.GetFullNameNoTooltip]
+Center portrait: child, [mother_test_child.GetFullNameNoTooltip]
+Right portrait: male mother, [mother_test_mother.GetFullNameNoTooltip]"
+ agp_native_mother_test.0003.desc.failure:0 "FAIL: create_character did not resolve the male mother in the native parent slot."
+ agp_native_mother_test.0004.t:0 "Native Mother Test 4: Grandparent Traversal"
+ agp_native_mother_test.0004.desc.success:0 "PASS: all four male grandparents are reachable through the child's father and mother scopes.
+
+Left portrait: male father, [mother_test_father.GetFullNameNoTooltip]
+Center portrait: child, [mother_test_child.GetFullNameNoTooltip]
+Right portrait: male mother, [mother_test_mother.GetFullNameNoTooltip]
+
+Maternal grandparents: [mother_test_mother_father.GetFullNameNoTooltip] and [mother_test_mother_mother.GetFullNameNoTooltip]
+Paternal grandparents: [mother_test_father_father.GetFullNameNoTooltip] and [mother_test_father_mother.GetFullNameNoTooltip]"
+ agp_native_mother_test.0004.desc.failure:0 "FAIL: at least one of the four grandparent scopes was not reachable."
+ agp_native_mother_test.0005.t:0 "Native Mother Test 5: Interaction Setup"
+ agp_native_mother_test.0005.desc:0 "The male mother and male real mother have been assigned.
+
+Left portrait: male mother, [mother_test_mother.GetFullNameNoTooltip]
+Center portrait: child, [mother_test_child.GetFullNameNoTooltip]
+Right portrait: male real mother, [mother_test_real_mother.GetFullNameNoTooltip]
+
+Play as the center-portrait child. Use each dedicated interaction on its matching parent, then run event agp_native_mother_test.0006."
+ agp_native_mother_test.0006.t:0 "Native Mother Test 6: Interaction Results"
+ agp_native_mother_test.0006.desc.success:0 "PASS: both dedicated interactions were available on and accepted by the correct male mother targets."
+ agp_native_mother_test.0006.desc.partial_mother:0 "PARTIAL: the native mother interaction worked, but the native real-mother interaction did not."
+ agp_native_mother_test.0006.desc.partial_real_mother:0 "PARTIAL: the native real-mother interaction worked, but the native mother interaction did not."
+ agp_native_mother_test.0006.desc.failure:0 "FAIL: neither dedicated mother interaction was recorded."
+ agp_native_mother_test.0007.t:0 "Native Mother Test 7: Two Male Parents"
+ agp_native_mother_test.0007.desc.success:0 "PASS: set_father and set_mother both accepted male characters, and both native parent scopes resolved.
+
+Left portrait: male father, [mother_test_father.GetFullNameNoTooltip]
+Center portrait: child, [mother_test_child.GetFullNameNoTooltip]
+Right portrait: male mother, [mother_test_mother.GetFullNameNoTooltip]"
+ agp_native_mother_test.0007.desc.failure:0 "FAIL: one or both male parent scopes did not resolve after set_father/set_mother."
+ agp_native_mother_test.0008.t:0 "Native Mother Test 8: create_character and set_real_mother"
+ agp_native_mother_test.0008.desc.success:0 "PASS: create_character accepted two male parents, and set_real_mother accepted a distinct male character.
+
+Left portrait: male father, [mother_test_father.GetFullNameNoTooltip]
+Center portrait: child, [mother_test_child.GetFullNameNoTooltip]
+Right portrait: male mother, [mother_test_mother.GetFullNameNoTooltip]
+
+The distinct male real mother is [mother_test_real_mother.GetFullNameNoTooltip]."
+ agp_native_mother_test.0008.desc.failure:0 "FAIL: create_character or set_real_mother did not resolve the expected male parent scopes."
+ agp_native_mother_test.close:0 "Close"
+ agp_native_mother_test_mother_scope_interaction:0 "Native Male Mother Scope Test"
+ agp_native_mother_test_mother_scope_interaction_desc:0 "Visible only when the selected character is the actor's native mother."
+ agp_native_mother_test_real_mother_scope_interaction:0 "Native Male Real Mother Scope Test"
+ agp_native_mother_test_real_mother_scope_interaction_desc:0 "Visible only when the selected character is the actor's native real mother."
+ agp_native_mother_test_make_pregnant_interaction:0 "Make Pregnant (Native Male Carrier Test)"
+ agp_native_mother_test_make_pregnant_interaction_desc:0 "Use native make_pregnant with [recipient.GetShortUIName] as the male carrier and [actor.GetShortUIName] as the biological father."
+ agp_native_mother_test_become_pregnant_interaction:0 "Become Pregnant (Native Male Carrier Test)"
+ agp_native_mother_test_become_pregnant_interaction_desc:0 "Use native make_pregnant with [actor.GetShortUIName] as the male carrier and [recipient.GetShortUIName] as the biological father."

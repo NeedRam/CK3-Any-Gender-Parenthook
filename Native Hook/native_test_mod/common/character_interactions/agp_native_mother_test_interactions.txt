@@ -1,0 +1,105 @@
+﻿agp_native_mother_test_mother_scope_interaction = {
+	category = interaction_category_uncategorized
+	icon = debug_chars
+	common_interaction = yes
+	use_diplomatic_range = no
+	ignores_pending_interaction_block = yes
+	auto_accept = yes
+
+	is_shown = {
+		debug_only = yes
+		scope:actor.mother = scope:recipient
+	}
+	is_valid = { scope:actor.mother = scope:recipient }
+	on_accept = { scope:actor = { add_character_flag = agp_native_mother_test_mother_interaction_used } }
+}
+
+agp_native_mother_test_real_mother_scope_interaction = {
+	category = interaction_category_uncategorized
+	icon = debug_chars
+	common_interaction = yes
+	use_diplomatic_range = no
+	ignores_pending_interaction_block = yes
+	auto_accept = yes
+
+	is_shown = {
+		debug_only = yes
+		scope:actor.real_mother = scope:recipient
+	}
+	is_valid = { scope:actor.real_mother = scope:recipient }
+	on_accept = { scope:actor = { add_character_flag = agp_native_mother_test_real_mother_interaction_used } }
+}
+
+# Debug-only native pregnancy test with two male spouses. The actor is recorded
+# as the biological father while the male recipient carries the pregnancy.
+agp_native_mother_test_make_pregnant_interaction = {
+	category = interaction_category_uncategorized
+	icon = debug_chars
+	common_interaction = yes
+	use_diplomatic_range = no
+	ignores_pending_interaction_block = yes
+	auto_accept = yes
+
+	is_shown = {
+		debug_only = yes
+		scope:actor = {
+			is_alive = yes
+			is_adult = yes
+			is_male = yes
+		}
+		scope:recipient = {
+			is_alive = yes
+			is_adult = yes
+			is_male = yes
+			is_spouse_of = scope:actor
+		}
+	}
+
+	is_valid = {
+		scope:actor = { is_alive = yes }
+		scope:recipient = { is_alive = yes }
+	}
+
+	on_accept = {
+		scope:recipient = {
+			make_pregnant = { father = scope:actor }
+		}
+	}
+}
+
+# Reciprocal test: the male actor carries the child and the male spouse is its
+# biological father.
+agp_native_mother_test_become_pregnant_interaction = {
+	category = interaction_category_uncategorized
+	icon = debug_chars
+	common_interaction = yes
+	use_diplomatic_range = no
+	ignores_pending_interaction_block = yes
+	auto_accept = yes
+
+	is_shown = {
+		debug_only = yes
+		scope:actor = {
+			is_alive = yes
+			is_adult = yes
+			is_male = yes
+		}
+		scope:recipient = {
+			is_alive = yes
+			is_adult = yes
+			is_male = yes
+			is_spouse_of = scope:actor
+		}
+	}
+
+	is_valid = {
+		scope:actor = { is_alive = yes }
+		scope:recipient = { is_alive = yes }
+	}
+
+	on_accept = {
+		scope:actor = {
+			make_pregnant = { father = scope:recipient }
+		}
+	}
+}

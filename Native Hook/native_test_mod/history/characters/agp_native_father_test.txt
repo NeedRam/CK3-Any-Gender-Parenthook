@@ -1,0 +1,15 @@
+agp_native_father_test_father = {
+	name = agp_native_father_test_father
+	female = yes
+	culture = "irish"
+	religion = "catholic"
+	1000.1.1 = { birth = "1000.1.1" }
+}
+
+agp_native_father_test_child = {
+	name = agp_native_father_test_child
+	culture = "irish"
+	religion = "catholic"
+	father = agp_native_father_test_father
+	1040.1.1 = { birth = "1040.1.1" }
+}

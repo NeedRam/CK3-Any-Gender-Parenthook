@@ -1,0 +1,11 @@
+*
+!.gitignore
+
+!Native Hook/
+!Native Hook/**
+
+!Dynasty Assignment/
+!Dynasty Assignment/**
+
+!script_docs/
+!script_docs/**
