@@ -9,3 +9,6 @@
 
 !script_docs/
 !script_docs/**
+
+!.vscode/
+!.vscode/**
