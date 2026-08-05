@@ -1,0 +1,12 @@
+# Add the optional dynasty-house preference without replacing vanilla on_birth_child.
+on_birth_child = {
+	on_actions = {
+		agp_dp_birth_hook
+	}
+}
+
+agp_dp_birth_hook = {
+	effect = {
+		agp_dp_on_birth_child = yes
+	}
+}

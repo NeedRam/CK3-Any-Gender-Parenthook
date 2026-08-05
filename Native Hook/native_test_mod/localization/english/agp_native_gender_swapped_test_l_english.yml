@@ -1,0 +1,5 @@
+﻿l_english:
+ agp_native_gender_swapped_test_female_actor_interaction:0 "Gender-Swapped Pregnancy Test (Female)"
+ agp_native_gender_swapped_test_female_actor_interaction_desc:0 "Use native make_pregnant with [recipient.GetShortUIName] as the male mother and [actor.GetShortUIName] as the female father."
+ agp_native_gender_swapped_test_male_actor_interaction:0 "Gender-Swapped Pregnancy Test (Male)"
+ agp_native_gender_swapped_test_male_actor_interaction_desc:0 "Use native make_pregnant with [actor.GetShortUIName] as the male mother and [recipient.GetShortUIName] as the female father."

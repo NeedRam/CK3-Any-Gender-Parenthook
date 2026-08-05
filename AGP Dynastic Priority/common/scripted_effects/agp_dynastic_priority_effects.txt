@@ -1,0 +1,151 @@
+# Apply the selected dynasty-priority rules on birth
+agp_dp_on_birth_child = {
+    if = {
+        limit = {
+            exists = scope:father
+            exists = scope:mother
+            scope:father = { is_spouse_of_even_if_dead = scope:mother }
+        }
+        agp_dp_assign_dynasty_effect = yes
+    }
+}
+
+# Classify the parents and route to the appropriate dynasty rule
+agp_dp_assign_dynasty_effect = {
+    if = {
+        limit = {
+            scope:father = { sex_same_as = scope:mother }
+        }
+        agp_dp_assign_dynasty_ss_effect = yes
+    }
+    else_if = {
+        limit = {
+            scope:father = { is_female = yes }
+            scope:mother = { is_male = yes }
+        }
+        agp_dp_assign_dynasty_os_effect = yes
+    }
+}
+
+# Route same-sex births by parent sex
+agp_dp_assign_dynasty_ss_effect = {
+    if = {
+        limit = {
+            scope:father = { is_female = yes }
+            scope:mother = { is_female = yes }
+        }
+        agp_dp_assign_dynasty_ss_female_effect = yes
+    }
+    else_if = {
+        limit = {
+            scope:father = { is_male = yes }
+            scope:mother = { is_male = yes }
+        }
+        agp_dp_assign_dynasty_ss_male_effect = yes
+    }
+}
+
+# Same-sex female births: mother is the carrier and father is the non-carrier
+# Vanilla carrier assignment is left untouched
+agp_dp_assign_dynasty_ss_female_effect = {
+    if = {
+        limit = { has_game_rule = agp_dp_ss_female_non_carrier }
+        if = {
+            limit = { exists = father.house }
+            set_house = father.house
+        }
+    }
+    else_if = {
+        limit = { has_game_rule = agp_dp_ss_female_higher_rank }
+        agp_dp_assign_higher_ranked_house = yes
+    }
+}
+
+# Same-sex male births: mother is the carrier and father is the non-carrier
+# Vanilla non-carrier assignment is left untouched
+agp_dp_assign_dynasty_ss_male_effect = {
+    if = {
+        limit = { has_game_rule = agp_dp_ss_male_carrier }
+        if = {
+            limit = { exists = mother.house }
+            set_house = mother.house
+        }
+    }
+    else_if = {
+        limit = { has_game_rule = agp_dp_ss_male_higher_rank }
+        agp_dp_assign_higher_ranked_house = yes
+    }
+}
+
+# Route gender-swapped opposite-sex marriages by marriage type
+agp_dp_assign_dynasty_os_effect = {
+    if = {
+        limit = { scope:mother = { patrilinear_marriage = yes } }
+        agp_dp_assign_dynasty_os_patrilineal_effect = yes
+    }
+    else_if = {
+        limit = { scope:mother = { matrilinear_marriage = yes } }
+        agp_dp_assign_dynasty_os_matrilineal_effect = yes
+    }
+}
+
+# Gender-swapped opposite-sex patrilinear marriage: default is the man's house
+# Vanilla woman's-house assignment is left untouched
+agp_dp_assign_dynasty_os_patrilineal_effect = {
+    if = {
+        limit = { has_game_rule = agp_dp_os_patrilinear_higher_rank }
+        agp_dp_assign_higher_ranked_house = yes
+    }
+    else_if = {
+        limit = { has_game_rule = agp_dp_os_patrilinear_man }
+        if = {
+            limit = { exists = mother.house }
+            set_house = mother.house
+        }
+    }
+}
+
+# Gender-swapped opposite-sex matrilinear marriage: default is the woman's house
+# Vanilla man's-house assignment is left untouched
+agp_dp_assign_dynasty_os_matrilineal_effect = {
+    if = {
+        limit = { has_game_rule = agp_dp_os_matrilinear_higher_rank }
+        agp_dp_assign_higher_ranked_house = yes
+    }
+    else_if = {
+        limit = { has_game_rule = agp_dp_os_matrilinear_woman }
+        if = {
+            limit = { exists = father.house }
+            set_house = father.house
+        }
+    }
+}
+
+# Assign a newborn to the higher-ranking parent's house
+agp_dp_assign_higher_ranked_house = {
+    if = {
+        limit = {
+            exists = mother.house
+            scope:mother = {
+                tier_difference = {
+                    target = scope:father
+                    value > 0
+                }
+            }
+        }
+        set_house = mother.house
+    }
+    else_if = {
+        limit = {
+            exists = father.house
+            scope:father = {
+                tier_difference = {
+                    target = scope:mother
+                    value > 0
+                }
+            }
+        }
+        set_house = father.house
+    }
+    # Equal-rank parents fall through to the existing result
+}

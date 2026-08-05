@@ -1,0 +1,55 @@
+agp_dp_ss_female_dynasty_priority = {
+	categories = {
+		game_modes
+		tweaks
+		agp_dp
+	}
+
+	default = agp_dp_ss_female_higher_rank
+
+	agp_dp_ss_female_higher_rank = {}
+	agp_dp_ss_female_carrier = {}
+	agp_dp_ss_female_non_carrier = {}
+}
+
+agp_dp_ss_male_dynasty_priority = {
+	categories = {
+		game_modes
+		tweaks
+		agp_dp
+	}
+
+	default = agp_dp_ss_male_higher_rank
+
+	agp_dp_ss_male_higher_rank = {}
+	agp_dp_ss_male_carrier = {}
+	agp_dp_ss_male_non_carrier = {}
+}
+
+agp_dp_os_patrilinear_dynasty_priority = {
+	categories = {
+		game_modes
+		tweaks
+		agp_dp
+	}
+
+	default = agp_dp_os_patrilinear_man
+
+	agp_dp_os_patrilinear_man = {}
+	agp_dp_os_patrilinear_woman = {}
+	agp_dp_os_patrilinear_higher_rank = {}
+}
+
+agp_dp_os_matrilinear_dynasty_priority = {
+	categories = {
+		game_modes
+		tweaks
+		agp_dp
+	}
+
+	default = agp_dp_os_matrilinear_woman
+
+	agp_dp_os_matrilinear_man = {}
+	agp_dp_os_matrilinear_woman = {}
+	agp_dp_os_matrilinear_higher_rank = {}
+}

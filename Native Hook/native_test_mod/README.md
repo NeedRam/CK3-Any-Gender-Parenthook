@@ -23,7 +23,9 @@ For local development, use `AGP Native Parent Test.mod` or `descriptor.mod` as a
 
 Namespace: `agp_native_father_test`
 
-All family members created by these fixtures are female. The suite tests female characters occupying native father or real-father roles while keeping the ordinary mother role available for comparison.
+The same-sex fixtures use female family members. The suite tests female
+characters occupying native father or real-father roles while keeping the
+ordinary mother role available for comparison.
 
 Run these events while playing a normal landed ruler:
 
@@ -79,6 +81,17 @@ The female-father suite adds:
 
 - **Make Pregnant (Native Female Father Test):** the recipient carries; the actor is recorded as the female father.
 - **Become Pregnant (Native Female Father Test):** the actor carries; the recipient is recorded as the female father.
+
+The gender-swapped test suite adds:
+
+- **Gender-Swapped Pregnancy Test (Female):** the female actor is recorded as the female father and the male recipient carries.
+- **Gender-Swapped Pregnancy Test (Male):** the male actor carries as the male mother and the female recipient is recorded as the female father.
+
+The gender-swapped interaction file is:
+
+```text
+common/character_interactions/agp_native_gender_swapped_test_interactions.txt
+```
 
 The male-mother suite adds:
 

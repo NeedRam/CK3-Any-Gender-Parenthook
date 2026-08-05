@@ -1,0 +1,71 @@
+# Debug-only native pregnancy test with a female actor as the female father.
+agp_native_gender_swapped_test_female_actor_interaction = {
+	category = interaction_category_uncategorized
+	icon = debug_chars
+	common_interaction = yes
+	use_diplomatic_range = no
+	ignores_pending_interaction_block = yes
+	auto_accept = yes
+
+	is_shown = {
+		debug_only = yes
+		scope:actor = {
+			is_alive = yes
+			is_adult = yes
+			is_female = yes
+		}
+		scope:recipient = {
+			is_alive = yes
+			is_adult = yes
+			is_male = yes
+			is_spouse_of = scope:actor
+		}
+	}
+
+	is_valid = {
+		scope:actor = { is_alive = yes }
+		scope:recipient = { is_alive = yes }
+	}
+
+	on_accept = {
+		scope:recipient = {
+			make_pregnant = { father = scope:actor }
+		}
+	}
+}
+
+# Debug-only native pregnancy test with a male actor as the male mother.
+agp_native_gender_swapped_test_male_actor_interaction = {
+	category = interaction_category_uncategorized
+	icon = debug_chars
+	common_interaction = yes
+	use_diplomatic_range = no
+	ignores_pending_interaction_block = yes
+	auto_accept = yes
+
+	is_shown = {
+		debug_only = yes
+		scope:actor = {
+			is_alive = yes
+			is_adult = yes
+			is_male = yes
+		}
+		scope:recipient = {
+			is_alive = yes
+			is_adult = yes
+			is_female = yes
+			is_spouse_of = scope:actor
+		}
+	}
+
+	is_valid = {
+		scope:actor = { is_alive = yes }
+		scope:recipient = { is_alive = yes }
+	}
+
+	on_accept = {
+		scope:actor = {
+			make_pregnant = { father = scope:recipient }
+		}
+	}
+}
