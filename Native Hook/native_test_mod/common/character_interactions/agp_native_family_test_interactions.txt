@@ -1,0 +1,26 @@
+# Shared debug test: the selected character must be a native close-family member
+# of the actor. This is intentionally independent of the father and mother
+# parent-role test suites.
+agp_native_family_test_close_family_interaction = {
+	category = interaction_category_uncategorized
+	icon = debug_chars
+	common_interaction = yes
+	use_diplomatic_range = no
+	ignores_pending_interaction_block = yes
+	auto_accept = yes
+
+	is_shown = {
+		debug_only = yes
+		scope:actor = { is_close_family_of = scope:recipient }
+	}
+
+	is_valid = {
+		scope:actor = { is_close_family_of = scope:recipient }
+	}
+
+	on_accept = {
+		scope:actor = {
+			add_character_flag = agp_native_family_test_close_family_interaction_used
+		}
+	}
+}

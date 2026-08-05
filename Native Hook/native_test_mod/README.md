@@ -111,6 +111,8 @@ For every fixture that creates a child:
 
 For fixture `.0008` in the female-father suite, play as the child and verify that the Mother Scope Test, Father Scope Test, and Real Father Scope Test appear only on their matching targets.
 
+The test mod also provides the shared `Close Family Test` interaction. When playing as a character, it appears only on a native close-family member, as determined by CK3's `is_close_family_of` trigger. It records the result with the `agp_native_family_test_close_family_interaction_used` character flag.
+
 For fixtures `.0005` and `.0006` in the male-mother suite, play as the child, use both dedicated mother-scope interactions on their matching parents, and then run `.0006` to report the results.
 
 ## History smoke tests
