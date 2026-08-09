@@ -27,7 +27,7 @@ The payload performs a signature preflight before writing patches. Every require
 
 The loader uses CK3's shipped `dxcompiler.dll` proxy route:
 
-1. The original game `dxcompiler.dll` is renamed to `dxcompiler_agp_original.dll`.
+1. The original game `dxcompiler.dll` is renamed to `dxcompiler_original.dll`.
 2. The AGP-built `dxcompiler.dll` takes the original filename and exports `DxcCreateInstance` and `DxcCreateInstance2`.
 3. Those exports are forwarded to the untouched original DXCompiler DLL.
 4. A background loader thread loads `AGP Native Hook\agp_parenthook.dll` beside it.
@@ -83,7 +83,7 @@ The script builds all payload translation units as one DLL, builds the DXCompile
 Close CK3 before changing the game binaries. In the CK3 `binaries` directory, make a reversible backup by renaming the original file:
 
 ```text
-dxcompiler.dll  ->  dxcompiler_agp_original.dll
+dxcompiler.dll  ->  dxcompiler_original.dll
 ```
 
 Copy the two build outputs into the same directory:
@@ -92,14 +92,14 @@ Copy the two build outputs into the same directory:
 Crusader Kings III\binaries\
   ck3.exe
   dxcompiler.dll
-  dxcompiler_agp_original.dll
+  dxcompiler_original.dll
   AGP Native Hook\
     agp_parenthook.dll
 ```
 
-The loader expects the original DLL to have exactly the `dxcompiler_agp_original.dll` name and expects the payload at exactly `AGP Native Hook\agp_parenthook.dll`.
+The loader expects the original DLL to have exactly the `dxcompiler_original.dll` name and expects the payload at exactly `AGP Native Hook\agp_parenthook.dll`.
 
-To roll back / uninstall, close CK3, remove the AGP proxy and payload, and rename `dxcompiler_agp_original.dll` back to `dxcompiler.dll`.
+To roll back / uninstall, close CK3, remove the AGP proxy and payload, and rename `dxcompiler_original.dll` back to `dxcompiler.dll`.
 
 ## Logs and failure handling
 

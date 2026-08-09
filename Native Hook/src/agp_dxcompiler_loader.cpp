@@ -36,10 +36,10 @@ BOOL CALLBACK InitializeRealDxcompiler(PINIT_ONCE, PVOID, PVOID*) {
 	if (GetModuleFileNameW(g_loader_module, path, MAX_PATH) == 0) return FALSE;
 	wchar_t* separator = std::wcsrchr(path, L'\\');
 	if (separator == nullptr) return FALSE;
-	std::wcscpy(separator + 1, L"dxcompiler_agp_original.dll");
+	std::wcscpy(separator + 1, L"dxcompiler_original.dll");
 	HMODULE original = LoadLibraryW(path);
 	if (original == nullptr) {
-		Log("AGP DXCompiler Loader: original dxcompiler_agp_original.dll failed to load.");
+		Log("AGP DXCompiler Loader: original dxcompiler_original.dll failed to load.");
 		return FALSE;
 	}
 	g_DxcCreateInstance = reinterpret_cast<DxcCreateInstance_t>(GetProcAddress(original, "DxcCreateInstance"));
