@@ -13,8 +13,9 @@ The payload removes or redirects CK3 gender checks around the native parent path
 - History-character parent validation
 - Save/load reconstruction of native parent roles
 - Role-aware reconstruction for female fathers and male mothers
+- Role-aware native parent and grandparent recognition for `is_close_family_of`
 
-The Native Hook changes CK3's native parent-role validation, pregnancy gates, and persistence. It does not decide when pregnancy occurs, which partners or carriers are selected, how dynasties are handled, or what script API the AGP framework exposes.
+The Native Hook changes CK3's native parent-role validation, pregnancy gates, persistence, and close-family recognition. It does not decide when pregnancy occurs, which partners or carriers are selected, how dynasties are handled, or what script API the AGP framework exposes.
 
 ## Compatibility
 
@@ -39,19 +40,20 @@ Native Hook\
   build.ps1                         # Builds the loader and payload
   dxcompiler_proxy.def              # DXCompiler proxy exports
   src\
-    agp_parenthook.cpp              # DLL entrypoint and patch coordinator
+    agp_parent_hook.cpp             # DLL entrypoint and patch coordinator
     agp_patch_runtime.cpp/.h        # Scanning, memory writes, branches, logging
+    agp_close_family.cpp/.h         # Role-aware close-family recognition
     agp_parent_roles.cpp/.h         # Native parent-role reconstruction
     agp_history.cpp/.h               # History parent validation
     agp_female_father.cpp/.h         # Female-father runtime, pregnancy, persistence
     agp_male_mother.cpp/.h           # Male-mother runtime, pregnancy, persistence
-    dxcompiler_loader.cpp            # DXCompiler proxy and payload loader
+    agp_dxcompiler_loader.cpp        # DXCompiler proxy and payload loader
   native_test_mod\                  # Disposable acceptance-test mod
   tools\ghidra\                    # Read-only reverse-engineering helpers
   build\                            # Build outputs
 ```
 
-The gender-specific translation units intentionally keep the related runtime, pregnancy, and persistence patches together. `agp_parenthook.cpp` only coordinates the modules and owns the DLL entrypoint.
+The gender-specific translation units intentionally keep the related runtime, pregnancy, and persistence patches together. `agp_parent_hook.cpp` only coordinates the modules and owns the DLL entrypoint.
 
 ## Building
 
@@ -118,6 +120,7 @@ The test fixtures cover:
 - Male-mother setter and real-mother paths
 - Native parent creation and pregnancy/carrier paths
 - Parent and grandparent scope resolution
+- Bidirectional `is_close_family_of` recognition
 - Native parent persistence across save/load
 - History loading with male mothers and female-fathers
 
@@ -142,5 +145,5 @@ For a new CK3 build or a substantial payload change, validate in separate stages
 2. Confirm every signature resolves exactly as expected and inspect the payload log.
 3. Start CK3 with the disposable test mod and inspect `error.log` and `database_conflicts.log`.
 4. Check native parent scopes and UI data immediately after creation.
-5. Save, reload, and repeat the relevant parent and grandparent checks.
+5. Save, reload, and repeat the relevant parent, grandparent, and close-family checks.
 6. Record the exact CK3 executable version and fixture results before publishing.
