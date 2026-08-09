@@ -6,14 +6,15 @@ if (-not (Test-Path $vsDevCmd)) {
 }
 
 $payloadSources = @(
-	(Join-Path $PSScriptRoot 'src\agp_parenthook.cpp'),
+	(Join-Path $PSScriptRoot 'src\agp_parent_hook.cpp'),
 	(Join-Path $PSScriptRoot 'src\agp_patch_runtime.cpp'),
+	(Join-Path $PSScriptRoot 'src\agp_close_family.cpp'),
 	(Join-Path $PSScriptRoot 'src\agp_history.cpp'),
 	(Join-Path $PSScriptRoot 'src\agp_parent_roles.cpp'),
 	(Join-Path $PSScriptRoot 'src\agp_female_father.cpp'),
 	(Join-Path $PSScriptRoot 'src\agp_male_mother.cpp')
 )
-$loaderSource = Join-Path $PSScriptRoot 'src\dxcompiler_loader.cpp'
+$loaderSource = Join-Path $PSScriptRoot 'src\agp_dxcompiler_loader.cpp'
 $definition = Join-Path $PSScriptRoot 'dxcompiler_proxy.def'
 $buildDirectory = Join-Path $PSScriptRoot 'build'
 $payloadDirectory = Join-Path $buildDirectory 'AGP Native Hook'
@@ -43,13 +44,14 @@ Remove-Item -Force -ErrorAction SilentlyContinue `
 	(Join-Path $buildDirectory 'version.exp'), `
 	(Join-Path $buildDirectory 'version.lib'), `
 	(Join-Path $buildDirectory 'version_proxy.obj'), `
-	(Join-Path $buildDirectory 'agp_parenthook.obj'), `
+	(Join-Path $buildDirectory 'agp_parent_hook.obj'), `
 	(Join-Path $buildDirectory 'agp_patch_runtime.obj'), `
+	(Join-Path $buildDirectory 'agp_close_family.obj'), `
 	(Join-Path $buildDirectory 'agp_history.obj'), `
 	(Join-Path $buildDirectory 'agp_parent_roles.obj'), `
 	(Join-Path $buildDirectory 'agp_female_father.obj'), `
 	(Join-Path $buildDirectory 'agp_male_mother.obj'), `
-	(Join-Path $buildDirectory 'dxcompiler_loader.obj'), `
+	(Join-Path $buildDirectory 'agp_dxcompiler_loader.obj'), `
 	(Join-Path $buildDirectory 'dxcompiler.exp'), `
 	(Join-Path $buildDirectory 'dxcompiler.lib')
 Write-Host "Built $loaderOutput and $payloadOutput"
