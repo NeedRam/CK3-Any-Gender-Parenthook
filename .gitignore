@@ -7,8 +7,8 @@
 !AGP Dynastic Priority/
 !AGP Dynastic Priority/**
 
-!script_docs/
-!script_docs/**
+!script_docs 1.19.0.6/
+!script_docs 1.19.0.6/**
 
 !.vscode/
 !.vscode/**
