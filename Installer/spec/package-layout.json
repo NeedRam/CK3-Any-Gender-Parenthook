@@ -1,0 +1,182 @@
+{
+  "$schema": "https://any-gender-parenthook.invalid/schema/package-layout-v1.json",
+  "schema_version": 1,
+  "kind": "agp_package_layout",
+  "package_id": "agp-v1.0.0-win-x64",
+  "root_entries": [
+    {
+      "relative_path": "dxcompiler.dll",
+      "role": "agp_proxy",
+      "required": true,
+      "phase": 1,
+      "artifact_id": "agp-proxy"
+    },
+    {
+      "relative_path": "AGP Native Hook/agp_parenthook.dll",
+      "role": "agp_payload",
+      "required": true,
+      "phase": 1,
+      "artifact_id": "agp-payload"
+    },
+    {
+      "relative_path": "Installer/release-manifest.json",
+      "role": "contract",
+      "required": true,
+      "phase": 1
+    },
+    {
+      "relative_path": "Installer/install.bat",
+      "role": "bat_entrypoint",
+      "required": true,
+      "phase": 2
+    },
+    {
+      "relative_path": "Installer/uninstall.bat",
+      "role": "bat_entrypoint",
+      "required": true,
+      "phase": 2
+    },
+    {
+      "relative_path": "Installer/install.ps1",
+      "role": "powershell_engine",
+      "required": true,
+      "phase": 2
+    },
+    {
+      "relative_path": "Installer/uninstall.ps1",
+      "role": "powershell_engine",
+      "required": true,
+      "phase": 2
+    },
+    {
+      "relative_path": "Installer/AGPInstaller.exe",
+      "role": "exe_frontend",
+      "required": true,
+      "phase": 2
+    },
+    {
+      "relative_path": "Installer/AGPUninstaller.exe",
+      "role": "exe_frontend",
+      "required": true,
+      "phase": 2
+    },
+    {
+      "relative_path": "Installer/python",
+      "role": "python_engine",
+      "required": true,
+      "phase": 2
+    }
+  ],
+  "package_exclusions": [
+    {
+      "relative_path": "Native Hook/native_test_mod",
+      "reason": "Disposable maintainer fixture; never ship in the end-user package."
+    },
+    {
+      "relative_path": "AGP Dynastic Priority",
+      "reason": "Separate optional addon explicitly excluded by release authority."
+    },
+    {
+      "relative_path": "Native Hook/src",
+      "reason": "Native source is not an end-user runtime artifact."
+    },
+    {
+      "relative_path": "Native Hook/tools",
+      "reason": "Reverse-engineering tools are not an end-user runtime artifact."
+    },
+    {
+      "relative_path": "script_docs 1.19.0.6",
+      "reason": "Development documentation is not an end-user runtime artifact."
+    },
+    {
+      "relative_path": ".git",
+      "reason": "Repository metadata is never packaged."
+    },
+    {
+      "relative_path": "Lunacy",
+      "reason": "Run control and reports are never packaged."
+    }
+  ],
+  "target_layout": {
+    "root_kind": "steam_game_binaries",
+    "binaries_relative_path_from_game_root": "binaries",
+    "required_target_files": [
+      {
+        "relative_path": "ck3.exe",
+        "role": "game_executable",
+        "owner": "steam"
+      },
+      {
+        "relative_path": "dxcompiler.dll",
+        "role": "active_dxcompiler",
+        "owner": "steam_or_agp_managed"
+      }
+    ],
+    "preserved_baseline": [
+      {
+        "relative_path": "dxcompiler_original.dll",
+        "owner": "steam",
+        "install_policy": "rename_active_to_original_if_absent",
+        "uninstall_policy": "restore_to_dxcompiler_dll_after_hash_check"
+      }
+    ],
+    "clean_install": {
+      "precondition": "dxcompiler_original.dll_absent_and_active_dxcompiler_matches_supported_steam_hash",
+      "first_mutation": "rename_dxcompiler_dll_to_dxcompiler_original_dll",
+      "destination_must_be_absent": true,
+      "journal_operation": "rename",
+      "proxy_write_after_rename": true
+    },
+    "managed_state": {
+      "relative_path": "AGP Native Hook/agp-install-state.json",
+      "owner": "agp_installer",
+      "created_at_commit": true,
+      "removed_last_on_uninstall": true
+    },
+    "transaction_journal": {
+      "relative_directory": "AGP Native Hook/.agp-journal",
+      "owner": "agp_installer",
+      "remove_only_after_commit_or_verified_rollback": true
+    },
+    "unknown_quarantine": {
+      "relative_directory": "AGP Native Hook/.agp-quarantine",
+      "owner": "agp_installer",
+      "preserve_until_explicit_user_removal": true
+    },
+    "runtime_logs": [
+      {
+        "relative_path": "agp_dxcompiler_loader.log",
+        "owner": "agp_runtime",
+        "uninstall_policy": "remove_exact_path"
+      },
+      {
+        "relative_path": "agp_parenthook.log",
+        "owner": "agp_runtime",
+        "uninstall_policy": "remove_exact_path"
+      }
+    ],
+    "unknown_agp_native_hook_contents": {
+      "relative_directory": "AGP Native Hook",
+      "policy": "preserve_every_path_not_explicitly_owned_or_named_agp_log"
+    },
+    "authorized_awow_ufg_cleanup": {
+      "directory": "AWOW Universal Female Generation",
+      "logs": [
+        "awow_ufg.log",
+        "awow_ufg_dxcompiler_loader.log"
+      ],
+      "authorization": "recognized_awow_ufg_seed_after_explicit_confirmation",
+      "method": "quarantine_then_remove_after_agp_commit",
+      "restore_on_agp_uninstall": false,
+      "recursive_scope": "directory_only_when_exact_awow_ufg_seed_matches"
+    }
+  },
+  "path_rules": {
+    "separator": "/",
+    "reject_absolute_paths": true,
+    "reject_drive_qualified_paths": true,
+    "reject_dot_segments": true,
+    "reject_reparse_targets_and_ancestors": true,
+    "resolve_and_verify_containment_before_each_mutation": true
+  }
+}

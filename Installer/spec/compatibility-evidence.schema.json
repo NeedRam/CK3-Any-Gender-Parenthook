@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://any-gender-parenthook.invalid/schema/compatibility-evidence-v1.json",
+  "title": "AGP compatibility evidence (schema v1)",
+  "description": "Read-only repository and installed-target observations backing the release manifest compatibility seeds.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "kind",
+    "observed_utc",
+    "observations",
+    "absence_checks",
+    "presence_checks"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "../spec/compatibility-evidence.schema.json"
+    },
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "kind": {
+      "type": "string",
+      "const": "agp_compatibility_evidence"
+    },
+    "observed_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "observations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/observation"
+      }
+    },
+    "absence_checks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/absence"
+      }
+    },
+    "presence_checks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/presence"
+      }
+    }
+  },
+  "$defs": {
+    "relativePath": {
+      "type": "string",
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*:)[^\\\\/:*?\"<>|\\x00-\\x1F]+(?:/[^\\\\/:*?\"<>|\\x00-\\x1F]+)*$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "root_kind",
+        "relative_path",
+        "role"
+      ],
+      "properties": {
+        "source": {
+          "type": "string",
+          "enum": [
+            "repository",
+            "installed_ck3"
+          ]
+        },
+        "root_kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "root_display": {
+          "type": "string",
+          "minLength": 1
+        },
+        "relative_path": {
+          "$ref": "#/$defs/relativePath"
+        },
+        "role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "file",
+            "directory"
+          ]
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "absence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "root_kind",
+        "relative_path",
+        "expected"
+      ],
+      "properties": {
+        "source": {
+          "type": "string",
+          "const": "installed_ck3"
+        },
+        "root_kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "relative_path": {
+          "$ref": "#/$defs/relativePath"
+        },
+        "expected": {
+          "type": "string",
+          "const": "absent"
+        }
+      }
+    },
+    "presence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "root_kind",
+        "relative_path",
+        "expected"
+      ],
+      "properties": {
+        "source": {
+          "type": "string",
+          "const": "installed_ck3"
+        },
+        "root_kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "relative_path": {
+          "$ref": "#/$defs/relativePath"
+        },
+        "expected": {
+          "type": "string",
+          "const": "present_and_hashed"
+        }
+      }
+    }
+  }
+}

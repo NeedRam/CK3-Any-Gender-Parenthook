@@ -1,0 +1,1182 @@
+{
+  "$schema": "../spec/scenario-fixtures.schema.json",
+  "schema_version": 1,
+  "kind": "agp_scenario_fixtures",
+  "contract_files": [
+    "Installer/spec/release-manifest.schema.json",
+    "Installer/spec/install-state.schema.json",
+    "Installer/spec/install-journal.schema.json",
+    "Installer/spec/state-transitions.json",
+    "Installer/spec/package-layout.json",
+    "Installer/spec/compatibility-evidence.schema.json"
+  ],
+  "scenarios": [
+    {
+      "id": "known-clean-install",
+      "description": "Install into a Steam-clean 1.19.0.6 binaries directory.",
+      "operation": "install",
+      "initial": {
+        "target_root_kind": "fixture_binaries",
+        "classification_hint": "known_clean",
+        "ck3_running": false,
+        "target_is_reparse": false,
+        "ancestor_is_reparse": false,
+        "files": [
+          {
+            "relative_path": "ck3.exe",
+            "kind": "file",
+            "sha256": "2d00ff3101ef70b566f2fcbae292f09263199c80e9dc8f139b82d7d96f83db86",
+            "size_bytes": 95206008,
+            "owner": "steam"
+          },
+          {
+            "relative_path": "dxcompiler.dll",
+            "kind": "file",
+            "sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+            "size_bytes": 20291584,
+            "owner": "steam"
+          }
+        ],
+        "state_file": "absent"
+      },
+      "confirmation_response": null,
+      "expected": {
+        "classification": "known_clean",
+        "decision": "proceed",
+        "next_state": "managed_agp",
+        "writes": [
+          {
+            "relative_path": "dxcompiler_original.dll",
+            "action": "rename_from_dxcompiler"
+          },
+          {
+            "relative_path": "dxcompiler.dll",
+            "action": "replace"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp_parenthook.dll",
+            "action": "create"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp-install-state.json",
+            "action": "create"
+          }
+        ],
+        "preserves": [
+          {
+            "relative_path": "ck3.exe",
+            "action": "preserve"
+          }
+        ],
+        "quarantines": [],
+        "removes": [],
+        "rollback": {
+          "required": true,
+          "committed_state": false,
+          "restores": [
+            "dxcompiler.dll",
+            "dxcompiler_original.dll"
+          ]
+        },
+        "reason": "The active Steam compiler is renamed transactionally to the canonical original path before the AGP proxy is written."
+      }
+    },
+    {
+      "id": "managed-in-place-upgrade",
+      "description": "Upgrade an existing schema-v1 AGP install only after the typed in-place confirmation.",
+      "operation": "install",
+      "initial": {
+        "target_root_kind": "fixture_binaries",
+        "classification_hint": "managed_agp",
+        "ck3_running": false,
+        "target_is_reparse": false,
+        "ancestor_is_reparse": false,
+        "files": [
+          {
+            "relative_path": "ck3.exe",
+            "kind": "file",
+            "sha256": "2d00ff3101ef70b566f2fcbae292f09263199c80e9dc8f139b82d7d96f83db86",
+            "size_bytes": 95206008,
+            "owner": "steam"
+          },
+          {
+            "relative_path": "dxcompiler.dll",
+            "kind": "file",
+            "sha256": "9a772457da46608dc0e05a6881318cc9663d94cd91513ece0861ae55b8ca6b5d",
+            "size_bytes": 108032,
+            "owner": "agp_managed"
+          },
+          {
+            "relative_path": "dxcompiler_original.dll",
+            "kind": "file",
+            "sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+            "size_bytes": 20291584,
+            "owner": "steam"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp_parenthook.dll",
+            "kind": "file",
+            "sha256": "9191782a7525e3cc3de18c666f5d7494740ae36ee255829cf1105641a94723ed",
+            "size_bytes": 134656,
+            "owner": "agp_managed"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp-install-state.json",
+            "kind": "file",
+            "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "size_bytes": 1900,
+            "owner": "agp_managed"
+          }
+        ],
+        "state_file": "valid"
+      },
+      "confirmation_response": "UPGRADE_AGP_IN_PLACE",
+      "expected": {
+        "classification": "managed_agp",
+        "decision": "proceed",
+        "next_state": "managed_agp",
+        "writes": [
+          {
+            "relative_path": "dxcompiler.dll",
+            "action": "replace"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp_parenthook.dll",
+            "action": "replace"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp-install-state.json",
+            "action": "replace"
+          }
+        ],
+        "preserves": [
+          {
+            "relative_path": "dxcompiler_original.dll",
+            "action": "preserve"
+          }
+        ],
+        "quarantines": [],
+        "removes": [],
+        "rollback": {
+          "required": true,
+          "committed_state": false,
+          "restores": [
+            "dxcompiler.dll",
+            "AGP Native Hook/agp_parenthook.dll",
+            "AGP Native Hook/agp-install-state.json"
+          ]
+        },
+        "reason": "A valid state proves ownership; only state-owned files may be replaced after confirmation."
+      }
+    },
+    {
+      "id": "legacy-agp-prompts-and-aborts",
+      "description": "A known manual/legacy AGP layout must not be changed when the user declines the upgrade prompt.",
+      "operation": "install",
+      "initial": {
+        "target_root_kind": "fixture_binaries",
+        "classification_hint": "legacy_agp",
+        "ck3_running": false,
+        "target_is_reparse": false,
+        "ancestor_is_reparse": false,
+        "files": [
+          {
+            "relative_path": "dxcompiler.dll",
+            "kind": "file",
+            "sha256": "7902c42b07581f90aebf94910553849aa8deeeaa07908df8f15b01e3250d09fc",
+            "size_bytes": 135168,
+            "owner": "unknown"
+          },
+          {
+            "relative_path": "dxcompiler_original.dll",
+            "kind": "file",
+            "sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+            "size_bytes": 20291584,
+            "owner": "steam"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp_parenthook.dll",
+            "kind": "file",
+            "sha256": "9191782a7525e3cc3de18c666f5d7494740ae36ee255829cf1105641a94723ed",
+            "size_bytes": 134656,
+            "owner": "unknown"
+          }
+        ],
+        "state_file": "absent"
+      },
+      "confirmation_response": null,
+      "expected": {
+        "classification": "legacy_agp",
+        "decision": "abort",
+        "next_state": "legacy_agp",
+        "writes": [],
+        "preserves": [
+          {
+            "relative_path": "dxcompiler.dll",
+            "action": "preserve"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp_parenthook.dll",
+            "action": "preserve"
+          }
+        ],
+        "quarantines": [],
+        "removes": [],
+        "rollback": {
+          "required": false,
+          "committed_state": false,
+          "restores": []
+        },
+        "reason": "Legacy AGP is recognized but ownership is not persisted; declining the prompt is a zero-write abort."
+      }
+    },
+    {
+      "id": "legacy-agp-confirmed-upgrade",
+      "description": "A recognized legacy AGP layout can be converted after the typed in-place confirmation.",
+      "operation": "install",
+      "initial": {
+        "target_root_kind": "fixture_binaries",
+        "classification_hint": "legacy_agp",
+        "ck3_running": false,
+        "target_is_reparse": false,
+        "ancestor_is_reparse": false,
+        "files": [
+          {
+            "relative_path": "dxcompiler.dll",
+            "kind": "file",
+            "sha256": "7902c42b07581f90aebf94910553849aa8deeeaa07908df8f15b01e3250d09fc",
+            "size_bytes": 135168,
+            "owner": "unknown"
+          },
+          {
+            "relative_path": "dxcompiler_original.dll",
+            "kind": "file",
+            "sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+            "size_bytes": 20291584,
+            "owner": "steam"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp_parenthook.dll",
+            "kind": "file",
+            "sha256": "9191782a7525e3cc3de18c666f5d7494740ae36ee255829cf1105641a94723ed",
+            "size_bytes": 134656,
+            "owner": "unknown"
+          }
+        ],
+        "state_file": "absent"
+      },
+      "confirmation_response": "UPGRADE_AGP_IN_PLACE",
+      "expected": {
+        "classification": "legacy_agp",
+        "decision": "proceed",
+        "next_state": "managed_agp",
+        "writes": [
+          {
+            "relative_path": "dxcompiler.dll",
+            "action": "replace"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp_parenthook.dll",
+            "action": "replace"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp-install-state.json",
+            "action": "create"
+          }
+        ],
+        "preserves": [
+          {
+            "relative_path": "dxcompiler_original.dll",
+            "action": "preserve"
+          }
+        ],
+        "quarantines": [
+          {
+            "relative_path": "dxcompiler.dll",
+            "action": "quarantine"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp_parenthook.dll",
+            "action": "quarantine"
+          }
+        ],
+        "removes": [],
+        "rollback": {
+          "required": true,
+          "committed_state": false,
+          "restores": [
+            "dxcompiler.dll",
+            "AGP Native Hook/agp_parenthook.dll"
+          ]
+        },
+        "reason": "The exact legacy files are quarantined losslessly before the new managed files are committed."
+      }
+    },
+    {
+      "id": "recognized-awow-ufg-conversion",
+      "description": "Recognized AWOW UFG is converted only after warning/confirmation; the exact foreign folder and two named logs are quarantined then removed after AGP commit.",
+      "operation": "install",
+      "initial": {
+        "target_root_kind": "fixture_binaries",
+        "classification_hint": "recognized_ufg",
+        "ck3_running": false,
+        "target_is_reparse": false,
+        "ancestor_is_reparse": false,
+        "files": [
+          {
+            "relative_path": "dxcompiler.dll",
+            "kind": "file",
+            "sha256": "7902c42b07581f90aebf94910553849aa8deeeaa07908df8f15b01e3250d09fc",
+            "size_bytes": 135168,
+            "owner": "ufg"
+          },
+          {
+            "relative_path": "dxcompiler_original.dll",
+            "kind": "file",
+            "sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+            "size_bytes": 20291584,
+            "owner": "steam"
+          },
+          {
+            "relative_path": "AWOW Universal Female Generation",
+            "kind": "directory",
+            "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "size_bytes": 0,
+            "owner": "ufg"
+          },
+          {
+            "relative_path": "AWOW Universal Female Generation/awow_ufg.dll",
+            "kind": "file",
+            "sha256": "466295aa3dc8bf345864b847728bd300b54c66a433d6bc886774d1ed66d39188",
+            "size_bytes": 131584,
+            "owner": "ufg"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp_parenthook.dll",
+            "kind": "file",
+            "sha256": "9191782a7525e3cc3de18c666f5d7494740ae36ee255829cf1105641a94723ed",
+            "size_bytes": 134656,
+            "owner": "agp_managed"
+          },
+          {
+            "relative_path": "awow_ufg_dxcompiler_loader.log",
+            "kind": "file",
+            "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "size_bytes": 1200,
+            "owner": "ufg"
+          },
+          {
+            "relative_path": "awow_ufg.log",
+            "kind": "file",
+            "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "size_bytes": 2100,
+            "owner": "ufg"
+          }
+        ],
+        "state_file": "absent"
+      },
+      "confirmation_response": "CONVERT_UFG_TO_AGP",
+      "expected": {
+        "classification": "recognized_ufg",
+        "decision": "proceed",
+        "next_state": "managed_agp",
+        "writes": [
+          {
+            "relative_path": "dxcompiler.dll",
+            "action": "replace"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp_parenthook.dll",
+            "action": "create"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp-install-state.json",
+            "action": "create"
+          }
+        ],
+        "preserves": [
+          {
+            "relative_path": "dxcompiler_original.dll",
+            "action": "preserve"
+          }
+        ],
+        "quarantines": [
+          {
+            "relative_path": "AWOW Universal Female Generation",
+            "action": "quarantine"
+          },
+          {
+            "relative_path": "awow_ufg_dxcompiler_loader.log",
+            "action": "quarantine"
+          },
+          {
+            "relative_path": "awow_ufg.log",
+            "action": "quarantine"
+          }
+        ],
+        "removes": [
+          {
+            "relative_path": "AWOW Universal Female Generation",
+            "action": "remove"
+          },
+          {
+            "relative_path": "awow_ufg_dxcompiler_loader.log",
+            "action": "remove"
+          },
+          {
+            "relative_path": "awow_ufg.log",
+            "action": "remove"
+          }
+        ],
+        "rollback": {
+          "required": true,
+          "committed_state": false,
+          "restores": [
+            "AWOW Universal Female Generation",
+            "awow_ufg_dxcompiler_loader.log",
+            "awow_ufg.log",
+            "dxcompiler.dll"
+          ]
+        },
+        "reason": "Foreign recursive removal is authorized only for the recognized AWOW UFG seed and occurs after AGP verification/commit."
+      }
+    },
+    {
+      "id": "unknown-conflict-requires-confirmation",
+      "description": "An unrecognized replacement and payload are never overwritten without the exact typed override.",
+      "operation": "install",
+      "initial": {
+        "target_root_kind": "fixture_binaries",
+        "classification_hint": "unknown_conflicting",
+        "ck3_running": false,
+        "target_is_reparse": false,
+        "ancestor_is_reparse": false,
+        "files": [
+          {
+            "relative_path": "dxcompiler.dll",
+            "kind": "file",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "size_bytes": 55555,
+            "owner": "unknown"
+          },
+          {
+            "relative_path": "dxcompiler_original.dll",
+            "kind": "file",
+            "sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+            "size_bytes": 20291584,
+            "owner": "steam"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp_parenthook.dll",
+            "kind": "file",
+            "sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+            "size_bytes": 44444,
+            "owner": "unknown"
+          }
+        ],
+        "state_file": "absent"
+      },
+      "confirmation_response": null,
+      "expected": {
+        "classification": "unknown_conflicting",
+        "decision": "reject",
+        "next_state": "unknown_conflicting",
+        "writes": [],
+        "preserves": [
+          {
+            "relative_path": "dxcompiler.dll",
+            "action": "preserve"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp_parenthook.dll",
+            "action": "preserve"
+          }
+        ],
+        "quarantines": [],
+        "removes": [],
+        "rollback": {
+          "required": false,
+          "committed_state": false,
+          "restores": []
+        },
+        "reason": "Unknown bytes are a hard confirmation boundary; no typed override means no mutation."
+      }
+    },
+    {
+      "id": "unknown-conflict-confirmed-preservation",
+      "description": "With the exact override, every displaced unknown file is quarantined with its original hash before AGP is installed.",
+      "operation": "install",
+      "initial": {
+        "target_root_kind": "fixture_binaries",
+        "classification_hint": "unknown_conflicting",
+        "ck3_running": false,
+        "target_is_reparse": false,
+        "ancestor_is_reparse": false,
+        "files": [
+          {
+            "relative_path": "dxcompiler.dll",
+            "kind": "file",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "size_bytes": 55555,
+            "owner": "unknown"
+          },
+          {
+            "relative_path": "dxcompiler_original.dll",
+            "kind": "file",
+            "sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+            "size_bytes": 20291584,
+            "owner": "steam"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp_parenthook.dll",
+            "kind": "file",
+            "sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+            "size_bytes": 44444,
+            "owner": "unknown"
+          }
+        ],
+        "state_file": "absent"
+      },
+      "confirmation_response": "I_UNDERSTAND_UNKNOWN_CONFLICT",
+      "expected": {
+        "classification": "unknown_conflicting",
+        "decision": "proceed",
+        "next_state": "managed_agp",
+        "writes": [
+          {
+            "relative_path": "dxcompiler.dll",
+            "action": "replace"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp_parenthook.dll",
+            "action": "replace"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp-install-state.json",
+            "action": "create"
+          }
+        ],
+        "preserves": [
+          {
+            "relative_path": "dxcompiler_original.dll",
+            "action": "preserve"
+          }
+        ],
+        "quarantines": [
+          {
+            "relative_path": "dxcompiler.dll",
+            "action": "quarantine"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp_parenthook.dll",
+            "action": "quarantine"
+          }
+        ],
+        "removes": [],
+        "rollback": {
+          "required": true,
+          "committed_state": false,
+          "restores": [
+            "dxcompiler.dll",
+            "AGP Native Hook/agp_parenthook.dll"
+          ]
+        },
+        "reason": "The typed override authorizes replacement only after lossless quarantine and hash journaling of each unknown path."
+      }
+    },
+    {
+      "id": "steam-update-prompts-before-rebaseline",
+      "description": "A precisely recognized Steam update prompts before replacing the stale state-recorded original backup.",
+      "operation": "install",
+      "initial": {
+        "target_root_kind": "fixture_binaries",
+        "classification_hint": "steam_updated",
+        "ck3_running": false,
+        "target_is_reparse": false,
+        "ancestor_is_reparse": false,
+        "files": [
+          {
+            "relative_path": "dxcompiler.dll",
+            "kind": "file",
+            "sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+            "size_bytes": 20291584,
+            "owner": "steam"
+          },
+          {
+            "relative_path": "dxcompiler_original.dll",
+            "kind": "file",
+            "sha256": "9999999999999999999999999999999999999999999999999999999999999999",
+            "size_bytes": 20291584,
+            "owner": "unknown"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp_parenthook.dll",
+            "kind": "file",
+            "sha256": "9191782a7525e3cc3de18c666f5d7494740ae36ee255829cf1105641a94723ed",
+            "size_bytes": 134656,
+            "owner": "agp_managed"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp-install-state.json",
+            "kind": "file",
+            "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "size_bytes": 1900,
+            "owner": "agp_managed"
+          }
+        ],
+        "state_file": "drifted"
+      },
+      "confirmation_response": null,
+      "expected": {
+        "classification": "steam_updated",
+        "decision": "abort",
+        "next_state": "steam_updated",
+        "writes": [],
+        "preserves": [
+          {
+            "relative_path": "dxcompiler.dll",
+            "action": "preserve"
+          },
+          {
+            "relative_path": "dxcompiler_original.dll",
+            "action": "preserve"
+          }
+        ],
+        "quarantines": [],
+        "removes": [],
+        "rollback": {
+          "required": false,
+          "committed_state": false,
+          "restores": []
+        },
+        "reason": "The exact Steam-update seed is recognized, but the stale original is not replaced without ACCEPT_STEAM_UPDATE."
+      }
+    },
+    {
+      "id": "steam-update-confirmed-rebaseline",
+      "description": "The accepted Steam update quarantines the stale recorded original, renames the newly supported active original, and then installs AGP.",
+      "operation": "install",
+      "initial": {
+        "target_root_kind": "fixture_binaries",
+        "classification_hint": "steam_updated",
+        "ck3_running": false,
+        "target_is_reparse": false,
+        "ancestor_is_reparse": false,
+        "files": [
+          {
+            "relative_path": "dxcompiler.dll",
+            "kind": "file",
+            "sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+            "size_bytes": 20291584,
+            "owner": "steam"
+          },
+          {
+            "relative_path": "dxcompiler_original.dll",
+            "kind": "file",
+            "sha256": "9999999999999999999999999999999999999999999999999999999999999999",
+            "size_bytes": 20290000,
+            "owner": "unknown"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp_parenthook.dll",
+            "kind": "file",
+            "sha256": "9191782a7525e3cc3de18c666f5d7494740ae36ee255829cf1105641a94723ed",
+            "size_bytes": 134656,
+            "owner": "agp_managed"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp-install-state.json",
+            "kind": "file",
+            "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "size_bytes": 1900,
+            "owner": "agp_managed"
+          }
+        ],
+        "state_file": "drifted"
+      },
+      "confirmation_response": "ACCEPT_STEAM_UPDATE",
+      "expected": {
+        "classification": "steam_updated",
+        "decision": "proceed",
+        "next_state": "managed_agp",
+        "writes": [
+          {
+            "relative_path": "dxcompiler_original.dll",
+            "action": "rename_from_dxcompiler"
+          },
+          {
+            "relative_path": "dxcompiler.dll",
+            "action": "replace"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp_parenthook.dll",
+            "action": "replace"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp-install-state.json",
+            "action": "replace"
+          }
+        ],
+        "preserves": [
+          {
+            "relative_path": "dxcompiler.dll",
+            "action": "verify_only"
+          },
+          {
+            "relative_path": "ck3.exe",
+            "action": "preserve"
+          }
+        ],
+        "quarantines": [
+          {
+            "relative_path": "dxcompiler_original.dll",
+            "action": "quarantine"
+          }
+        ],
+        "removes": [],
+        "rollback": {
+          "required": true,
+          "committed_state": false,
+          "restores": [
+            "dxcompiler.dll",
+            "dxcompiler_original.dll",
+            "AGP Native Hook/agp_parenthook.dll",
+            "AGP Native Hook/agp-install-state.json"
+          ]
+        },
+        "reason": "The confirmation authorizes replacing only the stale recorded original; the newly supported Steam bytes become the canonical restore baseline."
+      }
+    },
+    {
+      "id": "managed-uninstall-restores-original",
+      "description": "A hash-matching managed installation restores the original compiler, removes the exact AGP logs, and preserves unknown AGP Native Hook contents.",
+      "operation": "uninstall",
+      "initial": {
+        "target_root_kind": "fixture_binaries",
+        "classification_hint": "managed_agp",
+        "ck3_running": false,
+        "target_is_reparse": false,
+        "ancestor_is_reparse": false,
+        "files": [
+          {
+            "relative_path": "dxcompiler.dll",
+            "kind": "file",
+            "sha256": "9a772457da46608dc0e05a6881318cc9663d94cd91513ece0861ae55b8ca6b5d",
+            "size_bytes": 108032,
+            "owner": "agp_managed"
+          },
+          {
+            "relative_path": "dxcompiler_original.dll",
+            "kind": "file",
+            "sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+            "size_bytes": 20291584,
+            "owner": "steam"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp_parenthook.dll",
+            "kind": "file",
+            "sha256": "9191782a7525e3cc3de18c666f5d7494740ae36ee255829cf1105641a94723ed",
+            "size_bytes": 134656,
+            "owner": "agp_managed"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp-install-state.json",
+            "kind": "file",
+            "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "size_bytes": 1900,
+            "owner": "agp_managed"
+          },
+          {
+            "relative_path": "agp_dxcompiler_loader.log",
+            "kind": "file",
+            "sha256": "d9de9ec39cc90d51fb8ef8134a3200f97f1bd24fdcdc15e99747460766b766d4",
+            "size_bytes": 3160,
+            "owner": "agp_managed"
+          },
+          {
+            "relative_path": "agp_parenthook.log",
+            "kind": "file",
+            "sha256": "264c220b3da08fcf7e286920e9d438cf691eaa2d5b6b4065e7d11006d9673be3",
+            "size_bytes": 26800,
+            "owner": "agp_managed"
+          },
+          {
+            "relative_path": "AGP Native Hook/unknown-not-owned.bin",
+            "kind": "file",
+            "sha256": "1212121212121212121212121212121212121212121212121212121212121212",
+            "size_bytes": 1212,
+            "owner": "unknown"
+          }
+        ],
+        "state_file": "valid"
+      },
+      "confirmation_response": null,
+      "expected": {
+        "classification": "managed_agp",
+        "decision": "proceed",
+        "next_state": "known_clean",
+        "writes": [
+          {
+            "relative_path": "dxcompiler.dll",
+            "action": "restore"
+          }
+        ],
+        "preserves": [
+          {
+            "relative_path": "AGP Native Hook/unknown-not-owned.bin",
+            "action": "preserve"
+          }
+        ],
+        "quarantines": [],
+        "removes": [
+          {
+            "relative_path": "AGP Native Hook/agp_parenthook.dll",
+            "action": "remove"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp-install-state.json",
+            "action": "remove"
+          },
+          {
+            "relative_path": "agp_dxcompiler_loader.log",
+            "action": "remove"
+          },
+          {
+            "relative_path": "agp_parenthook.log",
+            "action": "remove"
+          },
+          {
+            "relative_path": "dxcompiler_original.dll",
+            "action": "remove"
+          }
+        ],
+        "rollback": {
+          "required": true,
+          "committed_state": false,
+          "restores": [
+            "dxcompiler.dll",
+            "dxcompiler_original.dll",
+            "AGP Native Hook/agp_parenthook.dll",
+            "AGP Native Hook/agp-install-state.json"
+          ]
+        },
+        "reason": "Only exact hash-matching managed files are removed; the preserved Steam compiler is hash-checked before restoration."
+      }
+    },
+    {
+      "id": "managed-drift-uninstall-requires-override",
+      "description": "A changed payload is unknown on uninstall; the typed unknown-hash override is required before quarantine/removal.",
+      "operation": "uninstall",
+      "initial": {
+        "target_root_kind": "fixture_binaries",
+        "classification_hint": "unknown_conflicting",
+        "ck3_running": false,
+        "target_is_reparse": false,
+        "ancestor_is_reparse": false,
+        "files": [
+          {
+            "relative_path": "dxcompiler.dll",
+            "kind": "file",
+            "sha256": "9a772457da46608dc0e05a6881318cc9663d94cd91513ece0861ae55b8ca6b5d",
+            "size_bytes": 108032,
+            "owner": "agp_managed"
+          },
+          {
+            "relative_path": "dxcompiler_original.dll",
+            "kind": "file",
+            "sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+            "size_bytes": 20291584,
+            "owner": "steam"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp_parenthook.dll",
+            "kind": "file",
+            "sha256": "9999999999999999999999999999999999999999999999999999999999999999",
+            "size_bytes": 134656,
+            "owner": "unknown"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp-install-state.json",
+            "kind": "file",
+            "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "size_bytes": 1900,
+            "owner": "agp_managed"
+          }
+        ],
+        "state_file": "valid"
+      },
+      "confirmation_response": null,
+      "expected": {
+        "classification": "unknown_conflicting",
+        "decision": "abort",
+        "next_state": "unknown_conflicting",
+        "writes": [],
+        "preserves": [
+          {
+            "relative_path": "AGP Native Hook/agp_parenthook.dll",
+            "action": "preserve"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp-install-state.json",
+            "action": "preserve"
+          }
+        ],
+        "quarantines": [],
+        "removes": [],
+        "rollback": {
+          "required": false,
+          "committed_state": false,
+          "restores": []
+        },
+        "reason": "A payload hash mismatch defeats ownership proof; without I_UNDERSTAND_UNKNOWN_CONFLICT uninstall performs no mutation."
+      }
+    },
+    {
+      "id": "managed-drift-uninstall-confirmed-quarantine",
+      "description": "The unknown-hash uninstall override quarantines the changed payload before removing the exact AGP paths and logs.",
+      "operation": "uninstall",
+      "initial": {
+        "target_root_kind": "fixture_binaries",
+        "classification_hint": "unknown_conflicting",
+        "ck3_running": false,
+        "target_is_reparse": false,
+        "ancestor_is_reparse": false,
+        "files": [
+          {
+            "relative_path": "dxcompiler.dll",
+            "kind": "file",
+            "sha256": "9a772457da46608dc0e05a6881318cc9663d94cd91513ece0861ae55b8ca6b5d",
+            "size_bytes": 108032,
+            "owner": "agp_managed"
+          },
+          {
+            "relative_path": "dxcompiler_original.dll",
+            "kind": "file",
+            "sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+            "size_bytes": 20291584,
+            "owner": "steam"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp_parenthook.dll",
+            "kind": "file",
+            "sha256": "9999999999999999999999999999999999999999999999999999999999999999",
+            "size_bytes": 134656,
+            "owner": "unknown"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp-install-state.json",
+            "kind": "file",
+            "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "size_bytes": 1900,
+            "owner": "agp_managed"
+          },
+          {
+            "relative_path": "agp_dxcompiler_loader.log",
+            "kind": "file",
+            "sha256": "d9de9ec39cc90d51fb8ef8134a3200f97f1bd24fdcdc15e99747460766b766d4",
+            "size_bytes": 3160,
+            "owner": "agp_managed"
+          },
+          {
+            "relative_path": "agp_parenthook.log",
+            "kind": "file",
+            "sha256": "264c220b3da08fcf7e286920e9d438cf691eaa2d5b6b4065e7d11006d9673be3",
+            "size_bytes": 26800,
+            "owner": "agp_managed"
+          }
+        ],
+        "state_file": "valid"
+      },
+      "confirmation_response": "I_UNDERSTAND_UNKNOWN_CONFLICT",
+      "expected": {
+        "classification": "unknown_conflicting",
+        "decision": "proceed",
+        "next_state": "known_clean",
+        "writes": [
+          {
+            "relative_path": "dxcompiler.dll",
+            "action": "restore"
+          }
+        ],
+        "preserves": [],
+        "quarantines": [
+          {
+            "relative_path": "AGP Native Hook/agp_parenthook.dll",
+            "action": "quarantine"
+          }
+        ],
+        "removes": [
+          {
+            "relative_path": "AGP Native Hook/agp-install-state.json",
+            "action": "remove"
+          },
+          {
+            "relative_path": "agp_dxcompiler_loader.log",
+            "action": "remove"
+          },
+          {
+            "relative_path": "agp_parenthook.log",
+            "action": "remove"
+          },
+          {
+            "relative_path": "dxcompiler_original.dll",
+            "action": "remove"
+          }
+        ],
+        "rollback": {
+          "required": true,
+          "committed_state": false,
+          "restores": [
+            "dxcompiler.dll",
+            "dxcompiler_original.dll",
+            "AGP Native Hook/agp_parenthook.dll",
+            "AGP Native Hook/agp-install-state.json"
+          ]
+        },
+        "reason": "The explicit override authorizes removal only after the foreign payload is preserved losslessly in quarantine."
+      }
+    },
+    {
+      "id": "ck3-running-preflight-reject",
+      "description": "No mutation occurs while ck3.exe is running, even when the target otherwise matches a clean seed.",
+      "operation": "install",
+      "initial": {
+        "target_root_kind": "fixture_binaries",
+        "classification_hint": "known_clean",
+        "ck3_running": true,
+        "target_is_reparse": false,
+        "ancestor_is_reparse": false,
+        "files": [
+          {
+            "relative_path": "ck3.exe",
+            "kind": "file",
+            "sha256": "2d00ff3101ef70b566f2fcbae292f09263199c80e9dc8f139b82d7d96f83db86",
+            "size_bytes": 95206008,
+            "owner": "steam"
+          },
+          {
+            "relative_path": "dxcompiler.dll",
+            "kind": "file",
+            "sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+            "size_bytes": 20291584,
+            "owner": "steam"
+          }
+        ],
+        "state_file": "absent"
+      },
+      "confirmation_response": null,
+      "expected": {
+        "classification": "known_clean",
+        "decision": "reject",
+        "next_state": "known_clean",
+        "writes": [],
+        "preserves": [],
+        "quarantines": [],
+        "removes": [],
+        "rollback": {
+          "required": false,
+          "committed_state": false,
+          "restores": []
+        },
+        "reason": "The ck3_not_running guard is evaluated before staging or mutation."
+      }
+    },
+    {
+      "id": "reparse-target-preflight-reject",
+      "description": "A reparse-point target is rejected before any path is opened for mutation.",
+      "operation": "install",
+      "initial": {
+        "target_root_kind": "fixture_binaries",
+        "classification_hint": "known_clean",
+        "ck3_running": false,
+        "target_is_reparse": true,
+        "ancestor_is_reparse": false,
+        "files": [],
+        "state_file": "absent"
+      },
+      "confirmation_response": null,
+      "expected": {
+        "classification": "known_clean",
+        "decision": "reject",
+        "next_state": "known_clean",
+        "writes": [],
+        "preserves": [],
+        "quarantines": [],
+        "removes": [],
+        "rollback": {
+          "required": false,
+          "committed_state": false,
+          "restores": []
+        },
+        "reason": "Target and ancestor reparse checks are mandatory containment guards."
+      }
+    },
+    {
+      "id": "write-failure-rolls-back",
+      "description": "A simulated artifact write failure leaves no committed state and restores the clean baseline.",
+      "operation": "install",
+      "initial": {
+        "target_root_kind": "fixture_binaries",
+        "classification_hint": "known_clean",
+        "ck3_running": false,
+        "target_is_reparse": false,
+        "ancestor_is_reparse": false,
+        "files": [
+          {
+            "relative_path": "ck3.exe",
+            "kind": "file",
+            "sha256": "2d00ff3101ef70b566f2fcbae292f09263199c80e9dc8f139b82d7d96f83db86",
+            "size_bytes": 95206008,
+            "owner": "steam"
+          },
+          {
+            "relative_path": "dxcompiler.dll",
+            "kind": "file",
+            "sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+            "size_bytes": 20291584,
+            "owner": "steam"
+          }
+        ],
+        "state_file": "absent",
+        "write_fault_at": "AGP Native Hook/agp_parenthook.dll"
+      },
+      "confirmation_response": null,
+      "expected": {
+        "classification": "known_clean",
+        "decision": "rollback",
+        "next_state": "known_clean",
+        "writes": [
+          {
+            "relative_path": "dxcompiler.dll",
+            "action": "replace"
+          },
+          {
+            "relative_path": "AGP Native Hook/agp_parenthook.dll",
+            "action": "create"
+          }
+        ],
+        "preserves": [
+          {
+            "relative_path": "ck3.exe",
+            "action": "preserve"
+          }
+        ],
+        "quarantines": [],
+        "removes": [
+          {
+            "relative_path": "AGP Native Hook/agp_parenthook.dll",
+            "action": "remove"
+          }
+        ],
+        "rollback": {
+          "required": true,
+          "committed_state": false,
+          "restores": [
+            "dxcompiler.dll"
+          ]
+        },
+        "reason": "The journal must roll back partial writes and never publish install state after a failed verify."
+      }
+    }
+  ]
+}

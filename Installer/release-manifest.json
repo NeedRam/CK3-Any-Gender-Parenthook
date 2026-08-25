@@ -1,0 +1,384 @@
+{
+  "$schema": "./spec/release-manifest.schema.json",
+  "schema_version": 1,
+  "kind": "agp_release_manifest",
+  "release": {
+    "id": "agp",
+    "version": "1.0.0",
+    "channel": "draft",
+    "unsigned": true,
+    "source_repo": "https://github.com/NeedRam/CK3-Any-Gender-Parenthook",
+    "license": "MIT"
+  },
+  "target": {
+    "platform": "windows",
+    "architecture": "x64",
+    "steam_app_id": 1158310,
+    "game_id": "crusader_kings_iii",
+    "supported_builds": [
+      {
+        "id": "1.19.0.6",
+        "executable_sha256": "2d00ff3101ef70b566f2fcbae292f09263199c80e9dc8f139b82d7d96f83db86",
+        "original_dxcompiler_sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+        "notes": "The native payload currently targets this CK3 executable build; the executable hash is a compatibility gate, not a download instruction."
+      }
+    ],
+    "binaries_relative_path": "binaries",
+    "executable_relative_path": "ck3.exe",
+    "active_dxcompiler_relative_path": "dxcompiler.dll",
+    "original_dxcompiler_relative_path": "dxcompiler_original.dll",
+    "state_relative_path": "AGP Native Hook/agp-install-state.json",
+    "journal_relative_directory": "AGP Native Hook/.agp-journal",
+    "quarantine_relative_directory": "AGP Native Hook/.agp-quarantine",
+    "logs": [
+      {
+        "relative_path": "agp_dxcompiler_loader.log",
+        "owner": "agp_runtime",
+        "uninstall_policy": "remove"
+      },
+      {
+        "relative_path": "agp_parenthook.log",
+        "owner": "agp_runtime",
+        "uninstall_policy": "remove"
+      },
+      {
+        "relative_path": "awow_ufg_dxcompiler_loader.log",
+        "owner": "foreign_ufg",
+        "uninstall_policy": "remove_only_during_ufg_conversion"
+      },
+      {
+        "relative_path": "awow_ufg.log",
+        "owner": "foreign_ufg",
+        "uninstall_policy": "remove_only_during_ufg_conversion"
+      }
+    ]
+  },
+  "package": {
+    "id": "agp-v1.0.0-win-x64",
+    "manifest_relative_path": "Installer/release-manifest.json",
+    "managed_files": [
+      {
+        "relative_path": "dxcompiler.dll",
+        "role": "agp_proxy",
+        "required": true,
+        "phase": 1,
+        "artifact_id": "agp-proxy"
+      },
+      {
+        "relative_path": "AGP Native Hook/agp_parenthook.dll",
+        "role": "agp_payload",
+        "required": true,
+        "phase": 1,
+        "artifact_id": "agp-payload"
+      }
+    ],
+    "preserved_files": [
+      {
+        "relative_path": "dxcompiler_original.dll",
+        "owner": "steam",
+        "install_policy": "rename_active_to_original_if_absent",
+        "uninstall_policy": "restore_to_active_name_after_hash_check"
+      }
+    ],
+    "diagnostic_files": [
+      "agp_dxcompiler_loader.log",
+      "agp_parenthook.log"
+    ],
+    "forbidden_paths": [
+      "Native Hook/native_test_mod",
+      "AGP Dynastic Priority",
+      "Native Hook/src",
+      "Native Hook/tools",
+      "script_docs 1.19.0.6",
+      ".git",
+      "Lunacy"
+    ],
+    "entrypoints": [
+      {
+        "relative_path": "Installer/install.bat",
+        "role": "bat_entrypoint",
+        "required": true,
+        "phase": 2
+      },
+      {
+        "relative_path": "Installer/uninstall.bat",
+        "role": "bat_entrypoint",
+        "required": true,
+        "phase": 2
+      },
+      {
+        "relative_path": "Installer/install.ps1",
+        "role": "powershell_engine",
+        "required": true,
+        "phase": 2
+      },
+      {
+        "relative_path": "Installer/uninstall.ps1",
+        "role": "powershell_engine",
+        "required": true,
+        "phase": 2
+      },
+      {
+        "relative_path": "Installer/AGPInstaller.exe",
+        "role": "exe_frontend",
+        "required": true,
+        "phase": 2
+      },
+      {
+        "relative_path": "Installer/AGPUninstaller.exe",
+        "role": "exe_frontend",
+        "required": true,
+        "phase": 2
+      },
+      {
+        "relative_path": "Installer/python",
+        "role": "python_engine",
+        "required": true,
+        "phase": 2
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "id": "agp-proxy",
+      "relative_path": "dxcompiler.dll",
+      "role": "agp_proxy",
+      "sha256": "24455f77bb877a80f80f09c004e86a1fc8058e986a36f8b00fc5dbffc825c0b0",
+      "size_bytes": 109568,
+      "size_is_informational": true,
+      "source_relative_path": "Native Hook/build/dxcompiler.dll"
+    },
+    {
+      "id": "agp-payload",
+      "relative_path": "AGP Native Hook/agp_parenthook.dll",
+      "role": "agp_payload",
+      "sha256": "388a2024e58e9bff884e70e2e3fdf4af12651b94dff0f142da200bfc70d14b6e",
+      "size_bytes": 135680,
+      "size_is_informational": true,
+      "source_relative_path": "Native Hook/build/AGP Native Hook/agp_parenthook.dll"
+    }
+  ],
+  "compatibility": {
+    "seed_schema_version": 1,
+    "seeds": [
+      {
+        "id": "steam-ck3-1.19.0.6-clean",
+        "state": "known_clean",
+        "confidence": "exact_hash",
+        "match": {
+          "state_file": "absent",
+          "required_files": [
+            {
+              "relative_path": "ck3.exe",
+              "kind": "file",
+              "sha256": "2d00ff3101ef70b566f2fcbae292f09263199c80e9dc8f139b82d7d96f83db86",
+              "size_bytes": 95206008
+            },
+            {
+              "relative_path": "dxcompiler.dll",
+              "kind": "file",
+              "sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+              "size_bytes": 20291584
+            }
+          ],
+          "required_paths": [],
+          "absent_paths": [
+            "dxcompiler_original.dll",
+            "AGP Native Hook/agp-install-state.json"
+          ]
+        },
+        "description": "Steam CK3 1.19.0.6 clean binaries observed on the maintainer machine."
+      },
+      {
+        "id": "agp-legacy-repo-build-2026-08-09",
+        "state": "legacy_agp",
+        "confidence": "exact_hash",
+        "match": {
+          "state_file": "absent",
+          "required_files": [
+            {
+              "relative_path": "dxcompiler.dll",
+              "kind": "file",
+              "sha256": "9a772457da46608dc0e05a6881318cc9663d94cd91513ece0861ae55b8ca6b5d",
+              "size_bytes": 108032
+            },
+            {
+              "relative_path": "dxcompiler_original.dll",
+              "kind": "file",
+              "sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+              "size_bytes": 20291584
+            },
+            {
+              "relative_path": "AGP Native Hook/agp_parenthook.dll",
+              "kind": "file",
+              "sha256": "9191782a7525e3cc3de18c666f5d7494740ae36ee255829cf1105641a94723ed",
+              "size_bytes": 134656
+            }
+          ],
+          "required_paths": [],
+          "absent_paths": [
+            "AGP Native Hook/agp-install-state.json"
+          ]
+        },
+        "description": "AGP build output in the repository when copied manually without a schema-v1 state file."
+      },
+      {
+        "id": "agp-v1.0.0-manual-layout",
+        "state": "legacy_agp",
+        "confidence": "exact_hash",
+        "match": {
+          "state_file": "absent",
+          "required_files": [
+            {
+              "relative_path": "dxcompiler.dll",
+              "kind": "file",
+              "sha256": "24455f77bb877a80f80f09c004e86a1fc8058e986a36f8b00fc5dbffc825c0b0",
+              "size_bytes": 109568
+            },
+            {
+              "relative_path": "dxcompiler_original.dll",
+              "kind": "file",
+              "sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+              "size_bytes": 20291584
+            },
+            {
+              "relative_path": "AGP Native Hook/agp_parenthook.dll",
+              "kind": "file",
+              "sha256": "388a2024e58e9bff884e70e2e3fdf4af12651b94dff0f142da200bfc70d14b6e",
+              "size_bytes": 135680
+            }
+          ],
+          "required_paths": [],
+          "absent_paths": [
+            "AGP Native Hook/agp-install-state.json"
+          ]
+        },
+        "description": "Unsigned AGP v1.0.0 deterministic build copied manually without schema-v1 state."
+      },
+      {
+        "id": "awow-ufg-recognized-layout-2026-08-13",
+        "state": "recognized_ufg",
+        "confidence": "exact_hash",
+        "match": {
+          "state_file": "absent",
+          "required_files": [
+            {
+              "relative_path": "dxcompiler.dll",
+              "kind": "file",
+              "sha256": "7902c42b07581f90aebf94910553849aa8deeeaa07908df8f15b01e3250d09fc",
+              "size_bytes": 135168
+            },
+            {
+              "relative_path": "dxcompiler_original.dll",
+              "kind": "file",
+              "sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+              "size_bytes": 20291584
+            },
+            {
+              "relative_path": "AWOW Universal Female Generation/awow_ufg.dll",
+              "kind": "file",
+              "sha256": "466295aa3dc8bf345864b847728bd300b54c66a433d6bc886774d1ed66d39188",
+              "size_bytes": 131584
+            },
+            {
+              "relative_path": "AGP Native Hook/agp_parenthook.dll",
+              "kind": "file",
+              "sha256": "9191782a7525e3cc3de18c666f5d7494740ae36ee255829cf1105641a94723ed",
+              "size_bytes": 134656
+            }
+          ],
+          "required_paths": [
+            {
+              "relative_path": "AWOW Universal Female Generation",
+              "kind": "directory"
+            }
+          ],
+          "absent_paths": [
+            "AGP Native Hook/agp-install-state.json"
+          ]
+        },
+        "description": "The observed AWOW UFG chained loader: exact proxy, canonical original, AWOW payload folder/payload, and coexisting AGP payload."
+      },
+      {
+        "id": "agp-managed-state-v1",
+        "state": "managed_agp",
+        "confidence": "derived_from_state",
+        "match": {
+          "state_file": "valid",
+          "required_files": [],
+          "required_paths": [
+            {
+              "relative_path": "AGP Native Hook/agp-install-state.json",
+              "kind": "path_marker"
+            },
+            {
+              "relative_path": "dxcompiler.dll",
+              "kind": "path_marker"
+            },
+            {
+              "relative_path": "AGP Native Hook/agp_parenthook.dll",
+              "kind": "path_marker"
+            }
+          ],
+          "absent_paths": []
+        },
+        "description": "A valid state plus exact hash/ownership verification of every managed file."
+      },
+      {
+        "id": "steam-updated-managed-state-v1",
+        "state": "steam_updated",
+        "confidence": "exact_hash",
+        "match": {
+          "state_file": "present_but_drifted",
+          "required_files": [
+            {
+              "relative_path": "dxcompiler.dll",
+              "kind": "file",
+              "sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+              "size_bytes": 20291584
+            }
+          ],
+          "required_paths": [
+            {
+              "relative_path": "AGP Native Hook/agp-install-state.json",
+              "kind": "path_marker"
+            }
+          ],
+          "absent_paths": []
+        },
+        "description": "A valid state records an older original backup while the active path now matches the newly supported Steam original hash; prompt before replacing the stale backup."
+      }
+    ],
+    "fallback_state": "unknown_conflicting"
+  },
+  "safety": {
+    "preflight_guards": [
+      "ck3_not_running",
+      "target_is_existing_directory",
+      "target_is_not_reparse_point",
+      "target_ancestors_are_not_reparse_points",
+      "all_manifest_paths_are_relative_and_contained",
+      "state_and_journal_are_schema_valid",
+      "all_hashes_are_read_before_mutation",
+      "active_and_original_dxcompiler_are_distinct_paths"
+    ],
+    "in_place_upgrade_confirmation": "UPGRADE_AGP_IN_PLACE",
+    "steam_update_confirmation": "ACCEPT_STEAM_UPDATE",
+    "unknown_conflict_confirmation": "I_UNDERSTAND_UNKNOWN_CONFLICT",
+    "ufg_conversion_confirmation": "CONVERT_UFG_TO_AGP",
+    "never_overwrite_on_install": [
+      "ck3.exe",
+      "dxcompiler_original.dll"
+    ],
+    "ufg_cleanup": {
+      "foreign_payload_directory": "AWOW Universal Female Generation",
+      "foreign_logs": [
+        "awow_ufg.log",
+        "awow_ufg_dxcompiler_loader.log"
+      ],
+      "recognition": "recognized_awow_ufg_seed_only",
+      "transaction": "quarantine_then_remove_after_agp_commit",
+      "uninstall_policy": "do_not_restore_awow_ufg"
+    }
+  }
+}
