@@ -57,7 +57,7 @@ jobs:
 
       - name: Build native x64 payload
         shell: pwsh
-        run: .\Native Hook\build.ps1 -Clean
+        run: "& '.\\Native Hook\\build.ps1' -Clean"
 
       - name: Run installer contract and transition tests
         shell: pwsh
