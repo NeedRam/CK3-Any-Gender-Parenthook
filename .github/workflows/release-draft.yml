@@ -56,7 +56,7 @@ jobs:
           }
 
       - name: Build native x64 payload
-        shell: pwsh
+        shell: powershell
         run: "& '.\\Native Hook\\build.ps1' -Clean"
 
       - name: Run installer contract and transition tests

@@ -57,10 +57,26 @@ function Invoke-VsCommand {
 		[string]$CommandLine
 	)
 
-	$fullCommand = "call `"$DeveloperCommand`" -arch=x64 -host_arch=x64 && $CommandLine"
-	& cmd.exe /d /s /c $fullCommand
-	if ($LASTEXITCODE -ne 0) {
-		throw "Native compiler command failed with exit code $LASTEXITCODE."
+	# PowerShell 7 uses different native-argument quoting from Windows
+	# PowerShell. A short command file keeps the Visual Studio environment and
+	# the compiler invocation identical on both local and GitHub runners.
+	$commandFile = Join-Path ([System.IO.Path]::GetTempPath()) ("agp-native-build-{0}.cmd" -f [Guid]::NewGuid().ToString('N'))
+	$contents = @(
+		'@echo off',
+		("call `"{0}`" -arch=x64 -host_arch=x64" -f $DeveloperCommand),
+		'if errorlevel 1 exit /b %errorlevel%',
+		$CommandLine
+	) -join "`r`n"
+	[System.IO.File]::WriteAllText($commandFile, $contents + "`r`n", [System.Text.Encoding]::ASCII)
+	try {
+		& $env:ComSpec /d /c $commandFile
+		$exitCode = $LASTEXITCODE
+	}
+	finally {
+		Remove-Item -LiteralPath $commandFile -Force -ErrorAction SilentlyContinue
+	}
+	if ($exitCode -ne 0) {
+		throw "Native compiler command failed with exit code $exitCode."
 	}
 }
 
