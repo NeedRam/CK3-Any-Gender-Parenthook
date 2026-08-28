@@ -69,6 +69,7 @@ jobs:
           Write-Host $testOutput
           [System.IO.File]::WriteAllText((Join-Path $env:RUNNER_TEMP 'agp-installer-tests.txt'), $testOutput)
           "exit_code=$testExit" >> $env:GITHUB_OUTPUT
+          exit 0
 
       - name: Publish installer test diagnostics
         if: steps.installer_tests.outputs.exit_code != '0'
