@@ -13,6 +13,7 @@ on:
 
 permissions:
   contents: write
+  checks: write
   id-token: write
   attestations: write
   artifact-metadata: write
@@ -60,19 +61,43 @@ jobs:
         run: "& '.\\Native Hook\\build.ps1' -Clean"
 
       - name: Run installer contract and transition tests
+        id: installer_tests
         shell: powershell
         run: |
           $testOutput = (& python -m unittest discover -s Installer/python/tests -q 2>&1 | Out-String)
           $testExit = $LASTEXITCODE
           Write-Host $testOutput
-          if ($testExit -ne 0) {
-            if ($testOutput.Length -gt 6000) {
-              $testOutput = $testOutput.Substring($testOutput.Length - 6000)
-            }
-            $annotation = $testOutput.Replace('%', '%25').Replace("`r", '%0D').Replace("`n", '%0A')
-            Write-Output "::error file=Installer/python/tests,title=Installer test failure::$annotation"
-            exit $testExit
+          [System.IO.File]::WriteAllText((Join-Path $env:RUNNER_TEMP 'agp-installer-tests.txt'), $testOutput)
+          "exit_code=$testExit" >> $env:GITHUB_OUTPUT
+
+      - name: Publish installer test diagnostics
+        if: steps.installer_tests.outputs.exit_code != '0'
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $testOutput = Get-Content -LiteralPath (Join-Path $env:RUNNER_TEMP 'agp-installer-tests.txt') -Raw
+          if ($testOutput.Length -gt 60000) {
+            $testOutput = $testOutput.Substring($testOutput.Length - 60000)
           }
+          $body = @{
+            name = 'installer-test-diagnostics'
+            head_sha = $env:GITHUB_SHA
+            status = 'completed'
+            conclusion = 'failure'
+            output = @{
+              title = 'Installer test failure'
+              summary = 'The release workflow installer suite failed on the Windows runner.'
+              text = $testOutput
+            }
+          } | ConvertTo-Json -Depth 5
+          $headers = @{
+            Authorization = "Bearer $env:GH_TOKEN"
+            Accept = 'application/vnd.github+json'
+            'X-GitHub-Api-Version' = '2022-11-28'
+          }
+          Invoke-RestMethod -Method Post -Headers $headers -ContentType 'application/json' -Body $body -Uri "$env:GITHUB_API_URL/repos/$env:GITHUB_REPOSITORY/check-runs" | Out-Null
+          exit 1
 
       - name: Build Python GUI front end
         shell: pwsh
