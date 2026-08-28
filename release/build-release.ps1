@@ -132,6 +132,37 @@ Copy-PackageDirectory (Join-Path $repositoryRoot 'Installer\python') (Join-Path 
 Copy-PackageDirectory (Join-Path $repositoryRoot 'Installer\powershell') (Join-Path $packageRoot 'Installer\powershell') -Required | Out-Null
 Copy-PackageDirectory (Join-Path $repositoryRoot 'Installer\spec') (Join-Path $packageRoot 'Installer\spec') -Required | Out-Null
 
+# The checked-in manifest is the release contract template. Native output can
+# differ across supported MSVC revisions even with /Brepro, so the packaged
+# manifest must be generated after the build from the exact DLL bytes that it
+# accompanies. This is also the required ordering for future signed releases.
+$packagedArtifactById = @{}
+foreach ($artifact in $manifest.artifacts) {
+	$packagedPath = Join-Path $packageRoot ([string]$artifact.relative_path -replace '/', '\')
+	if (-not (Test-Path -LiteralPath $packagedPath -PathType Leaf)) {
+		throw "Built artifact is not present in the package: $($artifact.relative_path)"
+	}
+	$artifact.sha256 = (Get-FileHash -LiteralPath $packagedPath -Algorithm SHA256).Hash.ToLowerInvariant()
+	$artifact.size_bytes = [int64](Get-Item -LiteralPath $packagedPath).Length
+	$packagedArtifactById[[string]$artifact.id] = $artifact
+}
+$manualSeed = $manifest.compatibility.seeds | Where-Object { $_.id -eq "agp-v$Version-manual-layout" } | Select-Object -First 1
+if ($manualSeed) {
+	foreach ($file in $manualSeed.match.required_files) {
+		if ($file.relative_path -eq 'dxcompiler.dll') {
+			$file.sha256 = $packagedArtifactById['agp-proxy'].sha256
+			$file.size_bytes = $packagedArtifactById['agp-proxy'].size_bytes
+		}
+		elseif ($file.relative_path -eq 'AGP Native Hook/agp_parenthook.dll') {
+			$file.sha256 = $packagedArtifactById['agp-payload'].sha256
+			$file.size_bytes = $packagedArtifactById['agp-payload'].size_bytes
+		}
+	}
+}
+$packagedManifestPath = Join-Path $packageRoot 'Installer\release-manifest.json'
+$packagedManifestJson = $manifest | ConvertTo-Json -Depth 20
+[System.IO.File]::WriteAllText($packagedManifestPath, $packagedManifestJson + "`n", [System.Text.UTF8Encoding]::new($false))
+
 $forbiddenNames = @('native_test_mod', 'AGP Dynastic Priority', 'Lunacy', '.git', 'script_docs 1.19.0.6')
 $forbiddenFound = Get-ChildItem -LiteralPath $packageRoot -Recurse -Force | Where-Object {
 	$forbiddenNames -contains $_.Name
