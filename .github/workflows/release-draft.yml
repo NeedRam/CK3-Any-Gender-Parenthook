@@ -62,12 +62,15 @@ jobs:
       - name: Run installer contract and transition tests
         shell: powershell
         run: |
-          $testOutput = (& python -m unittest discover -s Installer/python/tests -v 2>&1 | Out-String)
+          $testOutput = (& python -m unittest discover -s Installer/python/tests -q 2>&1 | Out-String)
           $testExit = $LASTEXITCODE
           Write-Host $testOutput
           if ($testExit -ne 0) {
+            if ($testOutput.Length -gt 6000) {
+              $testOutput = $testOutput.Substring($testOutput.Length - 6000)
+            }
             $annotation = $testOutput.Replace('%', '%25').Replace("`r", '%0D').Replace("`n", '%0A')
-            Write-Host "::error title=Installer test failure::$annotation"
+            Write-Output "::error file=Installer/python/tests,title=Installer test failure::$annotation"
             exit $testExit
           }
 
