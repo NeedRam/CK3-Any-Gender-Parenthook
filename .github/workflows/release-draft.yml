@@ -60,8 +60,16 @@ jobs:
         run: "& '.\\Native Hook\\build.ps1' -Clean"
 
       - name: Run installer contract and transition tests
-        shell: pwsh
-        run: python -m unittest discover -s Installer/python/tests -v
+        shell: powershell
+        run: |
+          $testOutput = (& python -m unittest discover -s Installer/python/tests -v 2>&1 | Out-String)
+          $testExit = $LASTEXITCODE
+          Write-Host $testOutput
+          if ($testExit -ne 0) {
+            $annotation = $testOutput.Replace('%', '%25').Replace("`r", '%0D').Replace("`n", '%0A')
+            Write-Host "::error title=Installer test failure::$annotation"
+            exit $testExit
+          }
 
       - name: Build Python GUI front end
         shell: pwsh
