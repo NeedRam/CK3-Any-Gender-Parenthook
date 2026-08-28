@@ -89,7 +89,7 @@ if (-not $SkipNativeBuild) {
 
 $packageId = [string]$manifest.package.id
 $stagingRoot = Join-Path $OutputDirectory "$packageId-staging"
-$packageRoot = Join-Path $stagingRoot $packageId
+$packageRoot = Join-Path $stagingRoot "Any-Gender Parenthook v$Version"
 $zipPath = Join-Path $OutputDirectory "Any-Gender-Parenthook-v$Version-win64.zip"
 $checksumPath = "$zipPath.sha256"
 $provenancePath = Join-Path $OutputDirectory "Any-Gender-Parenthook-v$Version-provenance.json"
@@ -108,24 +108,24 @@ $nativePayload = Join-Path $repositoryRoot 'Native Hook\build\AGP Native Hook\ag
 Copy-PackageFile $nativeProxy (Join-Path $packageRoot 'dxcompiler.dll') -Required | Out-Null
 Copy-PackageFile $nativePayload (Join-Path $packageRoot 'AGP Native Hook\agp_parenthook.dll') -Required | Out-Null
 
-$requiredPackageFiles = @(
-	'Installer\release-manifest.json',
-	'Installer\install.bat',
-	'Installer\uninstall.bat',
-	'Installer\install.ps1',
-	'Installer\uninstall.ps1',
-	'Installer\AGPInstaller.exe',
-	'Installer\AGPUninstaller.exe',
-	'LICENSE',
-	'PRIVACY.md',
-	'SECURITY.md',
-	'SIGNING.md',
-	'release\README.md',
-	'release\RELEASE_NOTES.md'
+$packageFiles = @(
+	@{ Source = 'release\assets\Install AGP.bat'; Destination = 'Install AGP.bat' },
+	@{ Source = 'release\assets\Uninstall AGP.bat'; Destination = 'Uninstall AGP.bat' },
+	@{ Source = 'Installer\AGPInstaller.exe'; Destination = 'AGP-Installer.exe' },
+	@{ Source = 'Installer\AGPUninstaller.exe'; Destination = 'AGP-Uninstaller.exe' },
+	@{ Source = 'release\END_USER_README.md'; Destination = 'README.md' },
+	@{ Source = 'release\RELEASE_NOTES.md'; Destination = 'RELEASE_NOTES.md' },
+	@{ Source = 'Installer\release-manifest.json'; Destination = 'Installer\release-manifest.json' },
+	@{ Source = 'Installer\install.ps1'; Destination = 'Installer\install.ps1' },
+	@{ Source = 'Installer\uninstall.ps1'; Destination = 'Installer\uninstall.ps1' },
+	@{ Source = 'LICENSE'; Destination = 'LICENSE' },
+	@{ Source = 'PRIVACY.md'; Destination = 'PRIVACY.md' },
+	@{ Source = 'SECURITY.md'; Destination = 'SECURITY.md' },
+	@{ Source = 'SIGNING.md'; Destination = 'SIGNING.md' }
 )
-foreach ($relative in $requiredPackageFiles) {
-	$source = Join-Path $repositoryRoot $relative
-	$destination = Join-Path $packageRoot $relative
+foreach ($mapping in $packageFiles) {
+	$source = Join-Path $repositoryRoot $mapping.Source
+	$destination = Join-Path $packageRoot $mapping.Destination
 	Copy-PackageFile $source $destination -Required | Out-Null
 }
 Copy-PackageDirectory (Join-Path $repositoryRoot 'Installer\python') (Join-Path $packageRoot 'Installer\python') -Required | Out-Null
@@ -138,6 +138,25 @@ $forbiddenFound = Get-ChildItem -LiteralPath $packageRoot -Recurse -Force | Wher
 }
 if ($forbiddenFound) {
 	throw "Forbidden development content entered the package: $($forbiddenFound.Name -join ', ')"
+}
+
+$endUserRootFiles = @('AGP-Installer.exe', 'AGP-Uninstaller.exe', 'Install AGP.bat', 'Uninstall AGP.bat', 'README.md')
+foreach ($relative in $endUserRootFiles) {
+	if (-not (Test-Path -LiteralPath (Join-Path $packageRoot $relative) -PathType Leaf)) {
+		throw "End-user root entry is missing: $relative"
+	}
+}
+$obsoleteNestedLaunchers = @(
+	'Installer\AGPInstaller.exe',
+	'Installer\AGPUninstaller.exe',
+	'Installer\install.bat',
+	'Installer\uninstall.bat',
+	'release\README.md'
+)
+foreach ($relative in $obsoleteNestedLaunchers) {
+	if (Test-Path -LiteralPath (Join-Path $packageRoot $relative)) {
+		throw "Obsolete nested launcher entered the end-user package: $relative"
+	}
 }
 
 $artifactByPath = @{}

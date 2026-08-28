@@ -29,6 +29,19 @@ class ContractFileTests(unittest.TestCase):
             "Installer/spec/compatibility-evidence.schema.json",
         )
 
+    def test_end_user_entrypoints_are_at_package_root(self) -> None:
+        manifest = json.loads((ROOT / "Installer" / "release-manifest.json").read_text(encoding="utf-8"))
+        entrypoints = {item["relative_path"] for item in manifest["package"]["entrypoints"]}
+        self.assertTrue(
+            {
+                "AGP-Installer.exe",
+                "AGP-Uninstaller.exe",
+                "Install AGP.bat",
+                "Uninstall AGP.bat",
+            }.issubset(entrypoints)
+        )
+        self.assertFalse(any(path.startswith("Installer/AGP") or path.endswith("/install.bat") or path.endswith("/uninstall.bat") for path in entrypoints))
+
 
 if __name__ == "__main__":
     unittest.main()

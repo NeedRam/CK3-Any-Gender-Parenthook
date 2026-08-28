@@ -5,11 +5,12 @@ import hashlib
 import json
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from agp_installer.core import Installer
+from agp_installer.core import Installer, frozen_package_root
 from agp_installer.discovery import parse_libraryfolders, select_target
 
 
@@ -21,6 +22,17 @@ def digest(data: bytes) -> str:
 
 
 class EngineTests(unittest.TestCase):
+    def test_frozen_exe_finds_release_root_and_development_root(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            package = Path(temp) / "Any-Gender Parenthook v1.0.0"
+            installer_dir = package / "Installer"
+            installer_dir.mkdir(parents=True)
+            (installer_dir / "release-manifest.json").write_text("{}", encoding="utf-8")
+            executables = (package / "AGP-Installer.exe", installer_dir / "AGPInstaller.exe")
+            for executable in executables:
+                with self.subTest(executable=executable), mock.patch.object(sys, "frozen", True, create=True), mock.patch.object(sys, "executable", str(executable)):
+                    self.assertEqual(frozen_package_root(), package.resolve())
+
     def make_manifest(self, directory: Path, ck3: bytes, steam: bytes) -> Path:
         manifest = json.loads((ROOT / "Installer" / "release-manifest.json").read_text(encoding="utf-8"))
         proxy = ROOT / "Native Hook" / "build" / "dxcompiler.dll"

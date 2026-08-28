@@ -95,13 +95,13 @@
     ],
     "entrypoints": [
       {
-        "relative_path": "Installer/install.bat",
+        "relative_path": "Install AGP.bat",
         "role": "bat_entrypoint",
         "required": true,
         "phase": 2
       },
       {
-        "relative_path": "Installer/uninstall.bat",
+        "relative_path": "Uninstall AGP.bat",
         "role": "bat_entrypoint",
         "required": true,
         "phase": 2
@@ -119,13 +119,13 @@
         "phase": 2
       },
       {
-        "relative_path": "Installer/AGPInstaller.exe",
+        "relative_path": "AGP-Installer.exe",
         "role": "exe_frontend",
         "required": true,
         "phase": 2
       },
       {
-        "relative_path": "Installer/AGPUninstaller.exe",
+        "relative_path": "AGP-Uninstaller.exe",
         "role": "exe_frontend",
         "required": true,
         "phase": 2

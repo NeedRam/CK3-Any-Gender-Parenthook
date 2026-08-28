@@ -7,7 +7,7 @@ VSVersionInfo(
       StringStruct('FileVersion', '1.0.0.0'),
       StringStruct('InternalName', 'AGPInstaller'),
       StringStruct('LegalCopyright', 'Copyright (c) 2026 NeedRam'),
-      StringStruct('OriginalFilename', 'AGPInstaller.exe'),
+      StringStruct('OriginalFilename', 'AGP-Installer.exe'),
       StringStruct('ProductName', 'Any-Gender Parenthook'),
       StringStruct('ProductVersion', '1.0.0.0')
     ])]),

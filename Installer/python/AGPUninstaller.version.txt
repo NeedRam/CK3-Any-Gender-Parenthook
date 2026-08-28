@@ -7,7 +7,7 @@ VSVersionInfo(
       StringStruct('FileVersion', '1.0.0.0'),
       StringStruct('InternalName', 'AGPUninstaller'),
       StringStruct('LegalCopyright', 'Copyright (c) 2026 NeedRam'),
-      StringStruct('OriginalFilename', 'AGPUninstaller.exe'),
+      StringStruct('OriginalFilename', 'AGP-Uninstaller.exe'),
       StringStruct('ProductName', 'Any-Gender Parenthook'),
       StringStruct('ProductVersion', '1.0.0.0')
     ])]),

@@ -140,6 +140,17 @@ def _is_process_running() -> bool:
         return False
 
 
+def frozen_package_root() -> Path | None:
+    """Locate the unpacked package from either release-root or dev EXEs."""
+    if not getattr(sys, "frozen", False):
+        return None
+    executable_dir = Path(sys.executable).resolve().parent
+    for candidate in (executable_dir, executable_dir.parent):
+        if (candidate / "Installer" / "release-manifest.json").is_file():
+            return candidate
+    return executable_dir
+
+
 class _Transaction:
     def __init__(self, engine: "Installer", target: Path, operation: str, source_state: str, target_state: str):
         self.engine = engine
@@ -254,8 +265,8 @@ class Installer:
 
     def __init__(self, package_root: str | os.PathLike[str] | None = None, manifest_path: str | os.PathLike[str] | None = None, process_checker: Callable[[], bool] | None = None):
         here = Path(__file__).resolve()
-        if package_root is None and getattr(sys, "frozen", False):
-            package_root = Path(sys.executable).resolve().parent.parent
+        if package_root is None:
+            package_root = frozen_package_root()
         self.package_root = Path(package_root or here.parents[3]).resolve()
         self.manifest_path = Path(manifest_path or self.package_root / "Installer" / "release-manifest.json").resolve()
         self.manifest = _read_json(self.manifest_path)
