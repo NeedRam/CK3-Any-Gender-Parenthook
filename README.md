@@ -13,6 +13,29 @@ Close CK3 before installing. The installer renames Steam's `dxcompiler.dll` to `
 
 If a recognized AWOW Universal Female Generation installation is found, the installer warns that conversion disables UFG and requires typed confirmation. Unknown proxy layouts are preserved in quarantine and also require typed confirmation.
 
+## Manual installation (advanced users)
+
+Use these steps only for a clean Steam installation where the game's `binaries`
+folder contains Steam's original `dxcompiler.dll` and does not already contain
+`dxcompiler_original.dll`. If a backup already exists, another `dxcompiler.dll`
+proxy is installed, or AGP/UFG is being upgraded or converted, use
+`AGP-Installer.exe` instead.
+
+1. Close Crusader Kings III.
+2. Open the game's `binaries` folder. The standard Steam location is
+   `C:\Program Files (x86)\Steam\steamapps\common\Crusader Kings III\binaries`.
+3. Rename the existing Steam `dxcompiler.dll` to `dxcompiler_original.dll`.
+   Never overwrite or delete an existing `dxcompiler_original.dll`.
+4. Copy the package's `dxcompiler.dll` into `binaries`.
+5. Copy the package's entire `AGP Native Hook` folder into `binaries`. The final
+   payload path must be
+   `...\Crusader Kings III\binaries\AGP Native Hook\agp_parenthook.dll`.
+6. Start CK3. A successful load creates `agp_dxcompiler_loader.log` and
+   `agp_parenthook.log` in `binaries`.
+
+The included `AGP-Uninstaller.exe` recognizes the package's exact manual layout
+and remains the safest way to remove AGP.
+
 ## Uninstall
 
 Use `AGP-Uninstaller.exe` or `Uninstall AGP.bat`. Uninstall verifies the recorded state, removes only AGP-owned files and logs, and restores the recorded Steam `dxcompiler.dll`. Unknown or modified files are preserved rather than silently deleted.
