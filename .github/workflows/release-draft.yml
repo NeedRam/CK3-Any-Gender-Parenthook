@@ -1,0 +1,107 @@
+name: Build draft AGP release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release version from Installer/release-manifest.json
+        required: true
+        default: 1.0.0
+  push:
+    tags:
+      - v*.*.*
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+  artifact-metadata: write
+
+jobs:
+  package:
+    runs-on: windows-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Select release version
+        id: release
+        shell: pwsh
+        run: |
+          if ($env:GITHUB_EVENT_NAME -eq 'workflow_dispatch') {
+            $version = '${{ inputs.version }}'
+          } else {
+            $version = $env:GITHUB_REF_NAME -replace '^v', ''
+          }
+          if ($version -notmatch '^[0-9]+\.[0-9]+\.[0-9]+$') {
+            throw "Invalid release version: $version"
+          }
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "tag=v$version" >> $env:GITHUB_OUTPUT
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Python build dependencies
+        shell: pwsh
+        run: |
+          if (Test-Path -LiteralPath 'Installer/python/requirements-build.txt') {
+            python -m pip install --disable-pip-version-check -r Installer/python/requirements-build.txt
+          } elseif (Test-Path -LiteralPath 'Installer/python/requirements.txt') {
+            python -m pip install --disable-pip-version-check -r Installer/python/requirements.txt
+          } else {
+            python -m pip install --disable-pip-version-check pyinstaller
+          }
+
+      - name: Build native x64 payload
+        shell: powershell
+        run: "& '.\\Native Hook\\build.ps1' -Clean"
+
+      - name: Run installer contract and transition tests
+        shell: cmd
+        run: python -m unittest discover -s Installer/python/tests -v
+
+      - name: Build Python GUI front end
+        shell: pwsh
+        run: |
+          $buildScript = 'Installer/python/build.ps1'
+          $buildModule = 'Installer/python/build.py'
+          $spec = Get-ChildItem -LiteralPath 'Installer/python' -Filter '*.spec' -File -ErrorAction SilentlyContinue | Select-Object -First 1
+          if (Test-Path -LiteralPath $buildScript -PathType Leaf) {
+            & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $buildScript
+          } elseif (Test-Path -LiteralPath $buildModule -PathType Leaf) {
+            python $buildModule
+          } elseif ($spec) {
+            python -m PyInstaller --noconfirm --clean $spec.FullName
+          } else {
+            Write-Host 'No dedicated Python build driver found; release assembly will require Installer/AGPInstaller.exe.'
+          }
+          foreach ($exe in @('Installer/AGPInstaller.exe', 'Installer/AGPUninstaller.exe')) {
+            if (-not (Test-Path -LiteralPath $exe -PathType Leaf)) {
+              throw "Python build did not produce the required phase-2 entrypoint $exe."
+            }
+          }
+
+      - name: Assemble unsigned package
+        shell: pwsh
+        run: .\release\build-release.ps1 -Version '${{ steps.release.outputs.version }}' -SkipNativeBuild
+
+      - name: Attest ZIP provenance
+        uses: actions/attest@v4
+        with:
+          subject-path: release/out/Any-Gender-Parenthook-v${{ steps.release.outputs.version }}-win64.zip
+
+      - name: Publish draft GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.release.outputs.tag }}
+          name: Any-Gender Parenthook v${{ steps.release.outputs.version }}
+          draft: true
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          files: |
+            release/out/Any-Gender-Parenthook-v${{ steps.release.outputs.version }}-win64.zip
+            release/out/Any-Gender-Parenthook-v${{ steps.release.outputs.version }}-win64.zip.sha256
+            release/out/Any-Gender-Parenthook-v${{ steps.release.outputs.version }}-provenance.json

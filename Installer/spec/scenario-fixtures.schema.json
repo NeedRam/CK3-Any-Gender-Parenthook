@@ -1,0 +1,317 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://any-gender-parenthook.invalid/schema/scenario-fixtures-v1.json",
+  "title": "Any-Gender Parenthook installer scenario fixtures (schema v1)",
+  "description": "Machine-readable, disposable layouts for both engines and the shared destructive-state matrix.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "kind",
+    "contract_files",
+    "scenarios"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "../spec/scenario-fixtures.schema.json"
+    },
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "kind": {
+      "type": "string",
+      "const": "agp_scenario_fixtures"
+    },
+    "contract_files": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "$ref": "#/$defs/relativePath"
+      }
+    },
+    "scenarios": {
+      "type": "array",
+      "minItems": 10,
+      "items": {
+        "$ref": "#/$defs/scenario"
+      }
+    }
+  },
+  "$defs": {
+    "relativePath": {
+      "type": "string",
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*:)[^\\\\/:*?\"<>|\\x00-\\x1F]+(?:/[^\\\\/:*?\"<>|\\x00-\\x1F]+)*$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "description",
+        "operation",
+        "initial",
+        "confirmation_response",
+        "expected"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]{2,63}$"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "operation": {
+          "type": "string",
+          "enum": [
+            "install",
+            "uninstall"
+          ]
+        },
+        "initial": {
+          "$ref": "#/$defs/initial"
+        },
+        "confirmation_response": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "expected": {
+          "$ref": "#/$defs/expected"
+        }
+      }
+    },
+    "initial": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target_root_kind",
+        "classification_hint",
+        "ck3_running",
+        "target_is_reparse",
+        "ancestor_is_reparse",
+        "files",
+        "state_file"
+      ],
+      "properties": {
+        "target_root_kind": {
+          "type": "string",
+          "const": "fixture_binaries"
+        },
+        "classification_hint": {
+          "type": "string",
+          "enum": [
+            "known_clean",
+            "managed_agp",
+            "legacy_agp",
+            "recognized_ufg",
+            "steam_updated",
+            "unknown_conflicting"
+          ]
+        },
+        "ck3_running": {
+          "type": "boolean"
+        },
+        "target_is_reparse": {
+          "type": "boolean"
+        },
+        "ancestor_is_reparse": {
+          "type": "boolean"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/file"
+          }
+        },
+        "state_file": {
+          "type": "string",
+          "enum": [
+            "absent",
+            "valid",
+            "drifted",
+            "invalid"
+          ]
+        },
+        "write_fault_at": {
+          "$ref": "#/$defs/relativePath"
+        }
+      }
+    },
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relative_path",
+        "kind",
+        "sha256",
+        "size_bytes",
+        "owner"
+      ],
+      "properties": {
+        "relative_path": {
+          "$ref": "#/$defs/relativePath"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "file",
+            "directory"
+          ]
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "owner": {
+          "type": "string",
+          "enum": [
+            "steam",
+            "agp_managed",
+            "unknown",
+            "ufg"
+          ]
+        }
+      }
+    },
+    "pathAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relative_path",
+        "action"
+      ],
+      "properties": {
+        "relative_path": {
+          "$ref": "#/$defs/relativePath"
+        },
+        "action": {
+          "type": "string",
+          "enum": [
+            "create",
+            "rename_from_dxcompiler",
+            "replace",
+            "remove",
+            "restore",
+            "preserve",
+            "quarantine",
+            "verify_only"
+          ]
+        }
+      }
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification",
+        "decision",
+        "next_state",
+        "writes",
+        "preserves",
+        "quarantines",
+        "removes",
+        "rollback",
+        "reason"
+      ],
+      "properties": {
+        "classification": {
+          "type": "string",
+          "enum": [
+            "known_clean",
+            "managed_agp",
+            "legacy_agp",
+            "recognized_ufg",
+            "steam_updated",
+            "unknown_conflicting"
+          ]
+        },
+        "decision": {
+          "type": "string",
+          "enum": [
+            "proceed",
+            "reject",
+            "abort",
+            "no_op",
+            "rollback"
+          ]
+        },
+        "next_state": {
+          "type": "string",
+          "enum": [
+            "known_clean",
+            "managed_agp",
+            "legacy_agp",
+            "recognized_ufg",
+            "steam_updated",
+            "unknown_conflicting",
+            "manual_recovery_required"
+          ]
+        },
+        "writes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pathAction"
+          }
+        },
+        "preserves": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pathAction"
+          }
+        },
+        "quarantines": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pathAction"
+          }
+        },
+        "removes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pathAction"
+          }
+        },
+        "rollback": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "required",
+            "committed_state",
+            "restores"
+          ],
+          "properties": {
+            "required": {
+              "type": "boolean"
+            },
+            "committed_state": {
+              "type": "boolean"
+            },
+            "restores": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/relativePath"
+              }
+            }
+          }
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

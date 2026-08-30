@@ -1,0 +1,627 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://any-gender-parenthook.invalid/schema/release-manifest-v1.json",
+  "title": "Any-Gender Parenthook release manifest (schema v1)",
+  "description": "Portable package and compatibility contract consumed by both installer engines.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "kind",
+    "release",
+    "target",
+    "package",
+    "artifacts",
+    "compatibility",
+    "safety"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "./spec/release-manifest.schema.json"
+    },
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "kind": {
+      "type": "string",
+      "const": "agp_release_manifest"
+    },
+    "release": {
+      "$ref": "#/$defs/release"
+    },
+    "target": {
+      "$ref": "#/$defs/target"
+    },
+    "package": {
+      "$ref": "#/$defs/package"
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "$ref": "#/$defs/artifact"
+      }
+    },
+    "compatibility": {
+      "$ref": "#/$defs/compatibility"
+    },
+    "safety": {
+      "$ref": "#/$defs/safety"
+    }
+  },
+  "$defs": {
+    "relativePath": {
+      "type": "string",
+      "description": "Canonical package/target path. Forward slashes are required; no root, drive, or dot segments are allowed.",
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*:)[^\\\\/:*?\"<>|\\x00-\\x1F]+(?:/[^\\\\/:*?\"<>|\\x00-\\x1F]+)*$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "nonEmptyId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+    },
+    "release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "channel",
+        "unsigned",
+        "source_repo",
+        "license"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/nonEmptyId"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "channel": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "stable"
+          ]
+        },
+        "unsigned": {
+          "type": "boolean",
+          "const": true
+        },
+        "source_repo": {
+          "type": "string",
+          "format": "uri-reference",
+          "minLength": 1
+        },
+        "license": {
+          "type": "string",
+          "const": "MIT"
+        }
+      }
+    },
+        "supportedBuild": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "executable_sha256",
+        "original_dxcompiler_sha256"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "executable_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "original_dxcompiler_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "platform",
+        "architecture",
+        "steam_app_id",
+        "game_id",
+        "supported_builds",
+        "binaries_relative_path",
+        "executable_relative_path",
+        "active_dxcompiler_relative_path",
+        "original_dxcompiler_relative_path",
+        "state_relative_path",
+        "journal_relative_directory",
+        "quarantine_relative_directory",
+        "logs"
+      ],
+      "properties": {
+        "platform": {
+          "type": "string",
+          "const": "windows"
+        },
+        "architecture": {
+          "type": "string",
+          "const": "x64"
+        },
+        "steam_app_id": {
+          "type": "integer",
+          "const": 1158310
+        },
+        "game_id": {
+          "type": "string",
+          "const": "crusader_kings_iii"
+        },
+        "supported_builds": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/supportedBuild"
+          }
+        },
+        "binaries_relative_path": {
+          "$ref": "#/$defs/relativePath",
+          "const": "binaries"
+        },
+        "executable_relative_path": {
+          "$ref": "#/$defs/relativePath",
+          "const": "ck3.exe"
+        },
+        "active_dxcompiler_relative_path": {
+          "$ref": "#/$defs/relativePath",
+          "const": "dxcompiler.dll"
+        },
+        "original_dxcompiler_relative_path": {
+          "$ref": "#/$defs/relativePath",
+          "const": "dxcompiler_original.dll"
+        },
+        "state_relative_path": {
+          "$ref": "#/$defs/relativePath",
+          "const": "AGP Native Hook/agp-install-state.json"
+        },
+        "journal_relative_directory": {
+          "$ref": "#/$defs/relativePath",
+          "const": "AGP Native Hook/.agp-journal"
+        },
+        "quarantine_relative_directory": {
+          "$ref": "#/$defs/relativePath",
+          "const": "AGP Native Hook/.agp-quarantine"
+        },
+        "logs": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "relative_path",
+              "owner",
+              "uninstall_policy"
+            ],
+            "properties": {
+              "relative_path": {
+                "$ref": "#/$defs/relativePath"
+              },
+              "owner": {
+                "type": "string",
+                "enum": [
+                  "agp_runtime",
+                  "foreign_ufg"
+                ]
+              },
+              "uninstall_policy": {
+                "type": "string",
+                "enum": [
+                  "preserve",
+                  "remove",
+                  "remove_only_during_ufg_conversion"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "relative_path",
+        "role",
+        "sha256",
+        "size_bytes"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/nonEmptyId"
+        },
+        "relative_path": {
+          "$ref": "#/$defs/relativePath"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "agp_proxy",
+            "agp_payload"
+          ]
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "size_is_informational": {
+          "type": "boolean",
+          "const": true
+        },
+        "source_relative_path": {
+          "$ref": "#/$defs/relativePath"
+        }
+      }
+    },
+    "packageFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relative_path",
+        "role",
+        "required"
+      ],
+      "properties": {
+        "relative_path": {
+          "$ref": "#/$defs/relativePath"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "agp_proxy",
+            "agp_payload",
+            "contract",
+            "bat_entrypoint",
+            "powershell_engine",
+            "python_engine",
+            "python_gui",
+            "exe_frontend",
+            "documentation",
+            "checksum"
+          ]
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "artifact_id": {
+          "$ref": "#/$defs/nonEmptyId"
+        },
+        "phase": {
+          "type": "integer",
+          "enum": [
+            1,
+            2
+          ]
+        }
+      }
+    },
+    "package": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "manifest_relative_path",
+        "managed_files",
+        "preserved_files",
+        "diagnostic_files",
+        "forbidden_paths",
+        "entrypoints"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/nonEmptyId"
+        },
+        "manifest_relative_path": {
+          "$ref": "#/$defs/relativePath",
+          "const": "Installer/release-manifest.json"
+        },
+        "managed_files": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/$defs/packageFile"
+          }
+        },
+        "preserved_files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "relative_path",
+              "owner",
+              "install_policy",
+              "uninstall_policy"
+            ],
+            "properties": {
+              "relative_path": {
+                "$ref": "#/$defs/relativePath"
+              },
+              "owner": {
+                "type": "string",
+                "const": "steam"
+              },
+              "install_policy": {
+                "type": "string",
+                "enum": [
+                  "never_overwrite_existing",
+                  "rename_active_to_original_if_absent"
+                ]
+              },
+              "uninstall_policy": {
+                "type": "string",
+                "const": "restore_to_active_name_after_hash_check"
+              }
+            }
+          }
+        },
+        "diagnostic_files": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/relativePath"
+          }
+        },
+        "forbidden_paths": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/relativePath"
+          }
+        },
+        "entrypoints": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/$defs/packageFile"
+          }
+        }
+      }
+    },
+    "fingerprint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relative_path",
+        "kind"
+      ],
+      "properties": {
+        "relative_path": {
+          "$ref": "#/$defs/relativePath"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "file",
+            "directory",
+            "path_marker"
+          ]
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "compatibilitySeed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "state",
+        "confidence",
+        "match",
+        "description"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/nonEmptyId"
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "known_clean",
+            "managed_agp",
+            "legacy_agp",
+            "recognized_ufg",
+            "steam_updated"
+          ]
+        },
+        "confidence": {
+          "type": "string",
+          "enum": [
+            "exact_hash",
+            "exact_path_markers",
+            "derived_from_state"
+          ]
+        },
+        "match": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "state_file",
+            "required_files",
+            "required_paths",
+            "absent_paths"
+          ],
+          "properties": {
+            "state_file": {
+              "type": "string",
+              "enum": [
+                "absent",
+                "valid",
+                "present_but_drifted",
+                "not_applicable"
+              ]
+            },
+            "required_files": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/fingerprint"
+              }
+            },
+            "required_paths": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/fingerprint"
+              }
+            },
+            "absent_paths": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/relativePath"
+              }
+            }
+          }
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "seed_schema_version",
+        "seeds",
+        "fallback_state"
+      ],
+      "properties": {
+        "seed_schema_version": {
+          "type": "integer",
+          "const": 1
+        },
+        "seeds": {
+          "type": "array",
+          "minItems": 4,
+          "items": {
+            "$ref": "#/$defs/compatibilitySeed"
+          }
+        },
+        "fallback_state": {
+          "type": "string",
+          "const": "unknown_conflicting"
+        }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preflight_guards",
+        "in_place_upgrade_confirmation",
+        "steam_update_confirmation",
+        "unknown_conflict_confirmation",
+        "ufg_conversion_confirmation",
+        "never_overwrite_on_install",
+        "ufg_cleanup"
+      ],
+      "properties": {
+        "preflight_guards": {
+          "type": "array",
+          "minItems": 6,
+          "items": {
+            "type": "string",
+            "enum": [
+              "ck3_not_running",
+              "target_is_existing_directory",
+              "target_is_not_reparse_point",
+              "target_ancestors_are_not_reparse_points",
+              "all_manifest_paths_are_relative_and_contained",
+              "state_and_journal_are_schema_valid",
+              "all_hashes_are_read_before_mutation",
+              "active_and_original_dxcompiler_are_distinct_paths"
+            ]
+          }
+        },
+        "in_place_upgrade_confirmation": {
+          "type": "string",
+          "const": "UPGRADE_AGP_IN_PLACE"
+        },
+        "steam_update_confirmation": {
+          "type": "string",
+          "const": "ACCEPT_STEAM_UPDATE"
+        },
+        "unknown_conflict_confirmation": {
+          "type": "string",
+          "const": "I_UNDERSTAND_UNKNOWN_CONFLICT"
+        },
+        "ufg_conversion_confirmation": {
+          "type": "string",
+          "const": "CONVERT_UFG_TO_AGP"
+        },
+        "never_overwrite_on_install": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/$defs/relativePath"
+          }
+        },
+        "ufg_cleanup": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "foreign_payload_directory",
+            "foreign_logs",
+            "recognition",
+            "transaction",
+            "uninstall_policy"
+          ],
+          "properties": {
+            "foreign_payload_directory": {
+              "$ref": "#/$defs/relativePath",
+              "const": "AWOW Universal Female Generation"
+            },
+            "foreign_logs": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "$ref": "#/$defs/relativePath"
+              }
+            },
+            "recognition": {
+              "type": "string",
+              "const": "recognized_awow_ufg_seed_only"
+            },
+            "transaction": {
+              "type": "string",
+              "const": "quarantine_then_remove_after_agp_commit"
+            },
+            "uninstall_policy": {
+              "type": "string",
+              "const": "do_not_restore_awow_ufg"
+            }
+          }
+        }
+      }
+    }
+  }
+}

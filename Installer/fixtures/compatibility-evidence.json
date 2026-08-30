@@ -1,0 +1,129 @@
+{
+  "$schema": "../spec/compatibility-evidence.schema.json",
+  "schema_version": 1,
+  "kind": "agp_compatibility_evidence",
+  "observed_utc": "2026-08-25T00:00:00Z",
+  "observations": [
+    {
+      "source": "repository",
+      "root_kind": "agp_repository",
+      "relative_path": "Native Hook/build/dxcompiler.dll",
+      "role": "agp_proxy_artifact",
+      "sha256": "24455f77bb877a80f80f09c004e86a1fc8058e986a36f8b00fc5dbffc825c0b0",
+      "size_bytes": 109568
+    },
+    {
+      "source": "repository",
+      "root_kind": "agp_repository",
+      "relative_path": "Native Hook/build/AGP Native Hook/agp_parenthook.dll",
+      "role": "agp_payload_artifact",
+      "sha256": "388a2024e58e9bff884e70e2e3fdf4af12651b94dff0f142da200bfc70d14b6e",
+      "size_bytes": 135680
+    },
+    {
+      "source": "installed_ck3",
+      "root_kind": "steam_standard_ck3_binaries",
+      "root_display": "C:/Program Files (x86)/Steam/steamapps/common/Crusader Kings III/binaries",
+      "relative_path": "ck3.exe",
+      "role": "game_executable",
+      "sha256": "2d00ff3101ef70b566f2fcbae292f09263199c80e9dc8f139b82d7d96f83db86",
+      "size_bytes": 95206008
+    },
+    {
+      "source": "installed_ck3",
+      "root_kind": "steam_standard_ck3_binaries",
+      "root_display": "C:/Program Files (x86)/Steam/steamapps/common/Crusader Kings III/binaries",
+      "relative_path": "dxcompiler.dll",
+      "role": "currently_active_awow_ufg_chained_loader",
+      "sha256": "7902c42b07581f90aebf94910553849aa8deeeaa07908df8f15b01e3250d09fc",
+      "size_bytes": 135168
+    },
+    {
+      "source": "installed_ck3",
+      "root_kind": "steam_standard_ck3_binaries",
+      "root_display": "C:/Program Files (x86)/Steam/steamapps/common/Crusader Kings III/binaries",
+      "relative_path": "dxcompiler_original.dll",
+      "role": "preserved_steam_dxcompiler",
+      "sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+      "size_bytes": 20291584
+    },
+    {
+      "source": "installed_ck3",
+      "root_kind": "steam_standard_ck3_binaries",
+      "root_display": "C:/Program Files (x86)/Steam/steamapps/common/Crusader Kings III/binaries",
+      "relative_path": "AGP Native Hook/agp_parenthook.dll",
+      "role": "currently_active_agp_payload",
+      "sha256": "9191782a7525e3cc3de18c666f5d7494740ae36ee255829cf1105641a94723ed",
+      "size_bytes": 134656
+    },
+    {
+      "source": "installed_ck3",
+      "root_kind": "steam_standard_ck3_binaries",
+      "root_display": "C:/Program Files (x86)/Steam/steamapps/common/Crusader Kings III/binaries",
+      "relative_path": "AWOW Universal Female Generation",
+      "role": "awow_ufg_payload_directory",
+      "kind": "directory"
+    },
+    {
+      "source": "installed_ck3",
+      "root_kind": "steam_standard_ck3_binaries",
+      "root_display": "C:/Program Files (x86)/Steam/steamapps/common/Crusader Kings III/binaries",
+      "relative_path": "AWOW Universal Female Generation/awow_ufg.dll",
+      "role": "currently_active_awow_ufg_payload",
+      "sha256": "466295aa3dc8bf345864b847728bd300b54c66a433d6bc886774d1ed66d39188",
+      "size_bytes": 131584
+    },
+    {
+      "source": "installed_ck3",
+      "root_kind": "steam_standard_ck3_binaries",
+      "root_display": "C:/Program Files (x86)/Steam/steamapps/common/Crusader Kings III/binaries",
+      "relative_path": "agp_dxcompiler_loader.log",
+      "role": "agp_runtime_log",
+      "sha256": "d9de9ec39cc90d51fb8ef8134a3200f97f1bd24fdcdc15e99747460766b766d4",
+      "size_bytes": 3160
+    },
+    {
+      "source": "installed_ck3",
+      "root_kind": "steam_standard_ck3_binaries",
+      "root_display": "C:/Program Files (x86)/Steam/steamapps/common/Crusader Kings III/binaries",
+      "relative_path": "agp_parenthook.log",
+      "role": "agp_runtime_log",
+      "sha256": "264c220b3da08fcf7e286920e9d438cf691eaa2d5b6b4065e7d11006d9673be3",
+      "size_bytes": 26800
+    },
+    {
+      "source": "installed_ck3",
+      "root_kind": "steam_standard_ck3_binaries",
+      "root_display": "C:/Program Files (x86)/Steam/steamapps/common/Crusader Kings III/binaries",
+      "relative_path": "awow_ufg.log",
+      "role": "awow_ufg_runtime_log",
+      "sha256": "8002f10160eb23c3111a4ca0c459051fadad080efa5131a6a9bbe69ea83b7cce",
+      "size_bytes": 9241389
+    },
+    {
+      "source": "installed_ck3",
+      "root_kind": "steam_standard_ck3_binaries",
+      "root_display": "C:/Program Files (x86)/Steam/steamapps/common/Crusader Kings III/binaries",
+      "relative_path": "awow_ufg_dxcompiler_loader.log",
+      "role": "awow_ufg_runtime_log",
+      "sha256": "7a1e66ff31b11ec8354ad0ff10e9744c46116f6f2c79db0055737a4cc935465d",
+      "size_bytes": 16873
+    }
+  ],
+  "absence_checks": [
+    {
+      "source": "installed_ck3",
+      "root_kind": "steam_standard_ck3_binaries",
+      "relative_path": "AGP Native Hook/agp-install-state.json",
+      "expected": "absent"
+    }
+  ],
+  "presence_checks": [
+    {
+      "source": "installed_ck3",
+      "root_kind": "steam_standard_ck3_binaries",
+      "relative_path": "AWOW Universal Female Generation/awow_ufg.dll",
+      "expected": "present_and_hashed"
+    }
+  ]
+}

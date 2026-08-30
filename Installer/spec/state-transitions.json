@@ -1,0 +1,388 @@
+{
+  "$schema": "https://any-gender-parenthook.invalid/schema/state-transitions-v1.json",
+  "schema_version": 1,
+  "kind": "agp_state_transition_contract",
+  "states": [
+    {
+      "id": "known_clean",
+      "safe_to_mutate": true,
+      "definition": "The CK3 executable and active dxcompiler.dll match a supported Steam seed; no schema-v1 state or AGP payload is present.",
+      "default_decision": "proceed"
+    },
+    {
+      "id": "managed_agp",
+      "safe_to_mutate": true,
+      "definition": "A schema-v1 state is valid and every managed file matches its recorded hash and ownership.",
+      "default_decision": "prompt"
+    },
+    {
+      "id": "legacy_agp",
+      "safe_to_mutate": false,
+      "definition": "The exact legacy AGP proxy/payload layout matches a compatibility seed but has no valid schema-v1 state.",
+      "default_decision": "prompt"
+    },
+    {
+      "id": "recognized_ufg",
+      "safe_to_mutate": false,
+      "definition": "The exact AWOW UFG chained-loader proxy, canonical original, AWOW payload, and coexisting AGP payload hashes/paths match.",
+      "default_decision": "prompt"
+    },
+    {
+      "id": "steam_updated",
+      "safe_to_mutate": false,
+      "definition": "The exact state-plus-supported-Steam hash layout identifies a newly supported active original replacing a stale state-recorded original backup.",
+      "default_decision": "prompt"
+    },
+    {
+      "id": "unknown_conflicting",
+      "safe_to_mutate": false,
+      "definition": "No compatibility seed or valid managed-state interpretation covers the observed files.",
+      "default_decision": "prompt"
+    },
+    {
+      "id": "manual_recovery_required",
+      "safe_to_mutate": false,
+      "definition": "A transaction or rollback could not be verified completely.",
+      "default_decision": "reject"
+    }
+  ],
+  "preflight_guards": [
+    {
+      "id": "ck3_not_running",
+      "failure_decision": "reject",
+      "mutation_allowed": false
+    },
+    {
+      "id": "target_is_directory",
+      "failure_decision": "reject",
+      "mutation_allowed": false
+    },
+    {
+      "id": "target_and_ancestors_not_reparse",
+      "failure_decision": "reject",
+      "mutation_allowed": false
+    },
+    {
+      "id": "paths_are_relative_and_contained",
+      "failure_decision": "reject",
+      "mutation_allowed": false
+    },
+    {
+      "id": "state_and_journal_parse_as_schema_v1",
+      "failure_decision": "reject",
+      "mutation_allowed": false
+    },
+    {
+      "id": "all_expected_hashes_read_before_mutation",
+      "failure_decision": "reject",
+      "mutation_allowed": false
+    },
+    {
+      "id": "active_and_original_names_are_distinct",
+      "failure_decision": "reject",
+      "mutation_allowed": false
+    },
+    {
+      "id": "clean_original_destination_absent_or_hash_matching",
+      "failure_decision": "reject",
+      "mutation_allowed": false
+    },
+    {
+      "id": "supported_original_hash_is_exactly_known",
+      "failure_decision": "reject",
+      "mutation_allowed": false
+    }
+  ],
+  "transitions": [
+    {
+      "id": "install_clean",
+      "operation": "install",
+      "from": [
+        "known_clean"
+      ],
+      "confirmation": "none",
+      "decision": "proceed",
+      "to": "managed_agp",
+      "ordering": [
+        "journal_and_rename_active_dxcompiler_to_original",
+        "verify_original_hash",
+        "install_declared_agp_artifacts",
+        "verify_artifacts",
+        "write_state_last"
+      ],
+      "mutation_scope": [
+        "rename_active_dxcompiler_to_original_before_proxy_write",
+        "stage_and_install_declared_artifacts",
+        "create_state_after_verification"
+      ],
+      "must_preserve": [
+        "ck3.exe",
+        "all_unmanaged_paths"
+      ],
+      "rollback": "rename_original_back_to_active_and_remove_uncommitted_agp_artifacts_and_state"
+    },
+    {
+      "id": "install_managed_upgrade",
+      "operation": "install",
+      "from": [
+        "managed_agp"
+      ],
+      "confirmation": "UPGRADE_AGP_IN_PLACE",
+      "decision": "proceed",
+      "on_missing_confirmation": "abort_without_mutation",
+      "to": "managed_agp",
+      "mutation_scope": [
+        "replace_only_state_owned_files",
+        "retain_hash_matching_original_dxcompiler",
+        "write_new_state_after_verification"
+      ],
+      "must_preserve": [
+        "ck3.exe",
+        "dxcompiler_original.dll",
+        "all_unmanaged_paths"
+      ],
+      "rollback": "restore_previous_managed_files_and_previous_state"
+    },
+    {
+      "id": "install_legacy_upgrade",
+      "operation": "install",
+      "from": [
+        "legacy_agp"
+      ],
+      "confirmation": "UPGRADE_AGP_IN_PLACE",
+      "decision": "proceed",
+      "on_missing_confirmation": "abort_without_mutation",
+      "to": "managed_agp",
+      "mutation_scope": [
+        "quarantine_exact_legacy_paths",
+        "retain_hash_matching_original_dxcompiler",
+        "install_declared_artifacts",
+        "write_state_after_verification"
+      ],
+      "must_preserve": [
+        "dxcompiler_original.dll",
+        "any_non_legacy_path"
+      ],
+      "rollback": "restore_legacy_quarantine_and_remove_uncommitted_artifacts"
+    },
+    {
+      "id": "install_awow_ufg_conversion",
+      "operation": "install",
+      "from": [
+        "recognized_ufg"
+      ],
+      "confirmation": "CONVERT_UFG_TO_AGP",
+      "decision": "proceed",
+      "on_missing_confirmation": "abort_without_mutation",
+      "to": "managed_agp",
+      "mutation_scope": [
+        "quarantine_exact_awow_ufg_payload_directory",
+        "quarantine_exact_two_awow_ufg_logs",
+        "install_declared_agp_artifacts",
+        "verify_agp_commit",
+        "remove_quarantined_awow_ufg_after_commit"
+      ],
+      "must_preserve": [
+        "dxcompiler_original.dll",
+        "all_paths_not_in_the_awow_ufg_seed",
+        "unknown_contents_under_agp_native_hook"
+      ],
+      "foreign_removal_authority": "solely_the_exact_awow_ufg_seed_and_manifest_paths",
+      "rollback": "restore_awow_ufg_quarantine_and_remove_uncommitted_agp_artifacts",
+      "uninstall_policy": "do_not_restore_awow_ufg"
+    },
+    {
+      "id": "install_steam_update_rebaseline",
+      "operation": "install",
+      "from": [
+        "steam_updated"
+      ],
+      "confirmation": "ACCEPT_STEAM_UPDATE",
+      "decision": "proceed",
+      "on_missing_confirmation": "abort_without_mutation",
+      "to": "managed_agp",
+      "ordering": [
+        "quarantine_stale_state_recorded_original",
+        "rename_new_supported_active_original_to_canonical_original",
+        "install_declared_agp_artifacts",
+        "write_state_with_new_original_hash"
+      ],
+      "mutation_scope": [
+        "quarantine_only_the_stale_state_recorded_original",
+        "rename_supported_steam_original_to_dxcompiler_original",
+        "install_declared_artifacts",
+        "write_state_after_verification"
+      ],
+      "must_preserve": [
+        "new_supported_original_hash",
+        "ck3.exe",
+        "all_unmanaged_paths"
+      ],
+      "rollback": "restore_stale_original_and_active_name_and_remove_uncommitted_agp_artifacts"
+    },
+    {
+      "id": "install_unknown_with_override",
+      "operation": "install",
+      "from": [
+        "unknown_conflicting"
+      ],
+      "confirmation": "I_UNDERSTAND_UNKNOWN_CONFLICT",
+      "decision": "proceed",
+      "on_missing_confirmation": "abort_without_mutation",
+      "to": "managed_agp",
+      "mutation_scope": [
+        "quarantine_every_displaced_unknown_path_losslessly",
+        "rename_or_retain_original_only_after_hash_check",
+        "install_declared_artifacts",
+        "write_state_after_verification"
+      ],
+      "must_preserve": [
+        "all_displaced_unknown_files_in_quarantine",
+        "ck3.exe"
+      ],
+      "rollback": "restore_unknown_quarantine_and_remove_uncommitted_agp_artifacts"
+    },
+    {
+      "id": "install_manual_recovery_block",
+      "operation": "install",
+      "from": [
+        "manual_recovery_required"
+      ],
+      "confirmation": "none",
+      "decision": "reject",
+      "to": "manual_recovery_required",
+      "mutation_scope": []
+    },
+    {
+      "id": "uninstall_managed",
+      "operation": "uninstall",
+      "from": [
+        "managed_agp"
+      ],
+      "confirmation": "none",
+      "decision": "proceed",
+      "to": "known_clean",
+      "mutation_scope": [
+        "remove_only_hash_matching_managed_files",
+        "restore_original_dxcompiler_after_hash_check",
+        "remove_exact_agp_runtime_logs",
+        "preserve_unknown_contents_under_agp_native_hook",
+        "remove_state_last"
+      ],
+      "must_preserve": [
+        "unmanaged_paths",
+        "unknown_contents_under_agp_native_hook",
+        "unknown_quarantine_files",
+        "awow_ufg_paths"
+      ],
+      "rollback": "restore_managed_snapshot_and_keep_state_for_retry"
+    },
+    {
+      "id": "uninstall_managed_drift_with_override",
+      "operation": "uninstall",
+      "from": [
+        "managed_agp",
+        "steam_updated"
+      ],
+      "confirmation": "I_UNDERSTAND_UNKNOWN_CONFLICT",
+      "decision": "proceed",
+      "on_missing_confirmation": "abort_without_mutation",
+      "to": "known_clean",
+      "mutation_scope": [
+        "quarantine_every_mismatched_state_owned_path_losslessly",
+        "remove_only_named_agp_paths_after_quarantine",
+        "restore_original_only_after_hash_check",
+        "remove_exact_agp_runtime_logs",
+        "remove_state_last"
+      ],
+      "must_preserve": [
+        "every_mismatched_file_in_quarantine",
+        "unknown_contents_under_agp_native_hook",
+        "awow_ufg_paths"
+      ],
+      "rollback": "restore_mismatched_quarantine_and_managed_snapshot"
+    },
+    {
+      "id": "uninstall_unknown_with_override",
+      "operation": "uninstall",
+      "from": [
+        "unknown_conflicting",
+        "legacy_agp"
+      ],
+      "confirmation": "I_UNDERSTAND_UNKNOWN_CONFLICT",
+      "decision": "proceed",
+      "on_missing_confirmation": "abort_without_mutation",
+      "to": "known_clean",
+      "mutation_scope": [
+        "quarantine_every_displaced_or_mismatched_unknown_path_losslessly",
+        "remove_only_exact_named_agp_paths_after_quarantine",
+        "restore_original_only_after_hash_check",
+        "remove_exact_agp_runtime_logs"
+      ],
+      "must_preserve": [
+        "every_unknown_file_in_quarantine",
+        "unknown_contents_under_agp_native_hook",
+        "awow_ufg_paths"
+      ],
+      "rollback": "restore_unknown_quarantine_and_active_original"
+    },
+    {
+      "id": "uninstall_known_clean_noop",
+      "operation": "uninstall",
+      "from": [
+        "known_clean"
+      ],
+      "confirmation": "none",
+      "decision": "no_op",
+      "to": "known_clean",
+      "mutation_scope": []
+    },
+    {
+      "id": "uninstall_awow_ufg_block",
+      "operation": "uninstall",
+      "from": [
+        "recognized_ufg"
+      ],
+      "confirmation": "none",
+      "decision": "reject",
+      "to": "recognized_ufg",
+      "mutation_scope": [],
+      "reason": "AWOW UFG is foreign until an explicit conversion; AGP uninstall must not remove or restore it."
+    },
+    {
+      "id": "uninstall_manual_recovery_block",
+      "operation": "uninstall",
+      "from": [
+        "manual_recovery_required"
+      ],
+      "confirmation": "none",
+      "decision": "reject",
+      "to": "manual_recovery_required",
+      "mutation_scope": []
+    }
+  ],
+  "failure_rules": [
+    {
+      "id": "any_mutation_failure",
+      "when": "write_or_verify_fails_before_commit",
+      "action": "rollback",
+      "commit_state": false,
+      "retain_journal_until": "rollback_verified"
+    },
+    {
+      "id": "rollback_failure",
+      "when": "rollback_cannot_be_verified",
+      "action": "mark_manual_recovery_required",
+      "commit_state": false,
+      "retain_journal": true,
+      "delete_nothing_further": true
+    },
+    {
+      "id": "awow_ufg_cleanup_failure_after_commit",
+      "when": "agp_commit_succeeds_but_awow_ufg_cleanup_cannot_finish",
+      "action": "retain_quarantine_and_mark_manual_recovery_required",
+      "commit_state": true,
+      "delete_nothing_further": true
+    }
+  ]
+}
