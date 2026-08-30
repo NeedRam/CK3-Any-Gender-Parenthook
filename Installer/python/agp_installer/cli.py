@@ -15,7 +15,7 @@ from .discovery import discover_steam_targets, select_target
 def build_parser(operation: str | None = None) -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="AGPInstaller" if operation == "install" else "AGPUninstaller" if operation == "uninstall" else "agp-installer")
     parser.add_argument("operation", nargs="?", choices=("install", "uninstall", "discover"), default=operation)
-    parser.add_argument("--target", help="CK3 binaries directory (or CK3 game directory)")
+    parser.add_argument("--target", help="CK3 executable, binaries directory, or CK3 game directory")
     parser.add_argument("--package-root", help="unpacked AGP release root")
     parser.add_argument("--confirmation", help="exact safety confirmation token")
     parser.add_argument("--json", action="store_true", help="emit machine-readable result")

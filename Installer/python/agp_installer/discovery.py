@@ -16,6 +16,7 @@ from typing import Callable, Iterable
 
 APP_ID = "1158310"
 GAME_DIRECTORY = "Crusader Kings III"
+EXECUTABLE_NAME = "ck3.exe"
 
 
 @dataclass(frozen=True)
@@ -25,6 +26,30 @@ class SteamTarget:
     binaries: Path
     library: Path
     source: str
+
+
+def standard_steam_executable() -> Path:
+    """Return the conventional Program Files Steam CK3 executable path."""
+
+    roots = [
+        os.environ.get("ProgramFiles(x86)"),
+        os.environ.get("ProgramFiles"),
+    ]
+    for value in roots:
+        if value:
+            return Path(value) / "Steam" / "steamapps" / "common" / GAME_DIRECTORY / "binaries" / EXECUTABLE_NAME
+    # This is primarily a deterministic fallback for environments without the
+    # Windows Program Files variables (for example, test runners).
+    return Path(r"C:\Program Files (x86)") / "Steam" / "steamapps" / "common" / GAME_DIRECTORY / "binaries" / EXECUTABLE_NAME
+
+
+def default_target(options: Iterable[SteamTarget] | None = None) -> Path:
+    """Return the best initial GUI target as an executable path."""
+
+    values = list(options if options is not None else discover_steam_targets())
+    if values:
+        return values[0].binaries / EXECUTABLE_NAME
+    return standard_steam_executable()
 
 
 def _registry_steam_paths() -> list[Path]:
@@ -125,7 +150,9 @@ def select_target(
 
     if manual is not None:
         path = Path(manual).expanduser()
-        if path.name.casefold() in ("crusader kings iii", "crusader_kings_iii"):
+        if path.name.casefold() == EXECUTABLE_NAME:
+            path = path.parent
+        elif path.name.casefold() in ("crusader kings iii", "crusader_kings_iii"):
             path = path / "binaries"
         elif path.name.casefold() != "binaries":
             candidate = path / "binaries"
