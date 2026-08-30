@@ -1,6 +1,6 @@
-# Code-signing policy
+# Code signing policy
 
-AGP `v1.0.0` is an unsigned, auditable draft ZIP. The release workflow records
+AGP `v1.0.0` is an unsigned, auditable release ZIP. The release workflow records
 SHA-256 checksums and GitHub build provenance; it does not create, embed, or
 claim an Authenticode signature.
 
@@ -10,8 +10,9 @@ connect and authorize the GitHub account, configure reviewers/approvers, and
 accept the provider's terms. No private key or password belongs in this
 repository, a GitHub secret, an issue, or a support request to this project.
 
-For approved signed releases: **Free code signing provided by SignPath.io,
-certificate by SignPath Foundation.**
+For approved signed releases: **Free code signing provided by
+[SignPath.io](https://signpath.io/), certificate by
+[SignPath Foundation](https://signpath.org/).**
 
 ## Team roles
 
