@@ -2,7 +2,7 @@
   "$schema": "https://any-gender-parenthook.invalid/schema/package-layout-v1.json",
   "schema_version": 1,
   "kind": "agp_package_layout",
-  "package_id": "agp-v1.0.0-win-x64",
+  "package_id": "agp-v1.0.1-win-x64",
   "root_entries": [
     {
       "relative_path": "dxcompiler.dll",

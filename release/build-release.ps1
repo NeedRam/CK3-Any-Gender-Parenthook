@@ -1,14 +1,19 @@
 [CmdletBinding()]
 param(
-	[string]$Version = '1.0.0',
+	[string]$Version = '1.0.1',
 	[string]$OutputDirectory,
-	[switch]$SkipNativeBuild
+	[switch]$SkipNativeBuild,
+	[switch]$RequireCanonicalCi
 )
 
 $ErrorActionPreference = 'Stop'
 
 $releaseRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $repositoryRoot = Split-Path -Parent $releaseRoot
+$isCanonicalCi = $env:GITHUB_ACTIONS -eq 'true'
+if ($RequireCanonicalCi -and -not $isCanonicalCi) {
+	throw 'Canonical release assembly is restricted to GitHub Actions.'
+}
 if (-not $OutputDirectory) {
 	$OutputDirectory = Join-Path $releaseRoot 'out'
 }
@@ -45,7 +50,7 @@ function Copy-PackageDirectory {
 	New-Item -ItemType Directory -Force -Path $Destination | Out-Null
 	Get-ChildItem -LiteralPath $Source -Recurse -File | Where-Object {
 		$relative = $_.FullName.Substring($Source.TrimEnd('\').Length).TrimStart('\')
-		$relative -notmatch '^(tests?|__pycache__|\.pytest_cache|build|dist|\.test-target)(\\|$)' -and
+		$relative -notmatch '^(tests?|__pycache__|\.pytest_cache|\.venv|venv|build|dist|\.test-target)(\\|$)' -and
 		$_.Extension -notin @('.pyc', '.pyo')
 	} | ForEach-Object {
 		$relative = $_.FullName.Substring($Source.TrimEnd('\').Length).TrimStart('\')
@@ -115,6 +120,7 @@ $packageFiles = @(
 	@{ Source = 'Installer\AGPUninstaller.exe'; Destination = 'AGP-Uninstaller.exe' },
 	@{ Source = 'release\END_USER_README.md'; Destination = 'README.md' },
 	@{ Source = 'release\RELEASE_NOTES.md'; Destination = 'RELEASE_NOTES.md' },
+	@{ Source = 'Native Hook\toolchain.json'; Destination = 'BUILD_TOOLCHAIN.json' },
 	@{ Source = 'Installer\release-manifest.json'; Destination = 'Installer\release-manifest.json' },
 	@{ Source = 'Installer\install.ps1'; Destination = 'Installer\install.ps1' },
 	@{ Source = 'Installer\uninstall.ps1'; Destination = 'Installer\uninstall.ps1' },
@@ -132,10 +138,10 @@ Copy-PackageDirectory (Join-Path $repositoryRoot 'Installer\python') (Join-Path 
 Copy-PackageDirectory (Join-Path $repositoryRoot 'Installer\powershell') (Join-Path $packageRoot 'Installer\powershell') -Required | Out-Null
 Copy-PackageDirectory (Join-Path $repositoryRoot 'Installer\spec') (Join-Path $packageRoot 'Installer\spec') -Required | Out-Null
 
-# The checked-in manifest is the release contract template. Native output can
-# differ across supported MSVC revisions even with /Brepro, so the packaged
-# manifest must be generated after the build from the exact DLL bytes that it
-# accompanies. This is also the required ordering for future signed releases.
+# The checked-in manifest is the release contract template. The packaged
+# manifest is always regenerated from the exact staged DLL bytes. GitHub
+# Actions, using Native Hook/toolchain.json, is the canonical release builder;
+# local packages are smoke-test candidates only.
 $packagedArtifactById = @{}
 foreach ($artifact in $manifest.artifacts) {
 	$packagedPath = Join-Path $packageRoot ([string]$artifact.relative_path -replace '/', '\')
@@ -163,7 +169,7 @@ $packagedManifestPath = Join-Path $packageRoot 'Installer\release-manifest.json'
 $packagedManifestJson = $manifest | ConvertTo-Json -Depth 20
 [System.IO.File]::WriteAllText($packagedManifestPath, $packagedManifestJson + "`n", [System.Text.UTF8Encoding]::new($false))
 
-$forbiddenNames = @('native_test_mod', 'AGP Dynastic Priority', 'Lunacy', '.git', 'script_docs 1.19.0.6')
+$forbiddenNames = @('native_test_mod', 'AGP Dynastic Priority', 'Lunacy', '.git', '.venv', 'venv', 'script_docs 1.19.0.6')
 $forbiddenFound = Get-ChildItem -LiteralPath $packageRoot -Recurse -Force | Where-Object {
 	$forbiddenNames -contains $_.Name
 }
@@ -223,6 +229,8 @@ try {
 	$commit = 'unavailable'
 }
 $fileCount = @(Get-ChildItem -LiteralPath $packageRoot -Recurse -File).Count
+$toolchainPath = Join-Path $repositoryRoot 'Native Hook\toolchain.json'
+$toolchain = Get-Content -LiteralPath $toolchainPath -Raw | ConvertFrom-Json
 $provenance = [ordered]@{
 	'schema_version' = 1
 	'kind' = 'agp_release_provenance'
@@ -237,6 +245,16 @@ $provenance = [ordered]@{
 		repository = $manifest.release.source_repo
 		commit = $commit
 		workflow = 'release/build-release.ps1'
+	}
+	'build' = [ordered]@{
+		authority = $(if ($isCanonicalCi) { 'canonical_github_actions' } else { 'local_smoke_test' })
+		canonical_release_artifact = $isCanonicalCi
+		github_actions_runner = $toolchain.github_actions_runner
+		vc_tools_version = $toolchain.vc_tools_version
+		windows_sdk_version = $toolchain.windows_sdk_version
+		host_architecture = $toolchain.host_architecture
+		target_architecture = $toolchain.target_architecture
+		toolchain_contract = 'Native Hook/toolchain.json'
 	}
 	'artifact' = [ordered]@{
 		file = (Split-Path -Leaf $zipPath)

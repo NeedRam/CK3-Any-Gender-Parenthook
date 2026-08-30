@@ -1,15 +1,24 @@
-# v1.0.0 draft release
+# v1.0.1 release
 
-This is the first unsigned, auditable Windows x64 release of Any-Gender
-Parenthook. It targets Crusader Kings III `1.19.0.6` and includes:
+This unsigned Windows x64 maintenance release of Any-Gender Parenthook targets
+Crusader Kings III `1.19.0.6`.
 
-- schema-v1 state, journal, compatibility, and package manifest;
-- independent BAT/PowerShell and Python/Tkinter installer engines;
-- clean install, managed uninstall, upgrade, unknown-conflict, Steam-update,
-  and recognized AWOW UFG safety transitions;
-- SHA-256 package checksums and GitHub build provenance.
+## Changed since v1.0.0
 
-The native payload is version-specific. Test the intended install/uninstall
-matrix before using it with an active campaign. Authenticode signing is not
-claimed for this release; the future SignPath path is documented in
-`SIGNING.md`.
+- pinned canonical native release builds to GitHub's `windows-2022` runner,
+  MSVC `14.44.35207`, and Windows SDK `10.0.22621.0`;
+- made the GitHub Actions build from `main` the canonical release artifact;
+- marked locally assembled packages as smoke-test candidates in their
+  provenance instead of treating them as publication artifacts;
+- preserved exact recognition of the published v1.0.0 CI binaries for safe
+  upgrades, including installations that were copied manually without state;
+- updated all DLL and installer file-version metadata to `1.0.1.0`.
+
+The transactional installer behavior is unchanged: Steam's original
+`dxcompiler.dll` is preserved, unknown files are quarantined rather than
+deleted, and uninstall restores the recorded pre-install layout.
+
+This release is intentionally unsigned. Verify the ZIP with its adjacent
+`.sha256` file or use the bundled `SHA256SUMS.txt`. SignPath preparation remains
+documented in `SIGNING.md`, but no Authenticode signature is claimed for
+v1.0.1.

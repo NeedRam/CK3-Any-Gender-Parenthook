@@ -17,7 +17,8 @@ AGP is an offline Windows x64 native hook for Crusader Kings III. It installs a 
 ## Build and release evidence
 
 - Workflow: `.github/workflows/release-draft.yml`
-- Local reproducible builder: `release/build-release.ps1`
+- Local smoke-test builder: `release/build-release.ps1`
+- Canonical pinned native toolchain: `Native Hook/toolchain.json`
 - Contract and exact hashes: `Installer/release-manifest.json`
 - Installer state/transaction schemas: `Installer/spec/`
 - Automated state-transition tests: `Installer/python/tests/`
@@ -35,6 +36,6 @@ The package excludes the native test mod, native source/tools, CK3 script docume
 5. Configure the authors/committers, reviewers, and approvers listed in `SIGNING.md`.
 6. Require a manual approver decision for every signing request.
 7. After approval, add the SignPath workflow identifiers and store the API token only as a GitHub Actions secret; no private signing key is provided to or stored by the project.
-8. Sign and timestamp the two EXEs and two DLLs, verify all four Authenticode chains, then generate the final v1.0.1 manifest/checksums and publish it.
+8. For a new post-approval version, sign and timestamp the two EXEs and two DLLs, verify all four Authenticode chains, then generate the final manifest/checksums and publish it. The existing v1.0.1 release remains unsigned.
 
 Approval and certificate use are controlled by SignPath Foundation. The certificate publisher is SignPath Foundation, not the repository owner.

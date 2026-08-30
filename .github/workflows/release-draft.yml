@@ -6,7 +6,7 @@ on:
       version:
         description: Release version from Installer/release-manifest.json
         required: true
-        default: 1.0.0
+        default: 1.0.1
   push:
     tags:
       - v*.*.*
@@ -19,10 +19,23 @@ permissions:
 
 jobs:
   package:
-    runs-on: windows-latest
+    # Native releases are pinned to Visual Studio 2022. Native Hook/toolchain.json
+    # selects and verifies the exact MSVC and Windows SDK versions.
+    runs-on: windows-2022
     steps:
       - name: Check out source
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Require a main-line release commit
+        shell: pwsh
+        run: |
+          git fetch --no-tags origin main
+          git merge-base --is-ancestor HEAD origin/main
+          if ($LASTEXITCODE -ne 0) {
+            throw 'Release builds must use a commit reachable from main.'
+          }
 
       - name: Select release version
         id: release
@@ -86,7 +99,7 @@ jobs:
 
       - name: Assemble unsigned package
         shell: pwsh
-        run: .\release\build-release.ps1 -Version '${{ steps.release.outputs.version }}' -SkipNativeBuild
+        run: .\release\build-release.ps1 -Version '${{ steps.release.outputs.version }}' -SkipNativeBuild -RequireCanonicalCi
 
       - name: Attest ZIP provenance
         uses: actions/attest@v4

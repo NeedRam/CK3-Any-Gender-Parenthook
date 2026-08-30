@@ -4,8 +4,8 @@
   "kind": "agp_release_manifest",
   "release": {
     "id": "agp",
-    "version": "1.0.0",
-    "channel": "draft",
+    "version": "1.0.1",
+    "channel": "stable",
     "unsigned": true,
     "source_repo": "https://github.com/NeedRam/CK3-Any-Gender-Parenthook",
     "license": "MIT"
@@ -54,7 +54,7 @@
     ]
   },
   "package": {
-    "id": "agp-v1.0.0-win-x64",
+    "id": "agp-v1.0.1-win-x64",
     "manifest_relative_path": "Installer/release-manifest.json",
     "managed_files": [
       {
@@ -143,7 +143,7 @@
       "id": "agp-proxy",
       "relative_path": "dxcompiler.dll",
       "role": "agp_proxy",
-      "sha256": "24455f77bb877a80f80f09c004e86a1fc8058e986a36f8b00fc5dbffc825c0b0",
+      "sha256": "4605b91a033668375cfd47ff1f64b005816bc40bc1438d72721d379011821cfa",
       "size_bytes": 109568,
       "size_is_informational": true,
       "source_relative_path": "Native Hook/build/dxcompiler.dll"
@@ -152,7 +152,7 @@
       "id": "agp-payload",
       "relative_path": "AGP Native Hook/agp_parenthook.dll",
       "role": "agp_payload",
-      "sha256": "388a2024e58e9bff884e70e2e3fdf4af12651b94dff0f142da200bfc70d14b6e",
+      "sha256": "3fb1a1a113bd2ae6780de30983046659ca8cca41ca1bc1a88c0c7856994f9f38",
       "size_bytes": 135680,
       "size_is_informational": true,
       "source_relative_path": "Native Hook/build/AGP Native Hook/agp_parenthook.dll"
@@ -232,7 +232,40 @@
             {
               "relative_path": "dxcompiler.dll",
               "kind": "file",
-              "sha256": "24455f77bb877a80f80f09c004e86a1fc8058e986a36f8b00fc5dbffc825c0b0",
+              "sha256": "02a014fcec8490ae3f35a864b6c520c450e825cbc748cd6d17351ba79f4ed70a",
+              "size_bytes": 107008
+            },
+            {
+              "relative_path": "dxcompiler_original.dll",
+              "kind": "file",
+              "sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+              "size_bytes": 20291584
+            },
+            {
+              "relative_path": "AGP Native Hook/agp_parenthook.dll",
+              "kind": "file",
+              "sha256": "a2572a019c6379f761ca807afb0e1e6ee3f74e7166d657e7b2819b57334a13af",
+              "size_bytes": 133632
+            }
+          ],
+          "required_paths": [],
+          "absent_paths": [
+            "AGP Native Hook/agp-install-state.json"
+          ]
+        },
+        "description": "Published unsigned AGP v1.0.0 CI build copied manually without schema-v1 state."
+      },
+      {
+        "id": "agp-v1.0.1-manual-layout",
+        "state": "legacy_agp",
+        "confidence": "exact_hash",
+        "match": {
+          "state_file": "absent",
+          "required_files": [
+            {
+              "relative_path": "dxcompiler.dll",
+              "kind": "file",
+              "sha256": "4605b91a033668375cfd47ff1f64b005816bc40bc1438d72721d379011821cfa",
               "size_bytes": 109568
             },
             {
@@ -244,7 +277,7 @@
             {
               "relative_path": "AGP Native Hook/agp_parenthook.dll",
               "kind": "file",
-              "sha256": "388a2024e58e9bff884e70e2e3fdf4af12651b94dff0f142da200bfc70d14b6e",
+              "sha256": "3fb1a1a113bd2ae6780de30983046659ca8cca41ca1bc1a88c0c7856994f9f38",
               "size_bytes": 135680
             }
           ],
@@ -253,7 +286,7 @@
             "AGP Native Hook/agp-install-state.json"
           ]
         },
-        "description": "Unsigned AGP v1.0.0 deterministic build copied manually without schema-v1 state."
+        "description": "Unsigned AGP v1.0.1 pinned-toolchain build copied manually without schema-v1 state."
       },
       {
         "id": "awow-ufg-recognized-layout-2026-08-13",

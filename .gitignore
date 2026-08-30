@@ -3,6 +3,7 @@
 
 !Native Hook/
 !Native Hook/**
+Native Hook/build/
 
 !AGP Dynastic Priority/
 !AGP Dynastic Priority/**
@@ -21,6 +22,7 @@ Installer/AGPInstaller.spec
 Installer/build/
 Installer/python/build/
 Installer/python/dist/
+Installer/python/.venv/
 Installer/python/**/__pycache__/
 Installer/python/**/*.pyc
 

@@ -1,4 +1,4 @@
-# Any-Gender Parenthook v1.0.0
+# Any-Gender Parenthook v1.0.1
 
 This is the Windows x64 AGP package for Steam Crusader Kings III `1.19.0.6`.
 Keep the extracted folder together: the four launchers at this folder's top
@@ -40,5 +40,5 @@ documentation, and repository metadata. `Installer` contains the auditable
 installer engines and contract used by the four top-level launchers; end users
 normally do not need to open it.
 
-Version 1.0.0 is intentionally unsigned. Verify the ZIP with its adjacent
+Version 1.0.1 is intentionally unsigned. Verify the ZIP with its adjacent
 `.sha256` file or use the included `SHA256SUMS.txt` for individual files.

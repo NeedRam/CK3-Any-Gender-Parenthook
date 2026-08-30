@@ -4,7 +4,7 @@ Any-Gender Parenthook (AGP) is a Windows x64 native hook for Crusader Kings III.
 
 ## Install
 
-Download `Any-Gender-Parenthook-v1.0.0-win64.zip`, extract the whole archive, and then use either:
+Download `Any-Gender-Parenthook-v1.0.1-win64.zip`, extract the whole archive, and then use either:
 
 - `AGP-Installer.exe` to search Steam libraries or browse to `ck3.exe`;
 - `Install AGP.bat` for the standard Steam location.
@@ -19,9 +19,9 @@ Use `AGP-Uninstaller.exe` or `Uninstall AGP.bat`. Uninstall verifies the recorde
 
 ## Building a release
 
-The repository's `release` folder is maintainer tooling, not the folder users copy into CK3. Run `release\build-release.ps1` from PowerShell on Windows with Visual Studio 2022 C++ build tools and the Python build requirements installed. The script builds or verifies the native x64 DLLs, assembles the end-user ZIP with its four launchers at the top level, rejects development-only content, and writes checksums plus local provenance metadata.
+The repository's `release` folder is maintainer tooling, not the folder users copy into CK3. Run `release\build-release.ps1` from PowerShell on Windows with the exact toolchain in `Native Hook\toolchain.json` and the Python build requirements installed. The script builds or verifies the native x64 DLLs, assembles the end-user ZIP with its four launchers at the top level, rejects development-only content, and writes checksums plus local provenance metadata. Local output is for smoke testing; the GitHub Actions build from `main` is the canonical release artifact.
 
-Version 1.0.0 is intentionally unsigned and auditable. The planned SignPath process for signed releases is documented in [SIGNING.md](SIGNING.md).
+Version 1.0.1 is intentionally unsigned and auditable. The planned SignPath process for a future signed release is documented in [SIGNING.md](SIGNING.md).
 
 ## Project policies
 
