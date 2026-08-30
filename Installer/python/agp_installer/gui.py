@@ -2,12 +2,35 @@
 
 from __future__ import annotations
 
+import re
 import tkinter as tk
 from pathlib import Path
 from tkinter import filedialog, messagebox, simpledialog
 
-from .core import InstallError, Installer
+from .core import InstallError, Installer, Result
 from .discovery import default_target, discover_steam_targets, select_target
+
+
+_WINDOWS_DRIVE_PREFIX = re.compile(r"^([A-Za-z]):")
+
+
+def normalize_drive_prefix(value: str) -> str:
+    """Uppercase only an alphabetic Windows drive prefix for GUI display."""
+
+    return _WINDOWS_DRIVE_PREFIX.sub(lambda match: f"{match.group(1).upper()}:", value, count=1)
+
+
+def _result_message(result: Result) -> str:
+    """Return a user-facing result without claiming success for non-commits."""
+
+    successful_states = {"install": "managed_agp", "uninstall": "known_clean"}
+    if result.operation in successful_states and result.decision == "proceed" and result.next_state == successful_states[result.operation]:
+        return {
+            "install": "AGP installed successfully.",
+            "uninstall": "AGP uninstalled successfully.",
+        }[result.operation]
+    details = f"{result.operation}: {result.decision}"
+    return f"{details}\n{result.message}".strip() if result.message else details
 
 
 def _ask_confirmation(token: str, parent: tk.Misc | None = None) -> str | None:
@@ -61,7 +84,7 @@ def _run_operation(root: tk.Misc, operation: str, package_root: str | None, targ
             token = "I_UNDERSTAND_UNKNOWN_CONFLICT"
         confirmation = _ask_confirmation(token, root) if token else None
         result = engine.install(selected, confirmation) if operation == "install" else engine.uninstall(selected, confirmation)
-        messagebox.showinfo("Any-Gender Parenthook", f"{result.operation}: {result.decision}\n{result.message}".strip(), parent=root)
+        messagebox.showinfo("Any-Gender Parenthook", _result_message(result), parent=root)
         return 0 if result.decision in ("proceed", "no_op") else 1
     except InstallError as exc:
         messagebox.showerror("Any-Gender Parenthook", str(exc), parent=root)
@@ -83,7 +106,7 @@ def run(operation: str = "install", package_root: str | None = None) -> int:
     frame.grid(row=0, column=0, sticky="nsew")
     frame.columnconfigure(0, weight=1)
     tk.Label(frame, text="Crusader Kings III executable or path:").grid(row=0, column=0, columnspan=2, sticky="w")
-    target_var = tk.StringVar(root, value=str(default_target(options)))
+    target_var = tk.StringVar(root, value=normalize_drive_prefix(str(default_target(options))))
     entry = tk.Entry(frame, textvariable=target_var, width=90)
     entry.grid(row=1, column=0, padx=(0, 8), pady=(6, 12), sticky="ew")
     tk.Button(frame, text="Browse...", command=lambda: _browse_for_target(root, target_var)).grid(row=1, column=1, pady=(6, 12))
