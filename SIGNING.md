@@ -1,6 +1,6 @@
 # Code signing policy
 
-AGP `v1.0.1` is an unsigned, auditable release. SHA-256 checksums and GitHub
+AGP `v1.0.2` is an unsigned, auditable release. SHA-256 checksums and GitHub
 build-provenance attestations identify its release ZIP; the project does not
 create, embed, or claim an Authenticode signature for this version.
 
@@ -55,7 +55,7 @@ operating it. See [PRIVACY.md](PRIVACY.md) for the complete policy.
 After SignPath approval, a later workflow may sign and timestamp the two
 installer executables and both native DLLs, verify every Authenticode signature,
 and only then generate final manifests and checksums. That work will use a new
-version number; `v1.0.1` must remain identified as unsigned.
+version number; `v1.0.1` and `v1.0.2` must remain identified as unsigned.
 
 Any signing integration must retain source-origin verification, protected
 manual approval, the pinned native toolchain, canonical CI assembly, and

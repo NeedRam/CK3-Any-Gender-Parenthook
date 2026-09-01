@@ -18,6 +18,30 @@ APP_ID = "1158310"
 GAME_DIRECTORY = "Crusader Kings III"
 EXECUTABLE_NAME = "ck3.exe"
 
+_DEFAULT_COMPONENT_CASE = {
+    "program files": "Program Files",
+    "program files (x86)": "Program Files (x86)",
+    "steam": "Steam",
+    "steamapps": "steamapps",
+    "common": "common",
+    "crusader kings iii": GAME_DIRECTORY,
+    "binaries": "binaries",
+    "ck3.exe": EXECUTABLE_NAME,
+}
+
+
+def canonicalize_default_path(path: Path) -> Path:
+    """Normalize the drive and known Steam/CK3 components used in defaults."""
+
+    value = str(path)
+    value = re.sub(r"^([a-z]):", lambda match: f"{match.group(1).upper()}:", value)
+    parts = re.split(r"([\\/])", value)
+    for index in range(0, len(parts), 2):
+        replacement = _DEFAULT_COMPONENT_CASE.get(parts[index].casefold())
+        if replacement is not None:
+            parts[index] = replacement
+    return Path("".join(parts))
+
 
 @dataclass(frozen=True)
 class SteamTarget:
@@ -37,10 +61,10 @@ def standard_steam_executable() -> Path:
     ]
     for value in roots:
         if value:
-            return Path(value) / "Steam" / "steamapps" / "common" / GAME_DIRECTORY / "binaries" / EXECUTABLE_NAME
+            return canonicalize_default_path(Path(value) / "Steam" / "steamapps" / "common" / GAME_DIRECTORY / "binaries" / EXECUTABLE_NAME)
     # This is primarily a deterministic fallback for environments without the
     # Windows Program Files variables (for example, test runners).
-    return Path(r"C:\Program Files (x86)") / "Steam" / "steamapps" / "common" / GAME_DIRECTORY / "binaries" / EXECUTABLE_NAME
+    return canonicalize_default_path(Path(r"C:\Program Files (x86)") / "Steam" / "steamapps" / "common" / GAME_DIRECTORY / "binaries" / EXECUTABLE_NAME)
 
 
 def default_target(options: Iterable[SteamTarget] | None = None) -> Path:
@@ -48,7 +72,7 @@ def default_target(options: Iterable[SteamTarget] | None = None) -> Path:
 
     values = list(options if options is not None else discover_steam_targets())
     if values:
-        return values[0].binaries / EXECUTABLE_NAME
+        return canonicalize_default_path(values[0].binaries / EXECUTABLE_NAME)
     return standard_steam_executable()
 
 

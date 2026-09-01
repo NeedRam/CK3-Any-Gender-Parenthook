@@ -251,7 +251,7 @@ function Add-Snapshot([hashtable]$Context, [string]$RelativePath) {
     $snapshot = [ordered]@{ relative_path = $RelativePath; stage_relative_path = $stageRel; before = $obs }
     if ($obs.exists) {
         if ($obs.kind -eq 'directory') {
-            New-Item -ItemType Directory -Path $stagePath -Force | Out-Null
+            New-Item -ItemType Directory -Path (Split-Path -Parent $stagePath) -Force | Out-Null
             Copy-Item -LiteralPath (Get-ContainedPath $Context $RelativePath) -Destination $stagePath -Recurse -Force
         }
         else {
@@ -382,9 +382,39 @@ function Get-ExpectedConfirmation([hashtable]$Context) {
         }
     }
     else {
+        if ($Context.Classification -eq 'recognized_ufg') { return 'REMOVE_AGP_AND_UFG' }
         if ($Context.Classification -in @('unknown_conflicting', 'legacy_agp', 'steam_updated')) { return 'I_UNDERSTAND_UNKNOWN_CONFLICT' }
     }
     return $null
+}
+
+function Get-ConfirmationPrompt([hashtable]$Context) {
+    $key = "$Operation/$($Context.Classification)"
+    switch ($key) {
+        'install/managed_agp' { return @('Replace installed AGP?', 'AGP is already installed. Click OK to replace it with this version.') }
+        'install/legacy_agp' { return @('Upgrade older AGP?', 'An older AGP installation was found. Click OK to upgrade it safely.') }
+        'install/recognized_ufg' { return @('Remove UFG and install AGP?', 'AWOW UFG and its proxy were found. Click OK to remove UFG and install AGP.') }
+        'install/steam_updated' { return @('Use updated Steam files?', "Steam updated CK3 after AGP was installed. Click OK to update AGP's saved original file.") }
+        'install/unknown_conflicting' { return @('Unknown proxy found', 'An unrecognized proxy is installed. Click OK to preserve it in quarantine and install AGP.') }
+        'uninstall/recognized_ufg' { return @('Remove AGP and UFG?', 'AWOW UFG and its proxy were found. Click OK to remove both UFG and AGP components.') }
+        'uninstall/legacy_agp' { return @('Remove older AGP?', "An older AGP installation was found. Click OK to remove it and restore Steam's file.") }
+        'uninstall/steam_updated' { return @('Remove changed AGP files?', 'CK3 files changed after AGP was installed. Click OK to preserve conflicts and continue.') }
+        'uninstall/unknown_conflicting' { return @('Unknown proxy found', 'An unrecognized proxy is installed. Click OK to preserve it in quarantine and continue.') }
+    }
+    return $null
+}
+
+function Show-ConfirmationDialog([hashtable]$Context) {
+    $prompt = Get-ConfirmationPrompt $Context
+    if ($null -eq $prompt) { return $false }
+    Add-Type -AssemblyName System.Windows.Forms
+    $choice = [Windows.Forms.MessageBox]::Show(
+        [string]$prompt[1],
+        [string]$prompt[0],
+        [Windows.Forms.MessageBoxButtons]::OKCancel,
+        [Windows.Forms.MessageBoxIcon]::Warning
+    )
+    return $choice -eq [Windows.Forms.DialogResult]::OK
 }
 
 function Confirm-Transition([hashtable]$Context) {
@@ -392,10 +422,10 @@ function Confirm-Transition([hashtable]$Context) {
     if ($null -eq $expected) { return $true }
     $answer = $Confirmation
     if ([string]::IsNullOrEmpty($answer) -and $Interactive) {
-        $answer = Read-Host "Type $expected to continue (anything else aborts)"
+        if (Show-ConfirmationDialog $Context) { $answer = $expected }
     }
     if ($answer -ne $expected) {
-        $Context.Result = [ordered]@{ operation = $Operation; classification = $Context.Classification; decision = 'abort'; message = "Required confirmation was not supplied: $expected" }
+        $Context.Result = [ordered]@{ operation = $Operation; classification = $Context.Classification; decision = 'abort'; message = 'Confirmation was cancelled or not supplied.' }
         return $false
     }
     return $true
@@ -422,6 +452,7 @@ function Add-InstallPlan([hashtable]$Context) {
             if ($payload.exists) { Add-Quarantine $Context $payloadRel 'file' 'unknown_displaced' 'preserve_for_uninstall' }
         }
         'recognized_ufg' {
+            if ((Get-Observation $Context $activeRel).exists) { Add-Quarantine $Context $activeRel 'file' 'recognized_awow_ufg' 'do_not_restore_after_awow_ufg_commit' }
             $ufgDir = [string]$Context.Manifest.safety.ufg_cleanup.foreign_payload_directory
             if ((Get-Observation $Context $ufgDir).exists) { Add-Quarantine $Context $ufgDir 'directory_manifest' 'recognized_awow_ufg' 'do_not_restore_after_awow_ufg_commit' }
             foreach ($log in @($Context.Manifest.safety.ufg_cleanup.foreign_logs)) {
@@ -633,6 +664,32 @@ function Add-UninstallPlan([hashtable]$Context) {
     foreach ($log in @($Context.Manifest.target.logs)) {
         if ([string]$log.owner -eq 'agp_runtime') { Add-Snapshot $Context $log.relative_path }
     }
+    if ($Context.Classification -eq 'recognized_ufg') {
+        foreach ($relative in @($activeRel, $payloadRel)) {
+            if ((Get-Observation $Context $relative).exists) {
+                Add-Quarantine $Context $relative 'file' 'recognized_awow_ufg' 'remove_after_uninstall_commit'
+            }
+        }
+        $ufgDir = [string]$Context.Manifest.safety.ufg_cleanup.foreign_payload_directory
+        if ((Get-Observation $Context $ufgDir).exists) {
+            Add-Quarantine $Context $ufgDir 'directory_manifest' 'recognized_awow_ufg' 'remove_after_uninstall_commit'
+        }
+        foreach ($log in @($Context.Manifest.safety.ufg_cleanup.foreign_logs)) {
+            if ((Get-Observation $Context $log).exists) {
+                Add-Quarantine $Context $log 'file' 'recognized_awow_ufg' 'remove_after_uninstall_commit'
+            }
+        }
+        $original = Get-Observation $Context $originalRel
+        if (-not $original.exists -or $original.kind -ne 'file' -or $original.sha256 -ne ([string]$Context.Build.original_dxcompiler_sha256).ToLowerInvariant()) {
+            Fail 'Cannot uninstall safely: the canonical Steam original is missing or unsupported.'
+        }
+        $Context.State = [ordered]@{
+            target = [ordered]@{ build_id = [string]$Context.Build.id }
+            baseline = [ordered]@{ original_dxcompiler = [ordered]@{ sha256 = $original.sha256 } }
+            managed_files = @()
+        }
+        return
+    }
     if ($null -eq $Context.State) {
         foreach ($relative in @($activeRel, $payloadRel)) {
             if ((Get-Observation $Context $relative).exists) {
@@ -672,6 +729,9 @@ function New-UninstallJournal([hashtable]$Context) {
     }
     [void]$entries.Add((New-JournalEntry $Context $Context.Manifest.target.original_dxcompiler_relative_path 'file' 'restore' "$($Context.StageRelative)/snapshot/dxcompiler_original.dll" 'steam'))
     $foreign = [ordered]@{ kind = 'none'; allowed = $false; quarantine_relative_path = $Context.QuarantineRelative; remove_after_commit = $false; uninstall_policy = 'none' }
+    if ($Context.Classification -eq 'recognized_ufg') {
+        $foreign = [ordered]@{ kind = 'recognized_awow_ufg'; allowed = $true; quarantine_relative_path = $Context.QuarantineRelative; remove_after_commit = $true; uninstall_policy = 'remove_with_agp' }
+    }
     $Context.Journal = [ordered]@{
         '$schema' = 'https://json-schema.org/draft/2020-12/schema'
         schema_version = 1
@@ -708,6 +768,7 @@ function Invoke-Uninstall([hashtable]$Context) {
         Move-Item -LiteralPath (Get-ContainedPath $Context $originalRel) -Destination (Get-ContainedPath $Context $activeRel)
         $stateRel = $Context.Manifest.target.state_relative_path
         Remove-Exact $Context $stateRel $false
+        if ($Context.Classification -eq 'recognized_ufg') { Remove-Exact $Context $Context.QuarantineRelative $true }
         $journalDir = Split-Path -Parent $Context.JournalPath
         if (Test-Path -LiteralPath $journalDir) { Remove-Item -LiteralPath $journalDir -Recurse -Force }
         $Context.Result = [ordered]@{ operation = 'uninstall'; classification = $Context.Classification; decision = 'proceed'; next_state = 'known_clean'; transaction_id = $Context.TransactionId }
@@ -747,10 +808,6 @@ try {
     if (-not (Confirm-Transition $ctx)) { exit (Write-Result $ctx) }
     if ($Operation -eq 'uninstall' -and $ctx.Classification -eq 'known_clean') {
         $ctx.Result = [ordered]@{ operation = 'uninstall'; classification = 'known_clean'; decision = 'no_op'; next_state = 'known_clean' }
-        exit (Write-Result $ctx)
-    }
-    if ($Operation -eq 'uninstall' -and $ctx.Classification -eq 'recognized_ufg') {
-        $ctx.Result = [ordered]@{ operation = 'uninstall'; classification = 'recognized_ufg'; decision = 'reject'; next_state = 'recognized_ufg'; message = 'AWOW UFG is foreign until explicit conversion; uninstall performs no mutation.' }
         exit (Write-Result $ctx)
     }
     if ($Operation -eq 'uninstall') { Invoke-Uninstall $ctx } else { Invoke-Install $ctx }

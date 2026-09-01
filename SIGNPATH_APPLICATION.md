@@ -36,6 +36,6 @@ The package excludes the native test mod, native source/tools, CK3 script docume
 5. Configure the authors/committers, reviewers, and approvers listed in `SIGNING.md`.
 6. Require a manual approver decision for every signing request.
 7. After approval, add the SignPath workflow identifiers and store the API token only as a GitHub Actions secret; no private signing key is provided to or stored by the project.
-8. For a new post-approval version, sign and timestamp the two EXEs and two DLLs, verify all four Authenticode chains, then generate the final manifest/checksums and publish it. The existing v1.0.1 release remains unsigned.
+8. For a new post-approval version, sign and timestamp the two EXEs and two DLLs, verify all four Authenticode chains, then generate the final manifest/checksums and publish it. The existing v1.0.1 and v1.0.2 releases remain unsigned.
 
 Approval and certificate use are controlled by SignPath Foundation. The certificate publisher is SignPath Foundation, not the repository owner.

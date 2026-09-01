@@ -176,6 +176,7 @@
       "on_missing_confirmation": "abort_without_mutation",
       "to": "managed_agp",
       "mutation_scope": [
+        "quarantine_exact_awow_ufg_proxy",
         "quarantine_exact_awow_ufg_payload_directory",
         "quarantine_exact_two_awow_ufg_logs",
         "install_declared_agp_artifacts",
@@ -338,16 +339,27 @@
       "mutation_scope": []
     },
     {
-      "id": "uninstall_awow_ufg_block",
+      "id": "uninstall_recognized_awow_ufg",
       "operation": "uninstall",
       "from": [
         "recognized_ufg"
       ],
-      "confirmation": "none",
-      "decision": "reject",
-      "to": "recognized_ufg",
-      "mutation_scope": [],
-      "reason": "AWOW UFG is foreign until an explicit conversion; AGP uninstall must not remove or restore it."
+      "confirmation": "REMOVE_AGP_AND_UFG",
+      "decision": "proceed",
+      "on_missing_confirmation": "abort_without_mutation",
+      "to": "known_clean",
+      "mutation_scope": [
+        "quarantine_exact_awow_ufg_proxy_payload_directory_and_logs",
+        "quarantine_exact_coexisting_agp_payload",
+        "restore_original_dxcompiler_after_hash_check",
+        "remove_agp_state_and_exact_runtime_logs",
+        "remove_recognized_quarantine_after_verification"
+      ],
+      "must_preserve": [
+        "ck3.exe",
+        "all_paths_not_in_the_recognized_awow_ufg_layout"
+      ],
+      "rollback": "restore_awow_ufg_and_agp_snapshots_and_original_name"
     },
     {
       "id": "uninstall_manual_recovery_block",

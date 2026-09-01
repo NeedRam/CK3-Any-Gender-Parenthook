@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 import tkinter as tk
 from pathlib import Path
-from tkinter import filedialog, messagebox, simpledialog
+from tkinter import filedialog, messagebox
 
 from .core import InstallError, Installer, Result
 from .discovery import default_target, discover_steam_targets, select_target
@@ -33,8 +33,65 @@ def _result_message(result: Result) -> str:
     return f"{details}\n{result.message}".strip() if result.message else details
 
 
-def _ask_confirmation(token: str, parent: tk.Misc | None = None) -> str | None:
-    return simpledialog.askstring("Confirmation required", f"Type exactly:\n{token}", parent=parent)
+def _confirmation_prompt(operation: str, state: str) -> tuple[str, str, str] | None:
+    """Return short end-user copy and the internal engine authorization token."""
+
+    prompts = {
+        ("install", "managed_agp"): (
+            "Replace installed AGP?",
+            "AGP is already installed. Click OK to replace it with this version.",
+            "UPGRADE_AGP_IN_PLACE",
+        ),
+        ("install", "legacy_agp"): (
+            "Upgrade older AGP?",
+            "An older AGP installation was found. Click OK to upgrade it safely.",
+            "UPGRADE_AGP_IN_PLACE",
+        ),
+        ("install", "recognized_ufg"): (
+            "Remove UFG and install AGP?",
+            "AWOW UFG and its proxy were found. Click OK to remove UFG and install AGP.",
+            "CONVERT_UFG_TO_AGP",
+        ),
+        ("install", "steam_updated"): (
+            "Use updated Steam files?",
+            "Steam updated CK3 after AGP was installed. Click OK to update AGP's saved original file.",
+            "ACCEPT_STEAM_UPDATE",
+        ),
+        ("install", "unknown_conflicting"): (
+            "Unknown proxy found",
+            "An unrecognized proxy is installed. Click OK to preserve it in quarantine and install AGP.",
+            "I_UNDERSTAND_UNKNOWN_CONFLICT",
+        ),
+        ("uninstall", "recognized_ufg"): (
+            "Remove AGP and UFG?",
+            "AWOW UFG and its proxy were found. Click OK to remove both UFG and AGP components.",
+            "REMOVE_AGP_AND_UFG",
+        ),
+        ("uninstall", "legacy_agp"): (
+            "Remove older AGP?",
+            "An older AGP installation was found. Click OK to remove it and restore Steam's file.",
+            "I_UNDERSTAND_UNKNOWN_CONFLICT",
+        ),
+        ("uninstall", "steam_updated"): (
+            "Remove changed AGP files?",
+            "CK3 files changed after AGP was installed. Click OK to preserve conflicts and continue.",
+            "I_UNDERSTAND_UNKNOWN_CONFLICT",
+        ),
+        ("uninstall", "unknown_conflicting"): (
+            "Unknown proxy found",
+            "An unrecognized proxy is installed. Click OK to preserve it in quarantine and continue.",
+            "I_UNDERSTAND_UNKNOWN_CONFLICT",
+        ),
+    }
+    return prompts.get((operation, state))
+
+
+def _ask_confirmation(operation: str, state: str, parent: tk.Misc | None = None) -> str | None:
+    prompt = _confirmation_prompt(operation, state)
+    if prompt is None:
+        return None
+    title, message, token = prompt
+    return token if messagebox.askokcancel(title, message, parent=parent) else None
 
 
 def _browse_for_target(parent: tk.Misc, target_var: tk.StringVar) -> None:
@@ -69,20 +126,10 @@ def _run_operation(root: tk.Misc, operation: str, package_root: str | None, targ
     engine = Installer(package_root=package_root)
     try:
         classification = engine.classify(Path(selected))
-        if classification.state == "recognized_ufg" and operation == "install":
-            proceed = messagebox.askyesno(
-                "AWOW UFG will be removed",
-                "This CK3 installation uses the AWOW UFG chained loader. Installing AGP-only will remove the AWOW Universal Female Generation folder and logs. Reinstall the latest UFG later if you want UFG again. Continue?",
-                parent=root,
-            )
-            if not proceed:
-                return 1
-        token = None
-        if operation == "install":
-            token = {"managed_agp": "UPGRADE_AGP_IN_PLACE", "legacy_agp": "UPGRADE_AGP_IN_PLACE", "recognized_ufg": "CONVERT_UFG_TO_AGP", "steam_updated": "ACCEPT_STEAM_UPDATE", "unknown_conflicting": "I_UNDERSTAND_UNKNOWN_CONFLICT"}.get(classification.state)
-        elif operation == "uninstall" and classification.state in ("unknown_conflicting", "legacy_agp", "steam_updated"):
-            token = "I_UNDERSTAND_UNKNOWN_CONFLICT"
-        confirmation = _ask_confirmation(token, root) if token else None
+        prompt = _confirmation_prompt(operation, classification.state)
+        confirmation = _ask_confirmation(operation, classification.state, root)
+        if prompt is not None and confirmation is None:
+            return 1
         result = engine.install(selected, confirmation) if operation == "install" else engine.uninstall(selected, confirmation)
         messagebox.showinfo("Any-Gender Parenthook", _result_message(result), parent=root)
         return 0 if result.decision in ("proceed", "no_op") else 1

@@ -83,7 +83,7 @@
     },
     {
       "id": "managed-in-place-upgrade",
-      "description": "Upgrade an existing schema-v1 AGP install only after the typed in-place confirmation.",
+      "description": "Upgrade an existing schema-v1 AGP install only after explicit confirmation.",
       "operation": "install",
       "initial": {
         "target_root_kind": "fixture_binaries",
@@ -232,7 +232,7 @@
     },
     {
       "id": "legacy-agp-confirmed-upgrade",
-      "description": "A recognized legacy AGP layout can be converted after the typed in-place confirmation.",
+      "description": "A recognized legacy AGP layout can be converted after explicit confirmation.",
       "operation": "install",
       "initial": {
         "target_root_kind": "fixture_binaries",
@@ -443,7 +443,7 @@
     },
     {
       "id": "unknown-conflict-requires-confirmation",
-      "description": "An unrecognized replacement and payload are never overwritten without the exact typed override.",
+      "description": "An unrecognized replacement and payload are never overwritten without explicit confirmation.",
       "operation": "install",
       "initial": {
         "target_root_kind": "fixture_binaries",
@@ -499,7 +499,7 @@
           "committed_state": false,
           "restores": []
         },
-        "reason": "Unknown bytes are a hard confirmation boundary; no typed override means no mutation."
+        "reason": "Unknown bytes are a hard confirmation boundary; cancellation means no mutation."
       }
     },
     {
@@ -581,7 +581,7 @@
             "AGP Native Hook/agp_parenthook.dll"
           ]
         },
-        "reason": "The typed override authorizes replacement only after lossless quarantine and hash journaling of each unknown path."
+        "reason": "Confirmation authorizes replacement only after lossless quarantine and hash journaling of each unknown path."
       }
     },
     {

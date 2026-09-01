@@ -540,6 +540,7 @@
         "steam_update_confirmation",
         "unknown_conflict_confirmation",
         "ufg_conversion_confirmation",
+        "ufg_uninstall_confirmation",
         "never_overwrite_on_install",
         "ufg_cleanup"
       ],
@@ -576,6 +577,10 @@
         "ufg_conversion_confirmation": {
           "type": "string",
           "const": "CONVERT_UFG_TO_AGP"
+        },
+        "ufg_uninstall_confirmation": {
+          "type": "string",
+          "const": "REMOVE_AGP_AND_UFG"
         },
         "never_overwrite_on_install": {
           "type": "array",
@@ -617,7 +622,7 @@
             },
             "uninstall_policy": {
               "type": "string",
-              "const": "do_not_restore_awow_ufg"
+              "const": "remove_recognized_ufg_with_agp_after_confirmation"
             }
           }
         }

@@ -197,6 +197,90 @@ class CrossEngineTests(unittest.TestCase):
                 self.assertEqual(engine.uninstall(target).decision, "proceed")
                 self.assert_clean(target)
 
+    def test_recognized_ufg_uninstall_in_both_engines(self) -> None:
+        for frontend in ("python", "powershell"):
+            with self.subTest(frontend=frontend), tempfile.TemporaryDirectory() as temp:
+                root = Path(temp)
+                package, target = self.make_package(root), self.make_clean_target(root)
+                (target / "dxcompiler.dll").write_bytes(self.ufg_proxy)
+                (target / "dxcompiler_original.dll").write_bytes(self.steam)
+                ufg = target / "AWOW Universal Female Generation"
+                ufg.mkdir()
+                (ufg / "awow_ufg.dll").write_bytes(self.ufg_payload)
+                (target / "AGP Native Hook").mkdir()
+                shutil.copy2(package / "AGP Native Hook" / "agp_parenthook.dll", target / "AGP Native Hook" / "agp_parenthook.dll")
+                (target / "awow_ufg.log").write_bytes(b"log")
+                (target / "awow_ufg_dxcompiler_loader.log").write_bytes(b"loader log")
+                engine = Installer(package_root=package, process_checker=lambda: False)
+
+                if frontend == "python":
+                    refused = engine.uninstall(target)
+                    self.assertEqual(refused.decision, "abort")
+                    self.assertEqual((target / "dxcompiler.dll").read_bytes(), self.ufg_proxy)
+                    self.assertTrue((ufg / "awow_ufg.dll").is_file())
+                    result = engine.uninstall(target, "REMOVE_AGP_AND_UFG")
+                    self.assertEqual(result.decision, "proceed", result.message)
+                else:
+                    code, refused = self.run_ps("uninstall", target, package)
+                    self.assertEqual((code, refused["decision"]), (2, "abort"), refused)
+                    self.assertEqual((target / "dxcompiler.dll").read_bytes(), self.ufg_proxy)
+                    self.assertTrue((ufg / "awow_ufg.dll").is_file())
+                    code, result = self.run_ps("uninstall", target, package, "REMOVE_AGP_AND_UFG")
+                    self.assertEqual((code, result["decision"]), (0, "proceed"), result)
+
+                self.assertFalse(ufg.exists())
+                self.assertFalse((target / "awow_ufg.log").exists())
+                self.assertFalse((target / "awow_ufg_dxcompiler_loader.log").exists())
+                self.assert_clean(target)
+
+    def test_ufg_proxy_and_payload_are_restored_if_agp_install_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            package, target = self.make_package(root), self.make_clean_target(root)
+            (target / "dxcompiler.dll").write_bytes(self.ufg_proxy)
+            (target / "dxcompiler_original.dll").write_bytes(self.steam)
+            ufg = target / "AWOW Universal Female Generation"
+            ufg.mkdir()
+            (ufg / "awow_ufg.dll").write_bytes(self.ufg_payload)
+            (target / "AGP Native Hook").mkdir()
+            shutil.copy2(package / "AGP Native Hook" / "agp_parenthook.dll", target / "AGP Native Hook" / "agp_parenthook.dll")
+            (target / "awow_ufg.log").write_bytes(b"log")
+            (target / "awow_ufg_dxcompiler_loader.log").write_bytes(b"loader log")
+
+            code, result = self.run_ps(
+                "install",
+                target,
+                package,
+                "CONVERT_UFG_TO_AGP",
+                fault="AGP Native Hook/agp_parenthook.dll",
+            )
+            self.assertEqual((code, result["decision"]), (1, "rollback"), result)
+            self.assertEqual((target / "dxcompiler.dll").read_bytes(), self.ufg_proxy)
+            self.assertEqual((ufg / "awow_ufg.dll").read_bytes(), self.ufg_payload)
+            self.assertTrue((target / "awow_ufg.log").is_file())
+            self.assertTrue((target / "awow_ufg_dxcompiler_loader.log").is_file())
+
+    def test_ufg_over_managed_agp_state_is_recognized(self) -> None:
+        for frontend in ("python", "powershell"):
+            with self.subTest(frontend=frontend), tempfile.TemporaryDirectory() as temp:
+                root = Path(temp)
+                package, target = self.make_package(root), self.make_clean_target(root)
+                engine = Installer(package_root=package, process_checker=lambda: False)
+                self.assertEqual(engine.install(target).decision, "proceed")
+                (target / "dxcompiler.dll").write_bytes(self.ufg_proxy)
+                ufg = target / "AWOW Universal Female Generation"
+                ufg.mkdir()
+                (ufg / "awow_ufg.dll").write_bytes(self.ufg_payload)
+                self.assertEqual(engine.classify(target).state, "recognized_ufg")
+
+                if frontend == "python":
+                    result = engine.uninstall(target, "REMOVE_AGP_AND_UFG")
+                    self.assertEqual(result.decision, "proceed", result.message)
+                else:
+                    code, result = self.run_ps("uninstall", target, package, "REMOVE_AGP_AND_UFG")
+                    self.assertEqual((code, result["decision"]), (0, "proceed"), result)
+                self.assert_clean(target)
+
     def test_unknown_proxy_is_preserved_by_powershell(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

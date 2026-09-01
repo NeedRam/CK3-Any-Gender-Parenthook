@@ -32,7 +32,7 @@ Classify only after the preflight guards and before any stage/mutation. A valid 
 - `steam_updated`: the exact state-plus-supported-Steam hash layout identifies a newly supported active original replacing a stale state-recorded backup.
 - `unknown_conflicting`: fallback for all unrecognized or contradictory layouts.
 
-Unknown conflict, invalid state, and manual recovery are non-mutating by default. `steam_updated` prompts with `ACCEPT_STEAM_UPDATE` before quarantining the stale state-recorded original and rebaselining to the newly supported original; a declined prompt is a zero-write abort. Unrecognized drift remains conservative and lossless.
+Unknown conflict, invalid state, and manual recovery are non-mutating by default. The graphical and interactive PowerShell front ends use short OK/Cancel dialogs; internal confirmation tokens remain available only for automation and cross-engine tests. `steam_updated` requires confirmation before quarantining the stale state-recorded original and rebaselining to the newly supported original; a declined prompt is a zero-write abort. Unrecognized drift remains conservative and lossless.
 
 ## Transaction protocol
 
@@ -47,9 +47,10 @@ Both engines implement the same six observable boundaries:
 
 ## Destructive boundaries
 
-- A legacy AGP install prompts with the exact token `UPGRADE_AGP_IN_PLACE`; decline is a zero-write abort.
-- An unknown layout requires `I_UNDERSTAND_UNKNOWN_CONFLICT` for both install and uninstall. Every displaced or mismatched unknown file/directory is quarantined losslessly with its original relative path, SHA-256, size, and restore metadata. Unknown files are never silently deleted.
-- Recognized AWOW UFG conversion requires `CONVERT_UFG_TO_AGP` and an explicit warning. It is the only recursive foreign-folder removal allowed: quarantine the exact `AWOW Universal Female Generation` directory and the exact `awow_ufg.log` and `awow_ufg_dxcompiler_loader.log`, install and verify AGP, then remove that quarantine after AGP commit. If AGP fails, restore the quarantine. AWOW UFG is deliberately not restored by a later AGP uninstall.
-- Managed uninstall is allowed only when state-owned hashes still match. It restores the hash-checked Steam compiler to `dxcompiler.dll`, removes the two managed AGP artifacts, the exact `agp_dxcompiler_loader.log` and `agp_parenthook.log`, and state (state last), while preserving unknown contents under `AGP Native Hook`, unknown quarantine, and all other unmanaged paths. A mismatched unknown file requires the typed override and quarantine before removal.
+- A legacy AGP install requires an explicit OK/Cancel confirmation; decline is a zero-write abort.
+- An unknown layout requires an explicit OK/Cancel confirmation for both install and uninstall. Every displaced or mismatched unknown file/directory is quarantined losslessly with its original relative path, SHA-256, size, and restore metadata. Unknown files are never silently deleted.
+- Recognized AWOW UFG conversion requires an explicit warning and confirmation. Quarantine the exact recognized UFG proxy, `AWOW Universal Female Generation` directory, and exact `awow_ufg.log` and `awow_ufg_dxcompiler_loader.log`, install and verify AGP, then remove that quarantine after AGP commit. If AGP fails, restore the quarantine.
+- Uninstalling a recognized UFG layout requires confirmation, then transactionally removes the recognized UFG proxy, payload directory, logs, and coexisting AGP payload before restoring the hash-checked Steam compiler. A cancelled confirmation performs no writes.
+- Managed uninstall is allowed only when state-owned hashes still match. It restores the hash-checked Steam compiler to `dxcompiler.dll`, removes the two managed AGP artifacts, the exact `agp_dxcompiler_loader.log` and `agp_parenthook.log`, and state (state last), while preserving unknown contents under `AGP Native Hook`, unknown quarantine, and all other unmanaged paths. A mismatched unknown file requires confirmation and quarantine before removal.
 
 No transition in `state-transitions.json` has an implicit destructive action: every mutating transition names its confirmation, scope, preservation/quarantine policy, and rollback result.

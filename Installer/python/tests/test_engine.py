@@ -24,7 +24,7 @@ def digest(data: bytes) -> str:
 class EngineTests(unittest.TestCase):
     def test_frozen_exe_finds_release_root_and_development_root(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
-            package = Path(temp) / "Any-Gender Parenthook v1.0.1"
+            package = Path(temp) / "Any-Gender Parenthook v1.0.2"
             installer_dir = package / "Installer"
             installer_dir.mkdir(parents=True)
             (installer_dir / "release-manifest.json").write_text("{}", encoding="utf-8")

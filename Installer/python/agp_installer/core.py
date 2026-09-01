@@ -487,7 +487,7 @@ class Installer:
         else:
             raise InstallError(f"cannot install from {classification.state}")
         if required != "" and classification.state != "known_clean" and not self._confirmation(required, confirmation):
-            return Result("install", "abort", classification.state, classification.state, message=f"typed confirmation required: {required}")
+            return Result("install", "abort", classification.state, classification.state, message="confirmation was cancelled or not supplied")
         tx = self._prepare_transaction(root, classification, "install")
         active = self.active_rel
         original = self.original_rel
@@ -505,7 +505,7 @@ class Installer:
                     if tx._path(relative).exists():
                         tx.entry(relative, "quarantine", "unknown_displaced", f"AGP Native Hook/.agp-quarantine/{tx.id}/{relative.replace('/', '__')}")
             elif source_state == "recognized_ufg":
-                for relative in ("AWOW Universal Female Generation", "awow_ufg_dxcompiler_loader.log", "awow_ufg.log"):
+                for relative in (active, "AWOW Universal Female Generation", "awow_ufg_dxcompiler_loader.log", "awow_ufg.log"):
                     if tx._path(relative).exists():
                         tx.entry(relative, "quarantine", "recognized_awow_ufg", f"AGP Native Hook/.agp-quarantine/{tx.id}/{relative.replace('/', '__')}")
                 tx.foreign_cleanup = {"kind": "recognized_awow_ufg", "allowed": True, "quarantine_relative_path": f"AGP Native Hook/.agp-quarantine/{tx.id}", "remove_after_commit": True, "uninstall_policy": "do_not_restore_awow_ufg"}
@@ -524,7 +524,7 @@ class Installer:
                         record = self._quarantine(tx, relative)
                         tx.quarantine_records.append(record)
             elif source_state == "recognized_ufg":
-                for relative in ("AWOW Universal Female Generation", "awow_ufg_dxcompiler_loader.log", "awow_ufg.log"):
+                for relative in (active, "AWOW Universal Female Generation", "awow_ufg_dxcompiler_loader.log", "awow_ufg.log"):
                     if tx._path(relative).exists():
                         record = self._quarantine(tx, relative, "recognized_awow_ufg", "do_not_restore_after_awow_ufg_commit")
                         tx.quarantine_records.append(record)
@@ -584,10 +584,11 @@ class Installer:
         root = Path(target).absolute()
         classification = self.classify(root)
         if classification.state == "recognized_ufg":
-            return Result("uninstall", "reject", classification.state, classification.state, message="recognized AWOW UFG is foreign; convert it before AGP uninstall")
-        if classification.state in ("unknown_conflicting", "legacy_agp", "steam_updated"):
+            if not self._confirmation("REMOVE_AGP_AND_UFG", confirmation):
+                return Result("uninstall", "abort", classification.state, classification.state, message="confirmation was cancelled or not supplied")
+        elif classification.state in ("unknown_conflicting", "legacy_agp", "steam_updated"):
             if not self._confirmation("I_UNDERSTAND_UNKNOWN_CONFLICT", confirmation):
-                return Result("uninstall", "abort", classification.state, classification.state, message="typed confirmation required: I_UNDERSTAND_UNKNOWN_CONFLICT")
+                return Result("uninstall", "abort", classification.state, classification.state, message="confirmation was cancelled or not supplied")
         if classification.state == "known_clean":
             return Result("uninstall", "no_op", classification.state, classification.state, message="AGP is not installed")
         state = classification.state == "managed_agp" and classification.state_data
@@ -596,11 +597,19 @@ class Installer:
             state = None
         tx = self._prepare_transaction(root, classification, "uninstall")
         active, original, payload, state_rel = self.active_rel, self.original_rel, "AGP Native Hook/agp_parenthook.dll", self.state_rel
+        ufg_paths = ["AWOW Universal Female Generation", "awow_ufg_dxcompiler_loader.log", "awow_ufg.log"]
         changed = [active, original, payload, state_rel, "agp_dxcompiler_loader.log", "agp_parenthook.log"]
+        if classification.state == "recognized_ufg":
+            changed.extend(ufg_paths)
         try:
             for relative in changed:
                 tx.snapshot(relative)
-            if classification.state != "managed_agp":
+            if classification.state == "recognized_ufg":
+                for relative in (active, payload, *ufg_paths):
+                    if tx._path(relative).exists():
+                        tx.entry(relative, "quarantine", "recognized_awow_ufg", f"AGP Native Hook/.agp-quarantine/{tx.id}/{relative.replace('/', '__')}")
+                tx.foreign_cleanup = {"kind": "recognized_awow_ufg", "allowed": True, "quarantine_relative_path": f"AGP Native Hook/.agp-quarantine/{tx.id}", "remove_after_commit": True, "uninstall_policy": "remove_with_agp"}
+            elif classification.state != "managed_agp":
                 for relative in (active, payload):
                     if tx._path(relative).exists():
                         tx.entry(relative, "quarantine", "unknown_displaced", f"AGP Native Hook/.agp-quarantine/{tx.id}/{relative.replace('/', '__')}")
@@ -619,7 +628,7 @@ class Installer:
                         mismatched.append(item["relative_path"])
                 if mismatched:
                     if confirmation != "I_UNDERSTAND_UNKNOWN_CONFLICT":
-                        return Result("uninstall", "abort", classification.state, classification.state, message="typed confirmation required: I_UNDERSTAND_UNKNOWN_CONFLICT")
+                        return Result("uninstall", "abort", classification.state, classification.state, message="confirmation was cancelled or not supplied")
                     for relative in mismatched:
                         if tx._path(relative).exists():
                             record = self._quarantine(tx, relative)
@@ -628,11 +637,16 @@ class Installer:
                 baseline = state.get("baseline", {}).get("original_dxcompiler", {})
                 if not _same_file(tx._path(original), baseline.get("sha256", ""), baseline.get("size_bytes")):
                     if confirmation != "I_UNDERSTAND_UNKNOWN_CONFLICT":
-                        return Result("uninstall", "abort", classification.state, classification.state, message="typed confirmation required: I_UNDERSTAND_UNKNOWN_CONFLICT")
+                        return Result("uninstall", "abort", classification.state, classification.state, message="confirmation was cancelled or not supplied")
                     if tx._path(original).exists():
                         record = self._quarantine(tx, original)
                         tx.quarantine_records.append(record)
                     raise InstallError("state-owned original drifted; no safe Steam restore is available")
+            elif classification.state == "recognized_ufg":
+                for relative in (active, payload, *ufg_paths):
+                    if tx._path(relative).exists():
+                        record = self._quarantine(tx, relative, "recognized_awow_ufg", "remove_after_uninstall_commit")
+                        tx.quarantine_records.append(record)
             else:
                 for relative in (active, payload):
                     if tx._path(relative).exists():
@@ -654,6 +668,10 @@ class Installer:
             tx.update_phase("verify")
             if not _same_file(tx._path(active), self.supported["original_dxcompiler_sha256"]):
                 raise InstallError("restored Steam compiler verification failed")
+            if classification.state == "recognized_ufg":
+                qdir = tx._path(f"AGP Native Hook/.agp-quarantine/{tx.id}")
+                if qdir.exists():
+                    shutil.rmtree(qdir)
             tx.update_phase("commit")
             tx.commit_cleanup()
             return Result("uninstall", "proceed", classification.state, "known_clean", tx.id, "AGP uninstalled", changed=[active, payload, state_rel])

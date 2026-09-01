@@ -245,7 +245,8 @@
           "type": "string",
           "enum": [
             "none",
-            "do_not_restore_awow_ufg"
+            "do_not_restore_awow_ufg",
+            "remove_with_agp"
           ]
         }
       }

@@ -29,6 +29,17 @@ class GuiPathTests(unittest.TestCase):
                 Path("C:/Program Files (x86)/Steam/steamapps/common/Crusader Kings III/binaries/ck3.exe"),
             )
 
+    def test_default_target_normalizes_known_path_component_capitalization(self) -> None:
+        with mock.patch.dict(
+            os.environ,
+            {"ProgramFiles(x86)": "c:/program files (x86)", "ProgramFiles": "c:/program files"},
+            clear=True,
+        ):
+            self.assertEqual(
+                standard_steam_executable(),
+                Path("C:/Program Files (x86)/Steam/steamapps/common/Crusader Kings III/binaries/ck3.exe"),
+            )
+
     def test_initial_target_normalizes_only_windows_drive_prefix(self) -> None:
         self.assertEqual(
             gui.normalize_drive_prefix(r"c:\Steam\steamapps\common\Crusader Kings III\binaries\ck3.exe"),
@@ -49,8 +60,8 @@ class GuiPathTests(unittest.TestCase):
 
     def test_result_message_preserves_non_success_detail(self) -> None:
         cases = (
-            (Result("install", "abort", "unknown_conflicting", "unknown_conflicting", message="typed confirmation required"), "install: abort\ntyped confirmation required"),
-            (Result("uninstall", "reject", "recognized_ufg", "recognized_ufg", message="recognized AWOW UFG is foreign"), "uninstall: reject\nrecognized AWOW UFG is foreign"),
+            (Result("install", "abort", "unknown_conflicting", "unknown_conflicting", message="confirmation was cancelled"), "install: abort\nconfirmation was cancelled"),
+            (Result("uninstall", "abort", "recognized_ufg", "recognized_ufg", message="confirmation was cancelled"), "uninstall: abort\nconfirmation was cancelled"),
             (Result("install", "rollback", "known_clean", "known_clean", message="artifact verification failed"), "install: rollback\nartifact verification failed"),
             (Result("uninstall", "no_op", "known_clean", "known_clean", message="AGP is not installed"), "uninstall: no_op\nAGP is not installed"),
         )
@@ -77,6 +88,15 @@ class GuiPathTests(unittest.TestCase):
             gui._browse_for_target(parent, target_var)
         target_var.set.assert_not_called()
         showerror.assert_called_once()
+
+    def test_confirmations_use_ok_cancel_and_return_internal_token(self) -> None:
+        with mock.patch.object(gui.messagebox, "askokcancel", return_value=True) as ask:
+            self.assertEqual(gui._ask_confirmation("install", "recognized_ufg"), "CONVERT_UFG_TO_AGP")
+        ask.assert_called_once()
+        self.assertIn("UFG", ask.call_args.args[1])
+
+        with mock.patch.object(gui.messagebox, "askokcancel", return_value=False):
+            self.assertIsNone(gui._ask_confirmation("uninstall", "recognized_ufg"))
 
 
 if __name__ == "__main__":

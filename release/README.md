@@ -4,7 +4,7 @@ This repository folder is not the end-user download. It contains the scripts,
 documentation sources, and launcher assets used to assemble and audit the
 release ZIP.
 
-End users download `Any-Gender-Parenthook-v1.0.1-win64.zip` from GitHub
+End users download `Any-Gender-Parenthook-v1.0.2-win64.zip` from GitHub
 Releases. After extraction, its top level contains:
 
 - `AGP-Installer.exe`
