@@ -1,4 +1,4 @@
-name: Build draft AGP release
+name: Build AGP release
 
 on:
   workflow_dispatch:
@@ -111,8 +111,9 @@ jobs:
         with:
           tag_name: ${{ steps.release.outputs.tag }}
           name: Any-Gender Parenthook v${{ steps.release.outputs.version }}
-          draft: true
-          generate_release_notes: true
+          draft: false
+          generate_release_notes: false
+          body_path: release/RELEASE_NOTES.md
           fail_on_unmatched_files: true
           files: |
             release/out/AGP v${{ steps.release.outputs.version }} Base Files (Manual Install).zip
@@ -124,3 +125,18 @@ jobs:
             release/out/AGP v${{ steps.release.outputs.version }} EXE Installer.zip
             release/out/AGP v${{ steps.release.outputs.version }} EXE Installer.zip.sha256
             release/out/AGP v${{ steps.release.outputs.version }} EXE Installer-provenance.json
+
+      - name: Remove obsolete combined-package assets
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $release = gh api "repos/${{ github.repository }}/releases/tags/${{ steps.release.outputs.tag }}" | ConvertFrom-Json
+          $obsolete = @(
+            "Any-Gender-Parenthook-v${{ steps.release.outputs.version }}-win64.zip",
+            "Any-Gender-Parenthook-v${{ steps.release.outputs.version }}-win64.zip.sha256",
+            "Any-Gender-Parenthook-v${{ steps.release.outputs.version }}-provenance.json"
+          )
+          foreach ($asset in @($release.assets | Where-Object { $_.name -in $obsolete })) {
+            gh api --method DELETE "repos/${{ github.repository }}/releases/assets/$($asset.id)"
+          }
