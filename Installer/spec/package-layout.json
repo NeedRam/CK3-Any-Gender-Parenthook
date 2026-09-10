@@ -1,70 +1,93 @@
 {
-  "$schema": "https://any-gender-parenthook.invalid/schema/package-layout-v1.json",
-  "schema_version": 1,
+  "$schema": "https://any-gender-parenthook.invalid/schema/package-layout-v2.json",
+  "schema_version": 2,
   "kind": "agp_package_layout",
   "package_id": "agp-v1.0.2-win-x64",
-  "root_entries": [
+  "package_variants": [
+    {
+      "id": "manual",
+      "archive_name": "AGP v1.0.2 Base Files (Manual Install).zip",
+      "entrypoints": []
+    },
+    {
+      "id": "batch",
+      "archive_name": "AGP v1.0.2 Batch File Installer.zip",
+      "entrypoints": [
+        "Install AGP.bat",
+        "Uninstall AGP.bat"
+      ]
+    },
+    {
+      "id": "exe",
+      "archive_name": "AGP v1.0.2 EXE Installer.zip",
+      "entrypoints": [
+        "AGP-Installer.exe",
+        "AGP-Uninstaller.exe"
+      ]
+    }
+  ],
+  "available_entries": [
     {
       "relative_path": "dxcompiler.dll",
       "role": "agp_proxy",
-      "required": true,
-      "phase": 1,
+      "variants": ["manual", "batch", "exe"],
       "artifact_id": "agp-proxy"
     },
     {
       "relative_path": "AGP Native Hook/agp_parenthook.dll",
       "role": "agp_payload",
-      "required": true,
-      "phase": 1,
+      "variants": ["manual", "batch", "exe"],
       "artifact_id": "agp-payload"
     },
     {
       "relative_path": "Installer/release-manifest.json",
       "role": "contract",
-      "required": true,
-      "phase": 1
+      "variants": ["batch", "exe"]
     },
     {
       "relative_path": "Install AGP.bat",
       "role": "bat_entrypoint",
-      "required": true,
-      "phase": 2
+      "variants": ["batch"]
     },
     {
       "relative_path": "Uninstall AGP.bat",
       "role": "bat_entrypoint",
-      "required": true,
-      "phase": 2
+      "variants": ["batch"]
     },
     {
       "relative_path": "Installer/install.ps1",
       "role": "powershell_engine",
-      "required": true,
-      "phase": 2
+      "variants": ["batch"]
     },
     {
       "relative_path": "Installer/uninstall.ps1",
       "role": "powershell_engine",
-      "required": true,
-      "phase": 2
+      "variants": ["batch"]
+    },
+    {
+      "relative_path": "Installer/powershell/engine.ps1",
+      "role": "powershell_engine",
+      "variants": ["batch"]
     },
     {
       "relative_path": "AGP-Installer.exe",
       "role": "exe_frontend",
-      "required": true,
-      "phase": 2
+      "variants": ["exe"]
     },
     {
       "relative_path": "AGP-Uninstaller.exe",
       "role": "exe_frontend",
-      "required": true,
-      "phase": 2
+      "variants": ["exe"]
     },
     {
-      "relative_path": "Installer/python",
-      "role": "python_engine",
-      "required": true,
-      "phase": 2
+      "relative_path": "README.md",
+      "role": "variant_instructions",
+      "variants": ["manual", "batch", "exe"]
+    },
+    {
+      "relative_path": "LICENSE",
+      "role": "license",
+      "variants": ["manual", "batch", "exe"]
     }
   ],
   "package_exclusions": [

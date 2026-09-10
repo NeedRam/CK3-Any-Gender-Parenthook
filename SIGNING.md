@@ -1,7 +1,7 @@
 # Code signing policy
 
 AGP `v1.0.2` is an unsigned, auditable release. SHA-256 checksums and GitHub
-build-provenance attestations identify its release ZIP; the project does not
+build-provenance attestations identify its release ZIPs; the project does not
 create, embed, or claim an Authenticode signature for this version.
 
 ## Release authority and build provenance

@@ -104,7 +104,7 @@ jobs:
       - name: Attest ZIP provenance
         uses: actions/attest@v4
         with:
-          subject-path: release/out/Any-Gender-Parenthook-v${{ steps.release.outputs.version }}-win64.zip
+          subject-path: release/out/*.zip
 
       - name: Publish draft GitHub release
         uses: softprops/action-gh-release@v2
@@ -115,6 +115,12 @@ jobs:
           generate_release_notes: true
           fail_on_unmatched_files: true
           files: |
-            release/out/Any-Gender-Parenthook-v${{ steps.release.outputs.version }}-win64.zip
-            release/out/Any-Gender-Parenthook-v${{ steps.release.outputs.version }}-win64.zip.sha256
-            release/out/Any-Gender-Parenthook-v${{ steps.release.outputs.version }}-provenance.json
+            release/out/AGP v${{ steps.release.outputs.version }} Base Files (Manual Install).zip
+            release/out/AGP v${{ steps.release.outputs.version }} Base Files (Manual Install).zip.sha256
+            release/out/AGP v${{ steps.release.outputs.version }} Base Files (Manual Install)-provenance.json
+            release/out/AGP v${{ steps.release.outputs.version }} Batch File Installer.zip
+            release/out/AGP v${{ steps.release.outputs.version }} Batch File Installer.zip.sha256
+            release/out/AGP v${{ steps.release.outputs.version }} Batch File Installer-provenance.json
+            release/out/AGP v${{ steps.release.outputs.version }} EXE Installer.zip
+            release/out/AGP v${{ steps.release.outputs.version }} EXE Installer.zip.sha256
+            release/out/AGP v${{ steps.release.outputs.version }} EXE Installer-provenance.json

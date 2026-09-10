@@ -4,14 +4,23 @@ Any-Gender Parenthook (AGP) is a Windows x64 native hook for Crusader Kings III.
 
 ## Install
 
-Download `Any-Gender-Parenthook-v1.0.2-win64.zip`, extract the whole archive, and then use either:
+Download the package for your preferred installation method and extract the
+whole archive:
 
-- `AGP-Installer.exe` to search Steam libraries or browse to `ck3.exe`;
-- `Install AGP.bat` for the standard Steam location.
+- `AGP v1.0.2 EXE Installer.zip` provides the graphical installer and
+  uninstaller that can search Steam libraries or browse to `ck3.exe`;
+- `AGP v1.0.2 Batch File Installer.zip` provides the readable batch/PowerShell
+  installer and uninstaller for the standard Steam location;
+- `AGP v1.0.2 Base Files (Manual Install).zip` contains only the native files
+  and manual instructions for advanced users with a clean Steam layout.
 
 Close CK3 before installing. The installer renames Steam's `dxcompiler.dll` to `dxcompiler_original.dll`, installs AGP's proxy as `dxcompiler.dll`, and installs `AGP Native Hook\agp_parenthook.dll`. Exact hashes and persistent state—not file size—identify files that AGP owns.
 
-If a recognized AWOW Universal Female Generation installation is found, the installer explains that UFG and its proxy will be removed and asks for confirmation with OK and Cancel buttons. Unknown proxy layouts are preserved in quarantine after the same clear button-based confirmation; users never need to type a confirmation phrase.
+If a recognized AWOW Universal Female Generation installation is found, the EXE
+and batch installers explain that UFG and its proxy will be removed and ask for
+confirmation with OK and Cancel buttons. Unknown proxy layouts are preserved in
+quarantine after the same clear button-based confirmation; users never need to
+type a confirmation phrase.
 
 ## Manual installation (advanced users)
 
@@ -33,16 +42,28 @@ proxy is installed, or AGP/UFG is being upgraded or converted, use
 6. Start CK3. A successful load creates `agp_dxcompiler_loader.log` and
    `agp_parenthook.log` in `binaries`.
 
-The included `AGP-Uninstaller.exe` recognizes the package's exact manual layout
-and remains the safest way to remove AGP.
+The separate EXE and batch packages recognize the exact manual layout and are
+the safest way to remove AGP.
 
 ## Uninstall
 
-Use `AGP-Uninstaller.exe` or `Uninstall AGP.bat`. Uninstall verifies the recorded state, removes only recognized AGP files and logs, and restores the recorded Steam `dxcompiler.dll`. If a recognized UFG installation is active, the uninstaller asks before also removing its proxy, payload folder, and logs. Unknown or modified files are preserved rather than silently deleted.
+Use `AGP-Uninstaller.exe` from the EXE package or `Uninstall AGP.bat` from the
+batch package. Uninstall verifies the recorded state, removes only recognized
+AGP files and logs, and restores the recorded Steam `dxcompiler.dll`. If a
+recognized UFG installation is active, the uninstaller asks before also
+removing its proxy, payload folder, and logs. Unknown or modified files are
+preserved rather than silently deleted.
 
 ## Building a release
 
-The repository's `release` folder is maintainer tooling, not the folder users copy into CK3. Run `release\build-release.ps1` from PowerShell on Windows with the exact toolchain in `Native Hook\toolchain.json` and the Python build requirements installed. The script builds or verifies the native x64 DLLs, assembles the end-user ZIP with its four launchers at the top level, rejects development-only content, and writes checksums plus local provenance metadata. Local output is for smoke testing; the GitHub Actions build from `main` is the canonical release artifact.
+The repository's `release` folder is maintainer tooling, not the folder users
+copy into CK3. Run `release\build-release.ps1` from PowerShell on Windows with
+the exact toolchain in `Native Hook\toolchain.json` and the Python build
+requirements installed. The script builds or verifies the native x64 DLLs,
+assembles the three method-specific ZIPs, rejects cross-package and
+development-only content, and writes checksums plus local provenance metadata.
+Local output is for smoke testing; the GitHub Actions build from `main` is the
+canonical release artifact.
 
 Version 1.0.2 is intentionally unsigned and auditable. The planned SignPath process for a future signed release is documented in [SIGNING.md](SIGNING.md).
 

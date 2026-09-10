@@ -3,6 +3,10 @@
 This unsigned Windows x64 maintenance release of Any-Gender Parenthook targets
 Crusader Kings III `1.19.0.6`.
 
+The release is available as three separate downloads: Base Files (Manual
+Install), Batch File Installer, and EXE Installer. Each ZIP contains only the
+files required for that installation method.
+
 ## Changed since v1.0.1
 
 - replaced typed confirmation phrases with short OK/Cancel dialogs in both the

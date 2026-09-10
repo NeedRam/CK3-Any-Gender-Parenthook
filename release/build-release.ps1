@@ -92,135 +92,21 @@ if (-not $SkipNativeBuild) {
 	if ($LASTEXITCODE -ne 0) { throw 'Native build failed.' }
 }
 
-$packageId = [string]$manifest.package.id
-$stagingRoot = Join-Path $OutputDirectory "$packageId-staging"
-$packageRoot = Join-Path $stagingRoot "Any-Gender Parenthook v$Version"
-$zipPath = Join-Path $OutputDirectory "Any-Gender-Parenthook-v$Version-win64.zip"
-$checksumPath = "$zipPath.sha256"
-$provenancePath = Join-Path $OutputDirectory "Any-Gender-Parenthook-v$Version-provenance.json"
-
 New-Item -ItemType Directory -Force -Path $OutputDirectory | Out-Null
-if (Test-Path -LiteralPath $stagingRoot) {
-	Remove-Item -LiteralPath $stagingRoot -Recurse -Force
+$legacyOutputs = @(
+	"Any-Gender-Parenthook-v$Version-win64.zip",
+	"Any-Gender-Parenthook-v$Version-win64.zip.sha256",
+	"Any-Gender-Parenthook-v$Version-provenance.json"
+)
+foreach ($legacyName in $legacyOutputs) {
+	$legacyPath = Join-Path $OutputDirectory $legacyName
+	if (Test-Path -LiteralPath $legacyPath -PathType Leaf) {
+		Remove-Item -LiteralPath $legacyPath -Force
+	}
 }
-if (Test-Path -LiteralPath $zipPath) { Remove-Item -LiteralPath $zipPath -Force }
-if (Test-Path -LiteralPath $checksumPath) { Remove-Item -LiteralPath $checksumPath -Force }
-if (Test-Path -LiteralPath $provenancePath) { Remove-Item -LiteralPath $provenancePath -Force }
-New-Item -ItemType Directory -Force -Path $packageRoot | Out-Null
-
 $nativeProxy = Join-Path $repositoryRoot 'Native Hook\build\dxcompiler.dll'
 $nativePayload = Join-Path $repositoryRoot 'Native Hook\build\AGP Native Hook\agp_parenthook.dll'
-Copy-PackageFile $nativeProxy (Join-Path $packageRoot 'dxcompiler.dll') -Required | Out-Null
-Copy-PackageFile $nativePayload (Join-Path $packageRoot 'AGP Native Hook\agp_parenthook.dll') -Required | Out-Null
-
-$packageFiles = @(
-	@{ Source = 'release\assets\Install AGP.bat'; Destination = 'Install AGP.bat' },
-	@{ Source = 'release\assets\Uninstall AGP.bat'; Destination = 'Uninstall AGP.bat' },
-	@{ Source = 'Installer\AGPInstaller.exe'; Destination = 'AGP-Installer.exe' },
-	@{ Source = 'Installer\AGPUninstaller.exe'; Destination = 'AGP-Uninstaller.exe' },
-	@{ Source = 'release\END_USER_README.md'; Destination = 'README.md' },
-	@{ Source = 'release\RELEASE_NOTES.md'; Destination = 'RELEASE_NOTES.md' },
-	@{ Source = 'Native Hook\toolchain.json'; Destination = 'BUILD_TOOLCHAIN.json' },
-	@{ Source = 'Installer\release-manifest.json'; Destination = 'Installer\release-manifest.json' },
-	@{ Source = 'Installer\install.ps1'; Destination = 'Installer\install.ps1' },
-	@{ Source = 'Installer\uninstall.ps1'; Destination = 'Installer\uninstall.ps1' },
-	@{ Source = 'LICENSE'; Destination = 'LICENSE' },
-	@{ Source = 'PRIVACY.md'; Destination = 'PRIVACY.md' },
-	@{ Source = 'SECURITY.md'; Destination = 'SECURITY.md' },
-	@{ Source = 'SIGNING.md'; Destination = 'SIGNING.md' }
-)
-foreach ($mapping in $packageFiles) {
-	$source = Join-Path $repositoryRoot $mapping.Source
-	$destination = Join-Path $packageRoot $mapping.Destination
-	Copy-PackageFile $source $destination -Required | Out-Null
-}
-Copy-PackageDirectory (Join-Path $repositoryRoot 'Installer\python') (Join-Path $packageRoot 'Installer\python') -Required | Out-Null
-Copy-PackageDirectory (Join-Path $repositoryRoot 'Installer\powershell') (Join-Path $packageRoot 'Installer\powershell') -Required | Out-Null
-Copy-PackageDirectory (Join-Path $repositoryRoot 'Installer\spec') (Join-Path $packageRoot 'Installer\spec') -Required | Out-Null
-
-# The checked-in manifest is the release contract template. The packaged
-# manifest is always regenerated from the exact staged DLL bytes. GitHub
-# Actions, using Native Hook/toolchain.json, is the canonical release builder;
-# local packages are smoke-test candidates only.
-$packagedArtifactById = @{}
-foreach ($artifact in $manifest.artifacts) {
-	$packagedPath = Join-Path $packageRoot ([string]$artifact.relative_path -replace '/', '\')
-	if (-not (Test-Path -LiteralPath $packagedPath -PathType Leaf)) {
-		throw "Built artifact is not present in the package: $($artifact.relative_path)"
-	}
-	$artifact.sha256 = (Get-FileHash -LiteralPath $packagedPath -Algorithm SHA256).Hash.ToLowerInvariant()
-	$artifact.size_bytes = [int64](Get-Item -LiteralPath $packagedPath).Length
-	$packagedArtifactById[[string]$artifact.id] = $artifact
-}
-$manualSeed = $manifest.compatibility.seeds | Where-Object { $_.id -eq "agp-v$Version-manual-layout" } | Select-Object -First 1
-if ($manualSeed) {
-	foreach ($file in $manualSeed.match.required_files) {
-		if ($file.relative_path -eq 'dxcompiler.dll') {
-			$file.sha256 = $packagedArtifactById['agp-proxy'].sha256
-			$file.size_bytes = $packagedArtifactById['agp-proxy'].size_bytes
-		}
-		elseif ($file.relative_path -eq 'AGP Native Hook/agp_parenthook.dll') {
-			$file.sha256 = $packagedArtifactById['agp-payload'].sha256
-			$file.size_bytes = $packagedArtifactById['agp-payload'].size_bytes
-		}
-	}
-}
-$packagedManifestPath = Join-Path $packageRoot 'Installer\release-manifest.json'
-$packagedManifestJson = $manifest | ConvertTo-Json -Depth 20
-[System.IO.File]::WriteAllText($packagedManifestPath, $packagedManifestJson + "`n", [System.Text.UTF8Encoding]::new($false))
-
 $forbiddenNames = @('native_test_mod', 'AGP Dynastic Priority', 'Lunacy', '.git', '.venv', 'venv', 'script_docs 1.19.0.6')
-$forbiddenFound = Get-ChildItem -LiteralPath $packageRoot -Recurse -Force | Where-Object {
-	$forbiddenNames -contains $_.Name
-}
-if ($forbiddenFound) {
-	throw "Forbidden development content entered the package: $($forbiddenFound.Name -join ', ')"
-}
-
-$endUserRootFiles = @('AGP-Installer.exe', 'AGP-Uninstaller.exe', 'Install AGP.bat', 'Uninstall AGP.bat', 'README.md')
-foreach ($relative in $endUserRootFiles) {
-	if (-not (Test-Path -LiteralPath (Join-Path $packageRoot $relative) -PathType Leaf)) {
-		throw "End-user root entry is missing: $relative"
-	}
-}
-$obsoleteNestedLaunchers = @(
-	'Installer\AGPInstaller.exe',
-	'Installer\AGPUninstaller.exe',
-	'Installer\install.bat',
-	'Installer\uninstall.bat',
-	'release\README.md'
-)
-foreach ($relative in $obsoleteNestedLaunchers) {
-	if (Test-Path -LiteralPath (Join-Path $packageRoot $relative)) {
-		throw "Obsolete nested launcher entered the end-user package: $relative"
-	}
-}
-
-$artifactByPath = @{}
-foreach ($artifact in $manifest.artifacts) {
-	$artifactByPath[[string]$artifact.relative_path] = $artifact
-}
-foreach ($entry in $artifactByPath.Keys) {
-	$artifact = $artifactByPath[$entry]
-	$packagedPath = Join-Path $packageRoot ($entry -replace '/', '\')
-	if (-not (Test-Path -LiteralPath $packagedPath -PathType Leaf)) {
-		throw "Manifest artifact is not present in the package: $entry"
-	}
-	Assert-Hash $packagedPath $artifact.sha256 $entry | Out-Null
-}
-
-$checksumLines = [System.Collections.Generic.List[string]]::new()
-Get-ChildItem -LiteralPath $packageRoot -Recurse -File | Sort-Object FullName | ForEach-Object {
-	$relative = $_.FullName.Substring($packageRoot.Length).TrimStart('\').Replace('\', '/')
-	$hash = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
-	[void]$checksumLines.Add("$hash *$relative")
-}
-[System.IO.File]::WriteAllLines((Join-Path $packageRoot 'SHA256SUMS.txt'), $checksumLines, [System.Text.UTF8Encoding]::new($false))
-
-Compress-Archive -Path (Join-Path $stagingRoot '*') -DestinationPath $zipPath -CompressionLevel Optimal
-$zipHash = (Get-FileHash -LiteralPath $zipPath -Algorithm SHA256).Hash.ToLowerInvariant()
-[System.IO.File]::WriteAllText($checksumPath, "$zipHash *$(Split-Path -Leaf $zipPath)`n", [System.Text.UTF8Encoding]::new($false))
-
 $commit = 'unavailable'
 try {
 	$commit = (& git -C $repositoryRoot rev-parse HEAD 2>$null | Select-Object -First 1).Trim()
@@ -228,47 +114,145 @@ try {
 } catch {
 	$commit = 'unavailable'
 }
-$fileCount = @(Get-ChildItem -LiteralPath $packageRoot -Recurse -File).Count
 $toolchainPath = Join-Path $repositoryRoot 'Native Hook\toolchain.json'
 $toolchain = Get-Content -LiteralPath $toolchainPath -Raw | ConvertFrom-Json
-$provenance = [ordered]@{
-	'schema_version' = 1
-	'kind' = 'agp_release_provenance'
-	'release' = [ordered]@{
-		'id' = $manifest.release.id
-		'version' = $Version
-		'channel' = $manifest.release.channel
-		'unsigned' = $true
-		'signing' = 'not_performed'
-	}
-	'source' = [ordered]@{
-		repository = $manifest.release.source_repo
-		commit = $commit
-		workflow = 'release/build-release.ps1'
-	}
-	'build' = [ordered]@{
-		authority = $(if ($isCanonicalCi) { 'canonical_github_actions' } else { 'local_smoke_test' })
-		canonical_release_artifact = $isCanonicalCi
-		github_actions_runner = $toolchain.github_actions_runner
-		vc_tools_version = $toolchain.vc_tools_version
-		windows_sdk_version = $toolchain.windows_sdk_version
-		host_architecture = $toolchain.host_architecture
-		target_architecture = $toolchain.target_architecture
-		toolchain_contract = 'Native Hook/toolchain.json'
-	}
-	'artifact' = [ordered]@{
-		file = (Split-Path -Leaf $zipPath)
-		sha256 = $zipHash
-		package_id = $packageId
-		file_count = $fileCount
-	}
-	'safety' = [ordered]@{
-		excluded = @('Native Hook/native_test_mod', 'AGP Dynastic Priority', '.git', 'Lunacy')
-		credentials_used = $false
-	}
-}
-$provenance | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $provenancePath -Encoding utf8
 
-Write-Host "Created $zipPath"
-Write-Host "SHA-256 $zipHash"
-Write-Host "Created $checksumPath and $provenancePath"
+$packageDefinitions = @(
+	@{
+		Id = 'manual'
+		Name = "AGP v$Version Base Files (Manual Install)"
+		Readme = 'release\README_MANUAL.md'
+		Files = @()
+		Directories = @()
+		RequiredRootFiles = @('dxcompiler.dll', 'AGP Native Hook\agp_parenthook.dll', 'README.md', 'LICENSE')
+		ForbiddenRootFiles = @('AGP-Installer.exe', 'AGP-Uninstaller.exe', 'Install AGP.bat', 'Uninstall AGP.bat', 'Installer')
+	}
+	@{
+		Id = 'batch'
+		Name = "AGP v$Version Batch File Installer"
+		Readme = 'release\README_BATCH.md'
+		Files = @(
+			@{ Source = 'release\assets\Install AGP.bat'; Destination = 'Install AGP.bat' },
+			@{ Source = 'release\assets\Uninstall AGP.bat'; Destination = 'Uninstall AGP.bat' },
+			@{ Source = 'Installer\release-manifest.json'; Destination = 'Installer\release-manifest.json' },
+			@{ Source = 'Installer\install.ps1'; Destination = 'Installer\install.ps1' },
+			@{ Source = 'Installer\uninstall.ps1'; Destination = 'Installer\uninstall.ps1' }
+		)
+		Directories = @(
+			@{ Source = 'Installer\powershell'; Destination = 'Installer\powershell' }
+		)
+		RequiredRootFiles = @('dxcompiler.dll', 'AGP Native Hook\agp_parenthook.dll', 'Install AGP.bat', 'Uninstall AGP.bat', 'README.md', 'LICENSE')
+		ForbiddenRootFiles = @('AGP-Installer.exe', 'AGP-Uninstaller.exe', 'Installer\python')
+	}
+	@{
+		Id = 'exe'
+		Name = "AGP v$Version EXE Installer"
+		Readme = 'release\README_EXE.md'
+		Files = @(
+			@{ Source = 'Installer\AGPInstaller.exe'; Destination = 'AGP-Installer.exe' },
+			@{ Source = 'Installer\AGPUninstaller.exe'; Destination = 'AGP-Uninstaller.exe' },
+			@{ Source = 'Installer\release-manifest.json'; Destination = 'Installer\release-manifest.json' }
+		)
+		Directories = @()
+		RequiredRootFiles = @('dxcompiler.dll', 'AGP Native Hook\agp_parenthook.dll', 'AGP-Installer.exe', 'AGP-Uninstaller.exe', 'README.md', 'LICENSE')
+		ForbiddenRootFiles = @('Install AGP.bat', 'Uninstall AGP.bat', 'Installer\install.ps1', 'Installer\uninstall.ps1', 'Installer\powershell', 'Installer\python')
+	}
+)
+
+foreach ($definition in $packageDefinitions) {
+	$stagingRoot = Join-Path $OutputDirectory "$($manifest.package.id)-$($definition.Id)-staging"
+	$packageRoot = Join-Path $stagingRoot $definition.Name
+	$zipPath = Join-Path $OutputDirectory "$($definition.Name).zip"
+	$checksumPath = "$zipPath.sha256"
+	$provenancePath = Join-Path $OutputDirectory "$($definition.Name)-provenance.json"
+
+	if (Test-Path -LiteralPath $stagingRoot) { Remove-Item -LiteralPath $stagingRoot -Recurse -Force }
+	foreach ($outputPath in @($zipPath, $checksumPath, $provenancePath)) {
+		if (Test-Path -LiteralPath $outputPath) { Remove-Item -LiteralPath $outputPath -Force }
+	}
+	New-Item -ItemType Directory -Force -Path $packageRoot | Out-Null
+
+	Copy-PackageFile $nativeProxy (Join-Path $packageRoot 'dxcompiler.dll') -Required | Out-Null
+	Copy-PackageFile $nativePayload (Join-Path $packageRoot 'AGP Native Hook\agp_parenthook.dll') -Required | Out-Null
+	Copy-PackageFile (Join-Path $repositoryRoot $definition.Readme) (Join-Path $packageRoot 'README.md') -Required | Out-Null
+	Copy-PackageFile (Join-Path $repositoryRoot 'LICENSE') (Join-Path $packageRoot 'LICENSE') -Required | Out-Null
+	foreach ($mapping in $definition.Files) {
+		Copy-PackageFile (Join-Path $repositoryRoot $mapping.Source) (Join-Path $packageRoot $mapping.Destination) -Required | Out-Null
+	}
+	foreach ($mapping in $definition.Directories) {
+		Copy-PackageDirectory (Join-Path $repositoryRoot $mapping.Source) (Join-Path $packageRoot $mapping.Destination) -Required | Out-Null
+	}
+
+	$packageManifest = $manifest | ConvertTo-Json -Depth 20 | ConvertFrom-Json
+	$packagedArtifactById = @{}
+	foreach ($artifact in $packageManifest.artifacts) {
+		$packagedPath = Join-Path $packageRoot ([string]$artifact.relative_path -replace '/', '\')
+		if (-not (Test-Path -LiteralPath $packagedPath -PathType Leaf)) {
+			throw "Built artifact is not present in $($definition.Name): $($artifact.relative_path)"
+		}
+		$artifact.sha256 = (Get-FileHash -LiteralPath $packagedPath -Algorithm SHA256).Hash.ToLowerInvariant()
+		$artifact.size_bytes = [int64](Get-Item -LiteralPath $packagedPath).Length
+		$packagedArtifactById[[string]$artifact.id] = $artifact
+	}
+	$manualSeed = $packageManifest.compatibility.seeds | Where-Object { $_.id -eq "agp-v$Version-manual-layout" } | Select-Object -First 1
+	if ($manualSeed) {
+		foreach ($file in $manualSeed.match.required_files) {
+			if ($file.relative_path -eq 'dxcompiler.dll') {
+				$file.sha256 = $packagedArtifactById['agp-proxy'].sha256
+				$file.size_bytes = $packagedArtifactById['agp-proxy'].size_bytes
+			} elseif ($file.relative_path -eq 'AGP Native Hook/agp_parenthook.dll') {
+				$file.sha256 = $packagedArtifactById['agp-payload'].sha256
+				$file.size_bytes = $packagedArtifactById['agp-payload'].size_bytes
+			}
+		}
+	}
+
+	$packagedManifestPath = Join-Path $packageRoot 'Installer\release-manifest.json'
+	if (Test-Path -LiteralPath $packagedManifestPath -PathType Leaf) {
+		$packageManifest.package.id = "$($manifest.package.id)-$($definition.Id)"
+		$packageManifest.package.entrypoints = @($packageManifest.package.entrypoints | Where-Object {
+			Test-Path -LiteralPath (Join-Path $packageRoot ([string]$_.relative_path -replace '/', '\'))
+		})
+		[System.IO.File]::WriteAllText($packagedManifestPath, ($packageManifest | ConvertTo-Json -Depth 20) + "`n", [System.Text.UTF8Encoding]::new($false))
+	}
+
+	$forbiddenFound = Get-ChildItem -LiteralPath $packageRoot -Recurse -Force | Where-Object { $forbiddenNames -contains $_.Name }
+	if ($forbiddenFound) { throw "Forbidden development content entered $($definition.Name): $($forbiddenFound.Name -join ', ')" }
+	foreach ($relative in $definition.RequiredRootFiles) {
+		if (-not (Test-Path -LiteralPath (Join-Path $packageRoot $relative))) { throw "$($definition.Name) is missing: $relative" }
+	}
+	foreach ($relative in $definition.ForbiddenRootFiles) {
+		if (Test-Path -LiteralPath (Join-Path $packageRoot $relative)) { throw "$($definition.Name) unexpectedly contains: $relative" }
+	}
+	foreach ($artifact in $packageManifest.artifacts) {
+		$packagedPath = Join-Path $packageRoot ([string]$artifact.relative_path -replace '/', '\')
+		Assert-Hash $packagedPath $artifact.sha256 $artifact.relative_path | Out-Null
+	}
+
+	$checksumLines = [System.Collections.Generic.List[string]]::new()
+	Get-ChildItem -LiteralPath $packageRoot -Recurse -File | Sort-Object FullName | ForEach-Object {
+		$relative = $_.FullName.Substring($packageRoot.Length).TrimStart('\').Replace('\', '/')
+		$hash = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+		[void]$checksumLines.Add("$hash *$relative")
+	}
+	[System.IO.File]::WriteAllLines((Join-Path $packageRoot 'SHA256SUMS.txt'), $checksumLines, [System.Text.UTF8Encoding]::new($false))
+
+	Compress-Archive -Path (Join-Path $stagingRoot '*') -DestinationPath $zipPath -CompressionLevel Optimal
+	$zipHash = (Get-FileHash -LiteralPath $zipPath -Algorithm SHA256).Hash.ToLowerInvariant()
+	[System.IO.File]::WriteAllText($checksumPath, "$zipHash *$(Split-Path -Leaf $zipPath)`n", [System.Text.UTF8Encoding]::new($false))
+	$fileCount = @(Get-ChildItem -LiteralPath $packageRoot -Recurse -File).Count
+	$provenance = [ordered]@{
+		'schema_version' = 1
+		'kind' = 'agp_release_provenance'
+		'release' = [ordered]@{ 'id' = $manifest.release.id; 'version' = $Version; 'channel' = $manifest.release.channel; 'unsigned' = $true; 'signing' = 'not_performed' }
+		'source' = [ordered]@{ repository = $manifest.release.source_repo; commit = $commit; workflow = 'release/build-release.ps1' }
+		'build' = [ordered]@{ authority = $(if ($isCanonicalCi) { 'canonical_github_actions' } else { 'local_smoke_test' }); canonical_release_artifact = $isCanonicalCi; github_actions_runner = $toolchain.github_actions_runner; vc_tools_version = $toolchain.vc_tools_version; windows_sdk_version = $toolchain.windows_sdk_version; host_architecture = $toolchain.host_architecture; target_architecture = $toolchain.target_architecture; toolchain_contract = 'Native Hook/toolchain.json' }
+		'artifact' = [ordered]@{ file = (Split-Path -Leaf $zipPath); sha256 = $zipHash; package_id = "$($manifest.package.id)-$($definition.Id)"; package_kind = $definition.Id; file_count = $fileCount }
+		'safety' = [ordered]@{ excluded = @('Native Hook/native_test_mod', 'AGP Dynastic Priority', '.git', 'Lunacy'); credentials_used = $false }
+	}
+	[System.IO.File]::WriteAllText($provenancePath, ($provenance | ConvertTo-Json -Depth 8) + "`n", [System.Text.UTF8Encoding]::new($false))
+
+	Write-Host "Created $zipPath"
+	Write-Host "SHA-256 $zipHash"
+	Write-Host "Created $checksumPath and $provenancePath"
+}
