@@ -107,6 +107,7 @@ jobs:
           subject-path: release/out/*.zip
 
       - name: Publish draft GitHub release
+        id: draft_release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.release.outputs.tag }}
@@ -131,7 +132,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $release = gh api "repos/${{ github.repository }}/releases/tags/${{ steps.release.outputs.tag }}" | ConvertFrom-Json
+          $release = gh api "repos/${{ github.repository }}/releases/${{ steps.draft_release.outputs.id }}" | ConvertFrom-Json
+          if ($LASTEXITCODE -ne 0) { throw 'Unable to inspect draft release assets.' }
           $obsolete = @(
             "Any-Gender-Parenthook-v${{ steps.release.outputs.version }}-win64.zip",
             "Any-Gender-Parenthook-v${{ steps.release.outputs.version }}-win64.zip.sha256",
