@@ -129,6 +129,7 @@ $definition = Join-Path $scriptRoot 'dxcompiler_proxy.def'
 $payloadSources = @(
 	'agp_parent_hook.cpp',
 	'agp_patch_runtime.cpp',
+    'agp_build_profile.cpp',
 	'agp_close_family.cpp',
 	'agp_history.cpp',
 	'agp_parent_roles.cpp',
@@ -162,6 +163,8 @@ if ($Clean) {
 }
 
 $payloadArguments = ($payloadSources | ForEach-Object { '"' + $_ + '"' }) -join ' '
+& (Join-Path $scriptRoot 'generate-profiles.ps1') -OutputPath (Join-Path $buildDirectory 'agp_profiles.generated.h')
+
 $payloadImportLibrary = Join-Path $buildDirectory 'agp_parenthook.lib'
 $loaderImportLibrary = Join-Path $buildDirectory 'dxcompiler.lib'
 
@@ -170,7 +173,7 @@ try {
 	Write-Host ("Pinned native toolchain: runner {0}, MSVC {1}, Windows SDK {2}, x64" -f $toolchain.github_actions_runner, $toolchain.vc_tools_version, $toolchain.windows_sdk_version)
 	Write-Host 'GitHub Actions output is the canonical release artifact; local output is for verification and smoke testing.'
 	Invoke-VcCommand $vcVarsAll "rc.exe /nologo /fo `"$versionResource`" `"$versionResourceSource`"" $toolchain
-	Invoke-VcCommand $vcVarsAll "cl.exe /nologo /std:c++17 /EHsc /LD /O2 $payloadArguments `"$versionResource`" /link /Brepro /OUT:`"$payloadOutput`" /IMPLIB:`"$payloadImportLibrary`"" $toolchain
+	Invoke-VcCommand $vcVarsAll "cl.exe /nologo /std:c++17 /EHsc /LD /O2 /I `"$buildDirectory`" $payloadArguments `"$versionResource`" /link bcrypt.lib /Brepro /OUT:`"$payloadOutput`" /IMPLIB:`"$payloadImportLibrary`"" $toolchain
 	Invoke-VcCommand $vcVarsAll "cl.exe /nologo /std:c++17 /EHsc /LD /O2 `"$loaderSource`" `"$versionResource`" /link /Brepro /DEF:`"$definition`" /OUT:`"$loaderOutput`" /IMPLIB:`"$loaderImportLibrary`"" $toolchain
 }
 finally {

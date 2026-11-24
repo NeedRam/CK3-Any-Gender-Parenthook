@@ -11,6 +11,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -111,23 +112,39 @@ def _required(value: dict[str, Any], *keys: str) -> bool:
 
 
 def _is_valid_state(data: dict[str, Any]) -> bool:
-    if data.get("schema_version") != 1 or data.get("kind") != "agp_install_state" or data.get("status") != "managed_agp":
-        return False
-    if not isinstance(data.get("managed_files"), list) or len(data["managed_files"]) < 2:
-        return False
-    if not isinstance(data.get("baseline"), dict) or not _required(data["baseline"], "original_dxcompiler", "executable"):
-        return False
-    for item in data["managed_files"]:
-        if not isinstance(item, dict) or not _required(item, "relative_path", "role", "ownership", "installed_sha256", "restore"):
+    try:
+        if data.get("schema_version") not in (1, 2) or data.get("kind") != "agp_install_state" or data.get("status") != "managed_agp":
             return False
-        try:
-            validate_relative(item["relative_path"])
-            validate_relative(item["restore"].get("source_relative_path", "x")) if "source_relative_path" in item["restore"] else None
-        except (ValueError, TypeError):
+        if not re.fullmatch(r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}", data["transaction_id"]):
             return False
-        if item["ownership"] != "managed" or len(str(item["installed_sha256"])) != 64:
+        release, target = data["release"], data["target"]
+        if release["id"] != "agp" or not re.fullmatch(r"\d+\.\d+\.\d+", release["version"]) or not re.fullmatch(r"[0-9a-f]{64}", release["manifest_sha256"]):
             return False
-    return True
+        if target["game_id"] != "crusader_kings_iii" or target["executable_relative_path"] != "ck3.exe" or target["binaries_relative_path"] != "binaries" or not re.fullmatch(r"\d+\.\d+\.\d+\.\d+", target["build_id"]):
+            return False
+        if data["schema_version"] == 1:
+            if target["target_root_kind"] != "steam_game_binaries": return False
+        elif target["target_root_kind"] != "ck3_game_binaries" or target["distribution"] not in ("steam", "gog") or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}",target["profile_id"]):
+            return False
+        for key,relative in (("original_dxcompiler","dxcompiler_original.dll"),("executable","ck3.exe")):
+            item = data["baseline"][key]
+            if item["relative_path"] != relative or item["ownership"] != ("steam" if data["schema_version"] == 1 else "game") or not re.fullmatch(r"[0-9a-f]{64}",item["sha256"]) or not isinstance(item["size_bytes"],int) or item["size_bytes"] < 0:
+                return False
+        managed = data["managed_files"]
+        expected = {"agp_proxy":"dxcompiler.dll","agp_payload":"AGP Native Hook/agp_parenthook.dll"}
+        if len(managed) != 2 or {item["role"] for item in managed} != set(expected): return False
+        for item in managed:
+            if item["relative_path"] != expected[item["role"]] or item["ownership"] != "managed" or not re.fullmatch(r"[0-9a-f]{64}",item["installed_sha256"]) or not isinstance(item["installed_size_bytes"],int) or item["installed_size_bytes"] < 0 or item["restore"]["action"] != "remove_managed_file":
+                return False
+        for item in data["quarantined_files"]:
+            validate_relative(item["original_relative_path"]); validate_relative(item["quarantine_relative_path"])
+            if item["kind"] not in ("file","directory_manifest") or not re.fullmatch(r"[0-9a-f]{64}",item["sha256"]): return False
+        cleanup = data["foreign_cleanup"]
+        validate_relative(cleanup["quarantine_relative_path"])
+        if cleanup["kind"] not in ("none","recognized_awow_ufg"): return False
+        return True
+    except (KeyError, TypeError, ValueError, AttributeError):
+        return False
 
 
 def _is_process_running() -> bool:
@@ -197,15 +214,15 @@ class _Transaction:
     def write_journal(self) -> None:
         self.phase = "journal"
         journal = {
-            "$schema": "https://any-gender-parenthook.invalid/schema/install-journal-v1.json",
-            "schema_version": 1,
+            "$schema": "https://any-gender-parenthook.invalid/schema/install-journal-v2.json",
+            "schema_version": 2,
             "kind": "agp_install_journal",
             "transaction_id": self.id,
             "operation": self.operation,
             "source_state": self.source_state,
             "target_state": self.target_state,
             "phase": self.phase,
-            "target": {"game_id": "crusader_kings_iii", "build_id": self.engine.build_id, "binaries_relative_path": "binaries", "target_root_kind": "steam_game_binaries"},
+            "target": {"game_id": "crusader_kings_iii", "build_id": self.engine.build_id, "binaries_relative_path": "binaries", "target_root_kind": "ck3_game_binaries", "profile_id": self.engine.supported["profile_id"], "distribution": self.engine.supported["distribution"]},
             "entries": self.entries,
             "foreign_cleanup": self.foreign_cleanup,
         }
@@ -272,8 +289,10 @@ class Installer:
         self.manifest = _read_json(self.manifest_path)
         self.process_checker = process_checker or _is_process_running
         self.target_manifest = self.manifest["target"]
-        self.build_id = self.manifest["target"]["supported_builds"][0]["id"]
-        self.supported = self.manifest["target"]["supported_builds"][0]
+        if self.manifest.get("schema_version") != 2:
+            raise InstallError("release manifest is not schema-v2")
+        self.build_id = ""
+        self.supported: dict[str, Any] = {}
         self.artifacts = {item["id"]: item for item in self.manifest["artifacts"]}
 
     @property
@@ -301,8 +320,14 @@ class Installer:
         except PathSafetyError as exc:
             raise InstallError(str(exc)) from exc
         executable = contained(target, "ck3.exe")
-        if not _same_file(executable, self.supported["executable_sha256"]):
-            raise InstallError("selected target is not the supported CK3 executable build")
+        if not executable.is_file():
+            raise InstallError("selected target has no ck3.exe")
+        executable_hash = _sha256(executable)
+        matches = [build for build in self.target_manifest["supported_builds"] if build["executable_sha256"] == executable_hash]
+        if len(matches) != 1:
+            raise InstallError("selected target does not match exactly one supported CK3 executable profile")
+        self.supported = matches[0]
+        self.build_id = self.supported["id"]
         state_path = contained(target, self.state_rel)
         if state_path.exists():
             try:
@@ -358,7 +383,7 @@ class Installer:
 
     def _managed_matches(self, target: Path, state: dict[str, Any]) -> bool:
         baseline = state.get("baseline", {})
-        for key in ("original_dxcompiler", "executable"):
+        for key in ("original_dxcompiler",):
             item = baseline.get(key, {})
             path = contained(target, item.get("relative_path", "invalid"))
             if not _same_file(path, item.get("sha256", ""), item.get("size_bytes")):
@@ -376,16 +401,27 @@ class Installer:
         if valid and data is not None and _is_valid_state(data):
             try:
                 if self._managed_matches(root, data):
-                    return Classification("managed_agp", "state-v1 ownership and hashes match", data, True)
+                    return Classification("managed_agp", "managed ownership and hashes match", data, True)
             except (InstallError, KeyError, TypeError):
                 valid = False
+        if valid and data is not None:
+            original = data["baseline"]["original_dxcompiler"]
+            payloads = [item for item in data["managed_files"] if item.get("role") == "agp_payload"]
+            if (len(payloads) == 1 and _same_file(contained(root, self.active_rel), self.supported["original_dxcompiler_sha256"])
+                    and _same_file(contained(root, original["relative_path"]), original["sha256"], original.get("size_bytes"))
+                    and _same_file(contained(root, payloads[0]["relative_path"]), payloads[0]["installed_sha256"], payloads[0].get("installed_size_bytes"))):
+                return Classification("game_updated", "supported original replaced the proxy; old payload and backup verified", data, True)
+        if (data is None and valid and not contained(root, self.original_rel).exists()
+                and not contained(root, "AGP Native Hook/agp_parenthook.dll").exists()
+                and _same_file(contained(root, self.active_rel), self.supported["original_dxcompiler_sha256"])):
+            return Classification("known_clean", "selected executable and original compiler match; no existing AGP layout", None, True)
         seeds = self.manifest.get("compatibility", {}).get("seeds", [])
         for seed in seeds:
-            if seed["state"] == "managed_agp":
+            if seed["state"] in ("managed_agp", "game_updated"):
                 continue
             if self._match_seed(root, seed):
-                if seed["state"] == "steam_updated":
-                    # Steam rebaseline is valid only for a schema-v1 state;
+                if seed["state"] == "game_updated":
+                    # Legacy rebaseline requires a valid managed state;
                     # a random marker must remain an unknown conflict.
                     if data is None or not _is_valid_state(data):
                         continue
@@ -414,14 +450,14 @@ class Installer:
         now = _utc()
         quarantine: list[dict[str, Any]] = getattr(tx, "quarantine_records", [])
         return {
-            "$schema": "https://any-gender-parenthook.invalid/schema/install-state-v1.json",
-            "schema_version": 1,
+            "$schema": "https://any-gender-parenthook.invalid/schema/install-state-v2.json",
+            "schema_version": 2,
             "kind": "agp_install_state",
             "status": "managed_agp",
             "transaction_id": tx.id,
             "release": {"id": self.manifest["release"]["id"], "version": self.manifest["release"]["version"], "manifest_sha256": _json_hash(self.manifest_path)},
-            "target": {"game_id": self.target_manifest["game_id"], "build_id": self.build_id, "binaries_relative_path": "binaries", "executable_relative_path": "ck3.exe", "target_root_kind": "steam_game_binaries"},
-            "baseline": {"original_dxcompiler": {"relative_path": self.original_rel, "sha256": original_obs["sha256"], "size_bytes": original_obs["size_bytes"], "ownership": "steam"}, "executable": {"relative_path": "ck3.exe", "sha256": exe_obs["sha256"], "size_bytes": exe_obs["size_bytes"], "ownership": "steam"}},
+            "target": {"game_id": self.target_manifest["game_id"], "build_id": self.build_id, "binaries_relative_path": "binaries", "executable_relative_path": "ck3.exe", "target_root_kind": "ck3_game_binaries", "profile_id": self.supported["profile_id"], "distribution": self.supported["distribution"]},
+            "baseline": {"original_dxcompiler": {"relative_path": self.original_rel, "sha256": original_obs["sha256"], "size_bytes": original_obs["size_bytes"], "ownership": "game"}, "executable": {"relative_path": "ck3.exe", "sha256": exe_obs["sha256"], "size_bytes": exe_obs["size_bytes"], "ownership": "game"}},
             "managed_files": [
                 {"relative_path": self.active_rel, "role": "agp_proxy", "ownership": "managed", "installed_sha256": self.artifacts["agp-proxy"]["sha256"], "installed_size_bytes": proxy.stat().st_size, "restore": {"action": "remove_managed_file"}},
                 {"relative_path": "AGP Native Hook/agp_parenthook.dll", "role": "agp_payload", "ownership": "managed", "installed_sha256": self.artifacts["agp-payload"]["sha256"], "installed_size_bytes": payload.stat().st_size, "restore": {"action": "remove_managed_file"}},
@@ -478,8 +514,8 @@ class Installer:
             required = "UPGRADE_AGP_IN_PLACE"
         elif classification.state == "recognized_ufg":
             required = "CONVERT_UFG_TO_AGP"
-        elif classification.state == "steam_updated":
-            required = "ACCEPT_STEAM_UPDATE"
+        elif classification.state == "game_updated":
+            required = "ACCEPT_GAME_UPDATE"
         elif classification.state == "unknown_conflicting":
             required = "I_UNDERSTAND_UNKNOWN_CONFLICT"
         elif classification.state == "known_clean":
@@ -510,10 +546,10 @@ class Installer:
                         tx.entry(relative, "quarantine", "recognized_awow_ufg", f"AGP Native Hook/.agp-quarantine/{tx.id}/{relative.replace('/', '__')}")
                 tx.foreign_cleanup = {"kind": "recognized_awow_ufg", "allowed": True, "quarantine_relative_path": f"AGP Native Hook/.agp-quarantine/{tx.id}", "remove_after_commit": True, "uninstall_policy": "do_not_restore_awow_ufg"}
                 tx.foreign_cleanup_state = {"kind": "recognized_awow_ufg", "quarantine_relative_path": f"AGP Native Hook/.agp-quarantine/{tx.id}", "removed_paths": ["AWOW Universal Female Generation", "awow_ufg_dxcompiler_loader.log", "awow_ufg.log"], "uninstall_policy": "do_not_restore_awow_ufg"}
-            elif source_state == "steam_updated" and tx._path(original).exists():
+            elif source_state == "game_updated" and tx._path(original).exists():
                 tx.entry(original, "quarantine", "unknown_displaced", f"AGP Native Hook/.agp-quarantine/{tx.id}/{original.replace('/', '__')}")
-            if source_state in ("known_clean", "steam_updated"):
-                tx.entry(active, "rename", "steam")
+            if source_state in ("known_clean", "game_updated"):
+                tx.entry(active, "rename", "game")
             tx.entry(active, "replace", "managed", f"AGP Native Hook/.agp-journal/{tx.id}/stage/dxcompiler.dll")
             tx.entry(payload, "replace", "managed", f"AGP Native Hook/.agp-journal/{tx.id}/stage/AGP Native Hook/agp_parenthook.dll")
             tx.entry(state_rel, "create" if not tx._path(state_rel).exists() else "replace", "managed")
@@ -528,8 +564,8 @@ class Installer:
                     if tx._path(relative).exists():
                         record = self._quarantine(tx, relative, "recognized_awow_ufg", "do_not_restore_after_awow_ufg_commit")
                         tx.quarantine_records.append(record)
-            elif source_state == "steam_updated":
-                # The active supported Steam file becomes the new canonical original.
+            elif source_state == "game_updated":
+                # The active supported game file becomes the new canonical original.
                 if tx._path(original).exists():
                     record = self._quarantine(tx, original, "unknown_displaced", "preserve_for_uninstall")
                     tx.quarantine_records.append(record)
@@ -537,15 +573,15 @@ class Installer:
                 if tx._path(original).exists():
                     raise InstallError("clean install requires dxcompiler_original.dll to be absent")
                 if not _same_file(tx._path(active), self.supported["original_dxcompiler_sha256"]):
-                    raise InstallError("active Steam dxcompiler hash is not supported")
+                    raise InstallError("active game dxcompiler hash is not supported")
                 tx._path(active).rename(tx._path(original))
-            elif source_state == "steam_updated":
+            elif source_state == "game_updated":
                 if not _same_file(tx._path(active), self.supported["original_dxcompiler_sha256"]):
-                    raise InstallError("Steam update active compiler hash is not supported")
+                    raise InstallError("Game update active compiler hash is not supported")
                 tx._path(active).rename(tx._path(original))
             elif source_state in ("managed_agp", "legacy_agp", "recognized_ufg", "unknown_conflicting"):
                 if not tx._path(original).exists() or not _same_file(tx._path(original), self.supported["original_dxcompiler_sha256"]):
-                    raise InstallError("canonical Steam original is missing or has an unsupported hash")
+                    raise InstallError("canonical game original is missing or has an unsupported hash")
             tx.update_phase("stage")
             proxy = self._artifact_source("agp-proxy")
             payload_source = self._artifact_source("agp-payload")
@@ -563,7 +599,7 @@ class Installer:
             tx.update_phase("verify")
             state = self._state_for_commit(root, tx, tx._path(original))
             if not _is_valid_state(state):
-                raise InstallError("generated state failed schema-v1 structural validation")
+                raise InstallError("generated state failed schema-v2 structural validation")
             _write_json(tx._path(state_rel), state)
             if source_state == "recognized_ufg":
                 qdir = tx._path(f"AGP Native Hook/.agp-quarantine/{tx.id}")
@@ -586,7 +622,7 @@ class Installer:
         if classification.state == "recognized_ufg":
             if not self._confirmation("REMOVE_AGP_AND_UFG", confirmation):
                 return Result("uninstall", "abort", classification.state, classification.state, message="confirmation was cancelled or not supplied")
-        elif classification.state in ("unknown_conflicting", "legacy_agp", "steam_updated"):
+        elif classification.state in ("unknown_conflicting", "legacy_agp", "game_updated"):
             if not self._confirmation("I_UNDERSTAND_UNKNOWN_CONFLICT", confirmation):
                 return Result("uninstall", "abort", classification.state, classification.state, message="confirmation was cancelled or not supplied")
         if classification.state == "known_clean":
@@ -613,8 +649,8 @@ class Installer:
                 for relative in (active, payload):
                     if tx._path(relative).exists():
                         tx.entry(relative, "quarantine", "unknown_displaced", f"AGP Native Hook/.agp-quarantine/{tx.id}/{relative.replace('/', '__')}")
-            tx.entry(active, "restore", "steam")
-            tx.entry(original, "remove", "steam")
+            tx.entry(active, "restore", "game")
+            tx.entry(original, "remove", "game")
             tx.entry(payload, "remove", "managed")
             tx.entry(state_rel, "remove", "managed")
             tx.write_journal()
@@ -641,7 +677,7 @@ class Installer:
                     if tx._path(original).exists():
                         record = self._quarantine(tx, original)
                         tx.quarantine_records.append(record)
-                    raise InstallError("state-owned original drifted; no safe Steam restore is available")
+                    raise InstallError("state-owned original drifted; no safe game-file restore is available")
             elif classification.state == "recognized_ufg":
                 for relative in (active, payload, *ufg_paths):
                     if tx._path(relative).exists():
@@ -667,7 +703,7 @@ class Installer:
                 tx._path(state_rel).unlink()
             tx.update_phase("verify")
             if not _same_file(tx._path(active), self.supported["original_dxcompiler_sha256"]):
-                raise InstallError("restored Steam compiler verification failed")
+                raise InstallError("restored game compiler verification failed")
             if classification.state == "recognized_ufg":
                 qdir = tx._path(f"AGP Native Hook/.agp-quarantine/{tx.id}")
                 if qdir.exists():

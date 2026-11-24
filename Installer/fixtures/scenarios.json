@@ -590,7 +590,7 @@
       "operation": "install",
       "initial": {
         "target_root_kind": "fixture_binaries",
-        "classification_hint": "steam_updated",
+        "classification_hint": "game_updated",
         "ck3_running": false,
         "target_is_reparse": false,
         "ancestor_is_reparse": false,
@@ -628,9 +628,9 @@
       },
       "confirmation_response": null,
       "expected": {
-        "classification": "steam_updated",
+        "classification": "game_updated",
         "decision": "abort",
-        "next_state": "steam_updated",
+        "next_state": "game_updated",
         "writes": [],
         "preserves": [
           {
@@ -649,7 +649,7 @@
           "committed_state": false,
           "restores": []
         },
-        "reason": "The exact Steam-update seed is recognized, but the stale original is not replaced without ACCEPT_STEAM_UPDATE."
+        "reason": "The exact Steam-update seed is recognized, but the stale original is not replaced without ACCEPT_GAME_UPDATE."
       }
     },
     {
@@ -658,7 +658,7 @@
       "operation": "install",
       "initial": {
         "target_root_kind": "fixture_binaries",
-        "classification_hint": "steam_updated",
+        "classification_hint": "game_updated",
         "ck3_running": false,
         "target_is_reparse": false,
         "ancestor_is_reparse": false,
@@ -694,9 +694,9 @@
         ],
         "state_file": "drifted"
       },
-      "confirmation_response": "ACCEPT_STEAM_UPDATE",
+      "confirmation_response": "ACCEPT_GAME_UPDATE",
       "expected": {
-        "classification": "steam_updated",
+        "classification": "game_updated",
         "decision": "proceed",
         "next_state": "managed_agp",
         "writes": [

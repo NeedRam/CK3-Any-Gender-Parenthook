@@ -121,30 +121,30 @@
     }
   ],
   "target_layout": {
-    "root_kind": "steam_game_binaries",
+    "root_kind": "ck3_game_binaries",
     "binaries_relative_path_from_game_root": "binaries",
     "required_target_files": [
       {
         "relative_path": "ck3.exe",
         "role": "game_executable",
-        "owner": "steam"
+        "owner": "game"
       },
       {
         "relative_path": "dxcompiler.dll",
         "role": "active_dxcompiler",
-        "owner": "steam_or_agp_managed"
+        "owner": "game_or_agp_managed"
       }
     ],
     "preserved_baseline": [
       {
         "relative_path": "dxcompiler_original.dll",
-        "owner": "steam",
+        "owner": "game",
         "install_policy": "rename_active_to_original_if_absent",
         "uninstall_policy": "restore_to_dxcompiler_dll_after_hash_check"
       }
     ],
     "clean_install": {
-      "precondition": "dxcompiler_original.dll_absent_and_active_dxcompiler_matches_supported_steam_hash",
+      "precondition": "dxcompiler_original.dll_absent_and_active_dxcompiler_matches_supported_game_hash",
       "first_mutation": "rename_dxcompiler_dll_to_dxcompiler_original_dll",
       "destination_must_be_absent": true,
       "journal_operation": "rename",

@@ -1,0 +1,415 @@
+﻿# Run only in disposable games: scripted_tests agp_native_121
+# This uses the 1.21 tests/_tests.info schema. Each expectation is evaluated
+# against native character scopes, rather than the event's displayed text.
+agp_native_121_setters_and_reassignment = {
+    character_target = 122
+    assert = { exists = root }
+    effect = {
+        create_character = { gender = female age = 40 employer = root save_scope_as = old_father }
+        create_character = { gender = female age = 42 employer = root save_scope_as = new_father }
+        create_character = { gender = female age = 45 employer = root save_scope_as = biological_father }
+        create_character = { gender = male age = 40 employer = root save_scope_as = old_mother }
+        create_character = { gender = male age = 42 employer = root save_scope_as = new_mother }
+        create_character = { gender = male age = 45 employer = root save_scope_as = biological_mother }
+        create_character = { gender = female age = 1 employer = root save_scope_as = test_child }
+        scope:test_child = {
+            set_father = scope:old_father
+            set_mother = scope:old_mother
+            set_real_father = scope:biological_father
+            set_real_mother = scope:biological_mother
+            set_father = scope:new_father
+            set_mother = scope:new_mother
+            add_character_flag = agp_native_121_reassignment_child
+        }
+        scope:new_father = { add_character_flag = agp_native_121_expected_father }
+        scope:new_mother = { add_character_flag = agp_native_121_expected_mother }
+        scope:biological_father = { add_character_flag = agp_native_121_expected_real_father }
+        scope:biological_mother = { add_character_flag = agp_native_121_expected_real_mother }
+    }
+    assert = {
+        scope:test_child.father = { this = scope:new_father }
+        scope:test_child.mother = { this = scope:new_mother }
+        scope:test_child.real_father = { this = scope:biological_father }
+        scope:test_child.real_mother = { this = scope:biological_mother }
+    }
+    effect = { debug_log = "AGP_ACCEPTANCE_PASS agp_native_121_setters_and_reassignment" }
+}
+
+agp_native_121_create_and_family = {
+    character_target = 122
+    assert = { exists = root }
+    effect = {
+        create_character = { gender = female age = 65 employer = root save_scope_as = grandparent }
+        create_character = { gender = female age = 40 employer = root father = scope:grandparent save_scope_as = test_father }
+        create_character = { gender = male age = 38 employer = root save_scope_as = test_mother }
+        create_character = { gender = female age = 1 employer = root father = scope:test_father mother = scope:test_mother save_scope_as = test_child }
+        create_character = { gender = female age = 30 employer = root save_scope_as = unrelated }
+    }
+    assert = {
+        scope:test_child.father = { this = scope:test_father }
+        scope:test_child.mother = { this = scope:test_mother }
+        scope:test_child.father.father = { this = scope:grandparent }
+        scope:test_child = { is_close_family_of = scope:test_father is_close_family_of = scope:test_mother is_close_family_of = scope:grandparent }
+        scope:grandparent = { is_close_family_of = scope:test_child }
+        scope:unrelated = { NOT = { is_close_family_of = scope:test_child } }
+    }
+    effect = { debug_log = "AGP_ACCEPTANCE_PASS agp_native_121_create_and_family" }
+}
+
+agp_native_121_pregnancy_carriers = {
+    character_target = 122
+    assert = { exists = root }
+    effect = {
+        create_character = { gender = female age = 30 employer = root save_scope_as = female_father }
+        create_character = { gender = female age = 28 employer = root save_scope_as = female_carrier }
+        create_character = { gender = male age = 30 employer = root save_scope_as = male_father }
+        create_character = { gender = male age = 28 employer = root save_scope_as = male_carrier }
+        create_character = { gender = male age = 28 employer = root save_scope_as = swapped_carrier }
+        scope:female_carrier = { make_pregnant = { father = scope:female_father } }
+        scope:male_carrier = { make_pregnant = { father = scope:male_father } }
+        scope:swapped_carrier = { make_pregnant = { father = scope:female_father } }
+    }
+    assert = {
+        scope:female_carrier = { is_pregnant = yes }
+        scope:male_carrier = { is_pregnant = yes }
+        scope:swapped_carrier = { is_pregnant = yes }
+    }
+    effect = { debug_log = "AGP_ACCEPTANCE_PASS agp_native_121_pregnancy_carriers" }
+}
+
+# Run separately after saving and reloading the setter test's game. Scope flags
+# persist in the save, so this does not rely on temporary event saved scopes.
+agp_reload_121_distinct_roles = {
+    character_target = 122
+    assert = { exists = root }
+    assert = {
+        any_courtier = {
+            has_character_flag = agp_native_121_reassignment_child
+            father = { has_character_flag = agp_native_121_expected_father }
+            mother = { has_character_flag = agp_native_121_expected_mother }
+            real_father = { has_character_flag = agp_native_121_expected_real_father }
+            real_mother = { has_character_flag = agp_native_121_expected_real_mother }
+        }
+    }
+    effect = { debug_log = "AGP_ACCEPTANCE_PASS agp_reload_121_distinct_roles" }
+}
+
+# Birth matrix: enable instant_birth before setup, advance the calendar, then
+# run the separate check. Each direction uses an independent married pair.
+agp_birth_setup_121_matrix = {
+    character_target = 122
+    assert = { exists = root }
+    effect = {
+        create_character = { gender = female age = 28 employer = root save_scope_as = ff_forward_carrier }
+        create_character = { gender = female age = 30 employer = root save_scope_as = ff_forward_father }
+        scope:ff_forward_father = { add_character_flag = agp_birth_ff_forward_father }
+        scope:ff_forward_carrier = {
+            add_character_flag = agp_birth_ff_forward_carrier
+            marry = scope:ff_forward_father
+            make_pregnant = { father = scope:ff_forward_father number_of_children = 1 }
+            set_pregnancy_assumed_father = scope:ff_forward_father
+        }
+        create_character = { gender = female age = 28 employer = root save_scope_as = ff_reverse_carrier }
+        create_character = { gender = female age = 30 employer = root save_scope_as = ff_reverse_father }
+        scope:ff_reverse_father = { add_character_flag = agp_birth_ff_reverse_father }
+        scope:ff_reverse_carrier = {
+            add_character_flag = agp_birth_ff_reverse_carrier
+            marry = scope:ff_reverse_father
+            make_pregnant = { father = scope:ff_reverse_father number_of_children = 1 }
+            set_pregnancy_assumed_father = scope:ff_reverse_father
+        }
+        create_character = { gender = male age = 28 employer = root save_scope_as = mm_forward_carrier }
+        create_character = { gender = male age = 30 employer = root save_scope_as = mm_forward_father }
+        scope:mm_forward_father = { add_character_flag = agp_birth_mm_forward_father }
+        scope:mm_forward_carrier = {
+            add_character_flag = agp_birth_mm_forward_carrier
+            marry = scope:mm_forward_father
+            make_pregnant = { father = scope:mm_forward_father number_of_children = 1 }
+            set_pregnancy_assumed_father = scope:mm_forward_father
+        }
+        create_character = { gender = male age = 28 employer = root save_scope_as = mm_reverse_carrier }
+        create_character = { gender = male age = 30 employer = root save_scope_as = mm_reverse_father }
+        scope:mm_reverse_father = { add_character_flag = agp_birth_mm_reverse_father }
+        scope:mm_reverse_carrier = {
+            add_character_flag = agp_birth_mm_reverse_carrier
+            marry = scope:mm_reverse_father
+            make_pregnant = { father = scope:mm_reverse_father number_of_children = 1 }
+            set_pregnancy_assumed_father = scope:mm_reverse_father
+        }
+        create_character = { gender = male age = 28 employer = root save_scope_as = swapped_forward_carrier }
+        create_character = { gender = female age = 30 employer = root save_scope_as = swapped_forward_father }
+        scope:swapped_forward_father = { add_character_flag = agp_birth_swapped_forward_father }
+        scope:swapped_forward_carrier = {
+            add_character_flag = agp_birth_swapped_forward_carrier
+            marry = scope:swapped_forward_father
+            make_pregnant = { father = scope:swapped_forward_father number_of_children = 1 }
+            set_pregnancy_assumed_father = scope:swapped_forward_father
+        }
+        create_character = { gender = female age = 28 employer = root save_scope_as = swapped_reverse_carrier }
+        create_character = { gender = male age = 30 employer = root save_scope_as = swapped_reverse_father }
+        scope:swapped_reverse_father = { add_character_flag = agp_birth_swapped_reverse_father }
+        scope:swapped_reverse_carrier = {
+            add_character_flag = agp_birth_swapped_reverse_carrier
+            marry = scope:swapped_reverse_father
+            make_pregnant = { father = scope:swapped_reverse_father number_of_children = 1 }
+            set_pregnancy_assumed_father = scope:swapped_reverse_father
+        }
+        create_character = { gender = female age = 28 employer = root save_scope_as = opposite_control_carrier }
+        create_character = { gender = male age = 30 employer = root save_scope_as = opposite_control_father }
+        scope:opposite_control_father = { add_character_flag = agp_birth_opposite_control_father }
+        scope:opposite_control_carrier = {
+            add_character_flag = agp_birth_opposite_control_carrier
+            marry = scope:opposite_control_father
+            make_pregnant = { father = scope:opposite_control_father number_of_children = 1 }
+            set_pregnancy_assumed_father = scope:opposite_control_father
+        }
+    }
+    assert = {
+        scope:ff_forward_carrier = { is_pregnant = yes is_spouse_of = scope:ff_forward_father }
+        scope:ff_reverse_carrier = { is_pregnant = yes is_spouse_of = scope:ff_reverse_father }
+        scope:mm_forward_carrier = { is_pregnant = yes is_spouse_of = scope:mm_forward_father }
+        scope:mm_reverse_carrier = { is_pregnant = yes is_spouse_of = scope:mm_reverse_father }
+        scope:swapped_forward_carrier = { is_pregnant = yes is_spouse_of = scope:swapped_forward_father }
+        scope:swapped_reverse_carrier = { is_pregnant = yes is_spouse_of = scope:swapped_reverse_father }
+        scope:opposite_control_carrier = { is_pregnant = yes is_spouse_of = scope:opposite_control_father }
+    }
+    effect = { debug_log = "AGP_ACCEPTANCE_PASS agp_birth_setup_121_matrix" }
+}
+
+agp_birth_check_121_matrix = {
+    character_target = 122
+    assert = { exists = root }
+    assert = {
+        any_courtier = {
+            has_character_flag = agp_birth_ff_forward_carrier
+            save_temporary_scope_as = carrier_under_test
+            is_pregnant = no
+            any_child = {
+                mother = scope:carrier_under_test
+                father = { has_character_flag = agp_birth_ff_forward_father }
+                real_father = { has_character_flag = agp_birth_ff_forward_father }
+            }
+        }
+        any_courtier = {
+            has_character_flag = agp_birth_ff_reverse_carrier
+            save_temporary_scope_as = carrier_under_test
+            is_pregnant = no
+            any_child = {
+                mother = scope:carrier_under_test
+                father = { has_character_flag = agp_birth_ff_reverse_father }
+                real_father = { has_character_flag = agp_birth_ff_reverse_father }
+            }
+        }
+        any_courtier = {
+            has_character_flag = agp_birth_mm_forward_carrier
+            save_temporary_scope_as = carrier_under_test
+            is_pregnant = no
+            any_child = {
+                mother = scope:carrier_under_test
+                father = { has_character_flag = agp_birth_mm_forward_father }
+                real_father = { has_character_flag = agp_birth_mm_forward_father }
+            }
+        }
+        any_courtier = {
+            has_character_flag = agp_birth_mm_reverse_carrier
+            save_temporary_scope_as = carrier_under_test
+            is_pregnant = no
+            any_child = {
+                mother = scope:carrier_under_test
+                father = { has_character_flag = agp_birth_mm_reverse_father }
+                real_father = { has_character_flag = agp_birth_mm_reverse_father }
+            }
+        }
+        any_courtier = {
+            has_character_flag = agp_birth_swapped_forward_carrier
+            save_temporary_scope_as = carrier_under_test
+            is_pregnant = no
+            any_child = {
+                mother = scope:carrier_under_test
+                father = { has_character_flag = agp_birth_swapped_forward_father }
+                real_father = { has_character_flag = agp_birth_swapped_forward_father }
+            }
+        }
+        any_courtier = {
+            has_character_flag = agp_birth_swapped_reverse_carrier
+            save_temporary_scope_as = carrier_under_test
+            is_pregnant = no
+            any_child = {
+                mother = scope:carrier_under_test
+                father = { has_character_flag = agp_birth_swapped_reverse_father }
+                real_father = { has_character_flag = agp_birth_swapped_reverse_father }
+            }
+        }
+        any_courtier = {
+            has_character_flag = agp_birth_opposite_control_carrier
+            save_temporary_scope_as = carrier_under_test
+            is_pregnant = no
+            any_child = {
+                mother = scope:carrier_under_test
+                father = { has_character_flag = agp_birth_opposite_control_father }
+                real_father = { has_character_flag = agp_birth_opposite_control_father }
+            }
+        }
+    }
+    effect = { debug_log = "AGP_ACCEPTANCE_PASS agp_birth_check_121_matrix" }
+}
+
+# The original history IDs remain available for dead ancestors after reload.
+agp_reload_121_history_roles = {
+    character_target = 122
+    assert = {
+        character:902 = { father = { this = character:900 is_female = yes } }
+        character:83355 = { father = { this = character:902 is_female = yes } }
+        character:83357 = {
+            father = { this = character:83355 is_female = yes father = character:902 }
+            is_close_family_of = character:902
+            NOT = { is_close_family_of = character:122 }
+        }
+        character:522 = { mother = { this = character:1437 is_male = yes } }
+        character:212881 = { mother = { this = character:477 is_male = yes } father = character:522 }
+        character:8502 = { mother = { this = character:477 is_male = yes } father = character:522 }
+    }
+    effect = { debug_log = "AGP_ACCEPTANCE_PASS agp_reload_121_history_roles" }
+}
+
+agp_reload_121_ordinary_controls = {
+    character_target = 122
+    effect = {
+        create_character = { gender = male age = 40 employer = root save_scope_as = ordinary_father }
+        create_character = { gender = female age = 40 employer = root save_scope_as = ordinary_mother }
+        create_character = { gender = male age = 45 employer = root save_scope_as = ordinary_real_father }
+        create_character = { gender = female age = 45 employer = root save_scope_as = ordinary_real_mother }
+        create_character = { gender = female age = 65 employer = root save_scope_as = paternal_father }
+        create_character = { gender = male age = 65 employer = root save_scope_as = paternal_mother }
+        create_character = { gender = female age = 65 employer = root save_scope_as = maternal_father }
+        create_character = { gender = male age = 65 employer = root save_scope_as = maternal_mother }
+        scope:ordinary_father = { set_father = scope:paternal_father set_mother = scope:paternal_mother }
+        scope:ordinary_mother = { set_father = scope:maternal_father set_mother = scope:maternal_mother }
+        create_character = {
+            gender = female age = 1 employer = root
+            father = scope:ordinary_father mother = scope:ordinary_mother
+            save_scope_as = ordinary_child
+        }
+        scope:ordinary_child = {
+            set_real_father = scope:ordinary_real_father
+            set_real_mother = scope:ordinary_real_mother
+        }
+    }
+    assert = {
+        scope:ordinary_child = {
+            father = scope:ordinary_father
+            mother = scope:ordinary_mother
+            real_father = scope:ordinary_real_father
+            real_mother = scope:ordinary_real_mother
+            is_close_family_of = scope:ordinary_father
+            is_close_family_of = scope:ordinary_mother
+            father = { father = scope:paternal_father mother = scope:paternal_mother }
+            mother = { father = scope:maternal_father mother = scope:maternal_mother }
+            is_close_family_of = scope:paternal_father
+            is_close_family_of = scope:paternal_mother
+            is_close_family_of = scope:maternal_father
+            is_close_family_of = scope:maternal_mother
+        }
+        scope:paternal_father = { is_close_family_of = scope:ordinary_child }
+        scope:paternal_mother = { is_close_family_of = scope:ordinary_child }
+        scope:maternal_father = { is_close_family_of = scope:ordinary_child }
+        scope:maternal_mother = { is_close_family_of = scope:ordinary_child }
+    }
+    effect = { debug_log = "AGP_ACCEPTANCE_PASS agp_reload_121_ordinary_controls" }
+}
+
+agp_no_checks_setup_121_matrix = {
+    character_target = 122
+    effect = {
+        create_character = { gender = female age = 28 employer = root save_scope_as = no_checks_ff_carrier }
+        create_character = { gender = female age = 30 employer = root save_scope_as = no_checks_ff_father }
+        scope:no_checks_ff_father = { add_character_flag = agp_birth_no_checks_ff_father }
+        scope:no_checks_ff_carrier = {
+            add_character_flag = agp_birth_no_checks_ff_carrier
+            marry = scope:no_checks_ff_father
+            make_pregnant_no_checks = { father = scope:no_checks_ff_father number_of_children = 1 }
+            set_pregnancy_assumed_father = scope:no_checks_ff_father
+        }
+        create_character = { gender = male age = 28 employer = root save_scope_as = no_checks_mm_carrier }
+        create_character = { gender = male age = 30 employer = root save_scope_as = no_checks_mm_father }
+        scope:no_checks_mm_father = { add_character_flag = agp_birth_no_checks_mm_father }
+        scope:no_checks_mm_carrier = {
+            add_character_flag = agp_birth_no_checks_mm_carrier
+            marry = scope:no_checks_mm_father
+            make_pregnant_no_checks = { father = scope:no_checks_mm_father number_of_children = 1 }
+            set_pregnancy_assumed_father = scope:no_checks_mm_father
+        }
+        create_character = { gender = male age = 28 employer = root save_scope_as = no_checks_swapped_carrier }
+        create_character = { gender = female age = 30 employer = root save_scope_as = no_checks_swapped_father }
+        scope:no_checks_swapped_father = { add_character_flag = agp_birth_no_checks_swapped_father }
+        scope:no_checks_swapped_carrier = {
+            add_character_flag = agp_birth_no_checks_swapped_carrier
+            marry = scope:no_checks_swapped_father
+            make_pregnant_no_checks = { father = scope:no_checks_swapped_father number_of_children = 1 }
+            set_pregnancy_assumed_father = scope:no_checks_swapped_father
+        }
+        create_character = { gender = female age = 28 employer = root save_scope_as = no_checks_control_carrier }
+        create_character = { gender = male age = 30 employer = root save_scope_as = no_checks_control_father }
+        scope:no_checks_control_father = { add_character_flag = agp_birth_no_checks_control_father }
+        scope:no_checks_control_carrier = {
+            add_character_flag = agp_birth_no_checks_control_carrier
+            marry = scope:no_checks_control_father
+            make_pregnant_no_checks = { father = scope:no_checks_control_father number_of_children = 1 }
+            set_pregnancy_assumed_father = scope:no_checks_control_father
+        }
+    }
+    assert = {
+        scope:no_checks_ff_carrier = { is_pregnant = yes }
+        scope:no_checks_mm_carrier = { is_pregnant = yes }
+        scope:no_checks_swapped_carrier = { is_pregnant = yes }
+        scope:no_checks_control_carrier = { is_pregnant = yes }
+    }
+    effect = { debug_log = "AGP_ACCEPTANCE_PASS agp_no_checks_setup_121_matrix" }
+}
+
+agp_no_checks_check_121_matrix = {
+    character_target = 122
+    assert = {
+        any_courtier = {
+            has_character_flag = agp_birth_no_checks_ff_carrier
+            save_temporary_scope_as = carrier_under_test
+            is_pregnant = no
+            any_child = {
+                mother = scope:carrier_under_test
+                father = { has_character_flag = agp_birth_no_checks_ff_father }
+                real_father = { has_character_flag = agp_birth_no_checks_ff_father }
+            }
+        }
+        any_courtier = {
+            has_character_flag = agp_birth_no_checks_mm_carrier
+            save_temporary_scope_as = carrier_under_test
+            is_pregnant = no
+            any_child = {
+                mother = scope:carrier_under_test
+                father = { has_character_flag = agp_birth_no_checks_mm_father }
+                real_father = { has_character_flag = agp_birth_no_checks_mm_father }
+            }
+        }
+        any_courtier = {
+            has_character_flag = agp_birth_no_checks_swapped_carrier
+            save_temporary_scope_as = carrier_under_test
+            is_pregnant = no
+            any_child = {
+                mother = scope:carrier_under_test
+                father = { has_character_flag = agp_birth_no_checks_swapped_father }
+                real_father = { has_character_flag = agp_birth_no_checks_swapped_father }
+            }
+        }
+        any_courtier = {
+            has_character_flag = agp_birth_no_checks_control_carrier
+            save_temporary_scope_as = carrier_under_test
+            is_pregnant = no
+            any_child = {
+                mother = scope:carrier_under_test
+                father = { has_character_flag = agp_birth_no_checks_control_father }
+                real_father = { has_character_flag = agp_birth_no_checks_control_father }
+            }
+        }
+    }
+    effect = { debug_log = "AGP_ACCEPTANCE_PASS agp_no_checks_check_121_matrix" }
+}

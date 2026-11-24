@@ -1,7 +1,9 @@
-# AGP v1.0.2 EXE Installer
+> CK3 1.21.0.3 only. Compatibility uses exact verified game-file hashes, regardless of launcher storefront metadata. The optional Dynastic Priority add-on is not included.
+
+# AGP v1.1.0 EXE Installer
 
 This package contains the Any-Gender Parenthook graphical installer and
-uninstaller for Windows x64 with Steam Crusader Kings III `1.19.0.6`.
+uninstaller for Windows x64 with Crusader Kings III `1.21.0.3`.
 
 ## Install
 
@@ -19,7 +21,7 @@ deleted.
 
 Close CK3 and run `AGP-Uninstaller.exe`. The uninstaller verifies AGP's
 recorded state, removes only recognized AGP files and logs, and restores the
-recorded Steam compiler. If recognized UFG files are active, it asks before
+recorded original game compiler. If recognized UFG files are active, it asks before
 removing UFG and AGP components together.
 
 Keep the extracted folder together; the EXEs require the `Installer` manifest

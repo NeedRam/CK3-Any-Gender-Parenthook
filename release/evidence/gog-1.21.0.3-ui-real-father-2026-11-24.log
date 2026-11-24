@@ -1,0 +1,2 @@
+User selected and confirmed Real Father Scope Test on the real-father portrait.
+[01:36:21][D][jomini_effect_impl.cpp:444]: file: common/character_interactions/agp_native_father_test_interactions.txt line: 119 (agp_native_father_test_real_father_scope_interaction:on_auto_accept): AGP_UI_ACCEPTED real_father_scope

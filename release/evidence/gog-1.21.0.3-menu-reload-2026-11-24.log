@@ -1,0 +1,16 @@
+User-run main-menu save and reload; 2026-11-24
+{
+  "process_id_before_and_after": 6888,
+  "save_format": "uncompressed text; successfully loaded by CK3",
+  "save_size_bytes": 168936414,
+  "save_sha256": "a58a054be8bf87eece553bb94032c963404a84ffd7eb2fa07f33775f7f7febc0",
+  "exit_write_error_in_session": false,
+  "instant_birth_commands_in_session": 0
+}
+Setting idler 'Load Save' with init options
+[00:29:31][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 4 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_BEGIN agp_reload_121_distinct_roles
+[00:29:31][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 16 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_PASS agp_reload_121_distinct_roles
+[00:29:31][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 18 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_BEGIN agp_reload_121_history_roles
+[00:29:31][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 32 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_PASS agp_reload_121_history_roles
+[00:29:31][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 34 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_BEGIN agp_reload_121_ordinary_controls
+[00:29:31][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 77 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_PASS agp_reload_121_ordinary_controls

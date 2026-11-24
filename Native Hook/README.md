@@ -13,15 +13,16 @@ The payload removes or redirects CK3 gender checks around the native parent path
 - History-character parent validation
 - Save/load reconstruction of native parent roles
 - Role-aware reconstruction for female fathers and male mothers
+- Explicit serialization of ordinary parent roles alongside distinct real-parent overrides
 - Role-aware native parent and grandparent recognition for `is_close_family_of`
 
 The Native Hook changes CK3's native parent-role validation, pregnancy gates, persistence, and close-family recognition. It does not decide when pregnancy occurs, which partners or carriers are selected, how dynasties are handled, or what script API the AGP framework exposes.
 
 ## Compatibility
 
-The current signatures and absolute code addresses target the 64-bit CK3 `1.19.0.6` executable. Treat other CK3 versions as unsupported until the patch signatures, call targets, and hardcoded addresses have been re-verified.
+Version 1.1.0 targets Windows x64 CK3 `1.21.0.3`. Binary audit and native gameplay acceptance passed for the recorded executable hash. The profile name records the inspected installation's GOG metadata; selection uses the executable hash, so identical files do not need separate Steam/GOG gameplay runs. Different or unknown executable hashes are rejected even with manual installation. AGP v1.0.2 remains the separate release for CK3 1.19.0.6.
 
-The payload performs a signature preflight before writing patches. Every required patch family must resolve to the expected number of original or already-patched matches. If a preflight check fails, the payload logs the failure and makes no patch writes. A failure during the write phase can leave the process partially patched; do not continue a test session after a reported write failure.
+The payload performs a signature preflight before writing patches. Each required original instruction context must match its profile address and occur exactly once in `.text`; reconstruction call targets and continuation bytes are also checked. If a preflight check fails, the payload logs the failure and makes no patch writes. All writes and relay allocations are staged before game-code mutation. A failed write stops the transaction and restores and verifies the original bytes. Exit without saving after any write or rollback failure; a failed rollback is reported explicitly.
 
 ## Runtime architecture
 
@@ -60,7 +61,7 @@ The gender-specific translation units intentionally keep the related runtime, pr
 Requirements:
 
 - Windows x64
-- Visual Studio 2022 Community x64 build tools at the path configured in `build.ps1`
+- Visual Studio 2022 x64 build tools with the MSVC and SDK versions pinned in `toolchain.json`
 - The AGP Native Hook source tree
 
 From this directory, run:
@@ -124,6 +125,8 @@ The test fixtures cover:
 - Native parent persistence across save/load
 - History loading with male mothers and female-fathers
 
+Run `test.ps1` for native executable tests, including emitted machine-code stubs and write-failure rollback. Run `python tools/audit_binary.py <ck3.exe>` for the read-only PE audit. `profiles/ck3-1.21.0.3.json` is the canonical source of executable identities, offsets, original bytes, and resolved call targets; `generate-profiles.ps1` generates the compiled header. No installed game files are inputs to the normal build.
+
 See [`native_test_mod\README.md`](native_test_mod/README.md) for fixture IDs, installation details, and the required UI, log, and save/load checks. A successful DLL build is not gameplay validation; run the relevant fixtures on the matching CK3 version before treating a behavior as verified.
 
 ## Reverse-engineering helpers
@@ -147,3 +150,16 @@ For a new CK3 build or a substantial payload change, validate in separate stages
 4. Check native parent scopes and UI data immediately after creation.
 5. Save, reload, and repeat the relevant parent, grandparent, and close-family checks.
 6. Record the exact CK3 executable version and fixture results before publishing.
+
+## Release acceptance
+
+`release/validation.json` tracks the required in-game scenarios. `release/check-release.py` prevents canonical packaging until every supported executable profile and its native-package acceptance evidence are complete. Incomplete local candidates require the explicit `-AllowIncompleteValidation` release-builder option and carry an incomplete-candidate notice.
+
+Distinct real-parent reassignment must be tested again after save/reload: a runtime scope check alone cannot prove that the reciprocal-child reconstruction preserves it.
+
+The 1.21 serializer writes ordinary `father` and `mother` IDs in `family_data`
+through CK3's persistent writer; the matching reader consumes those fields before
+reciprocal-child reconstruction. This uses the native text/binary serialization
+primitives; binary-save acceptance still requires evidence. The real-parent
+override fields remain separate. Older saves that already lost ambiguous role
+information cannot be repaired from that missing information alone.

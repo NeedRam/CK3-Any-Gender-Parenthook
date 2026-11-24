@@ -1,4 +1,4 @@
-# Debug-only native pregnancy test with a female actor as the female father.
+﻿# Debug-only native pregnancy test with a female actor as the female father.
 agp_native_gender_swapped_test_female_actor_interaction = {
 	category = interaction_category_uncategorized
 	icon = debug_chars
@@ -27,7 +27,7 @@ agp_native_gender_swapped_test_female_actor_interaction = {
 		scope:recipient = { is_alive = yes }
 	}
 
-	on_accept = {
+	on_auto_accept = {
 		scope:recipient = {
 			make_pregnant = { father = scope:actor }
 		}
@@ -63,7 +63,7 @@ agp_native_gender_swapped_test_male_actor_interaction = {
 		scope:recipient = { is_alive = yes }
 	}
 
-	on_accept = {
+	on_auto_accept = {
 		scope:actor = {
 			make_pregnant = { father = scope:recipient }
 		}

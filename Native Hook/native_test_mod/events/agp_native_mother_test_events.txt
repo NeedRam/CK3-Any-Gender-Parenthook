@@ -218,6 +218,18 @@ agp_native_mother_test.0006 = {
 			desc = agp_native_mother_test.0006.desc.failure
 		}
 	}
+    immediate = {
+        if = {
+            limit = { has_character_flag = agp_native_mother_test_mother_interaction_used }
+            debug_log = "AGP_UI_MALE_MOTHER_ACCEPTED"
+        }
+        else = { debug_log = "AGP_UI_MALE_MOTHER_PENDING" }
+        if = {
+            limit = { has_character_flag = agp_native_mother_test_real_mother_interaction_used }
+            debug_log = "AGP_UI_REAL_MOTHER_ACCEPTED"
+        }
+        else = { debug_log = "AGP_UI_REAL_MOTHER_PENDING" }
+    }
 	theme = family
 	option = { name = agp_native_mother_test.close }
 }
@@ -304,4 +316,43 @@ agp_native_mother_test.0008 = {
 		}
 	}
 	option = { name = agp_native_mother_test.close }
+}
+
+# First use creates two distinct male mother roles on the current player.
+# Reopening this view preserves the existing fixture and acceptance flags.
+agp_native_mother_test.0009 = {
+    type = character_event
+    orphan = yes
+    title = agp_native_mother_test.0005.t
+    desc = agp_native_mother_test_mother_scope_interaction_desc
+    theme = family
+    left_portrait = scope:male_test_mother
+    right_portrait = scope:male_test_real_mother
+    immediate = {
+        if = {
+            limit = { NOT = { has_character_flag = agp_ui_male_mother_fixture_ready } }
+            remove_character_flag = agp_native_mother_test_mother_interaction_used
+            remove_character_flag = agp_native_mother_test_real_mother_interaction_used
+            create_character = { gender = male age = 85 employer = root save_scope_as = male_test_real_mother }
+            create_character = { gender = male age = 65 employer = root save_scope_as = male_test_mother }
+            scope:male_test_mother = { set_mother = scope:male_test_real_mother }
+            set_mother = scope:male_test_mother
+            set_real_mother = scope:male_test_real_mother
+            if = {
+                limit = {
+                    mother = scope:male_test_mother
+                    real_mother = scope:male_test_real_mother
+                    mother = { is_male = yes NOT = { this = scope:male_test_real_mother } }
+                    real_mother = { is_male = yes }
+                }
+                add_character_flag = agp_ui_male_mother_fixture_ready
+                debug_log = "AGP_UI_MALE_MOTHER_SETUP_PASS"
+            }
+            else = { debug_log = "AGP_UI_MALE_MOTHER_SETUP_FAIL" }
+        }
+        mother = { save_scope_as = male_test_mother }
+        real_mother = { save_scope_as = male_test_real_mother }
+        debug_log_scopes = yes
+    }
+    option = { name = agp_native_mother_test.close }
 }

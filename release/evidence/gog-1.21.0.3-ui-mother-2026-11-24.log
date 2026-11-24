@@ -1,0 +1,3 @@
+User selected and confirmed Mother Scope Test on Heregyth Rowe.
+User also observed Close Family Test and the male-suite mother/real-mother entries; those predicates do not filter recipient sex.
+[01:33:22][D][jomini_effect_impl.cpp:444]: file: common/character_interactions/agp_native_father_test_interactions.txt line: 87 (agp_native_father_test_mother_scope_interaction:on_auto_accept): AGP_UI_ACCEPTED mother_scope

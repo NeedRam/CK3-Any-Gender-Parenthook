@@ -114,7 +114,7 @@
             "managed_agp",
             "legacy_agp",
             "recognized_ufg",
-            "steam_updated",
+            "game_updated",
             "unknown_conflicting"
           ]
         },
@@ -234,7 +234,7 @@
             "managed_agp",
             "legacy_agp",
             "recognized_ufg",
-            "steam_updated",
+            "game_updated",
             "unknown_conflicting"
           ]
         },
@@ -255,7 +255,7 @@
             "managed_agp",
             "legacy_agp",
             "recognized_ufg",
-            "steam_updated",
+            "game_updated",
             "unknown_conflicting",
             "manual_recovery_required"
           ]

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://any-gender-parenthook.invalid/schema/release-manifest-v1.json",
-  "title": "Any-Gender Parenthook release manifest (schema v1)",
+  "$id": "https://any-gender-parenthook.invalid/schema/release-manifest-v2.json",
+  "title": "Any-Gender Parenthook release manifest (schema v2)",
   "description": "Portable package and compatibility contract consumed by both installer engines.",
   "type": "object",
   "additionalProperties": false,
@@ -23,7 +23,7 @@
     },
     "schema_version": {
       "type": "integer",
-      "const": 1
+      "const": 2
     },
     "kind": {
       "type": "string",
@@ -107,13 +107,15 @@
         }
       }
     },
-        "supportedBuild": {
+    "supportedBuild": {
       "type": "object",
       "additionalProperties": false,
       "required": [
         "id",
         "executable_sha256",
-        "original_dxcompiler_sha256"
+        "original_dxcompiler_sha256",
+        "profile_id",
+        "distribution"
       ],
       "properties": {
         "id": {
@@ -128,6 +130,17 @@
         },
         "notes": {
           "type": "string"
+        },
+        "profile_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+        },
+        "distribution": {
+          "type": "string",
+          "enum": [
+            "steam",
+            "gog"
+          ]
         }
       }
     },
@@ -362,7 +375,7 @@
               },
               "owner": {
                 "type": "string",
-                "const": "steam"
+                "const": "game"
               },
               "install_policy": {
                 "type": "string",
@@ -449,7 +462,7 @@
             "managed_agp",
             "legacy_agp",
             "recognized_ufg",
-            "steam_updated"
+            "game_updated"
           ]
         },
         "confidence": {

@@ -31,3 +31,8 @@
  agp_native_father_test_real_father_scope_interaction:0 "Real Father Scope Test"
  agp_native_father_test_real_father_scope_interaction_desc:0 "Visible only when the selected character is the actor's native real father."
  agp_native_father_test.close:0 "Close"
+ agp_native_father_test_father:0 "AGP Female Father"
+ agp_native_father_test_child:0 "AGP Test Child"
+ agp_native_father_test.0010.t:0 "Native Father Test: Interaction Results"
+ agp_native_father_test.0010.desc.success:0 "PASS: the mother, father, real-father, and close-family interactions were used on valid targets. Repeat after save/reload."
+ agp_native_father_test.0010.desc.failure:0 "INCOMPLETE: at least one expected interaction has not been recorded on this character."

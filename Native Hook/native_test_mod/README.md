@@ -162,3 +162,66 @@ A successful event panel is not sufficient proof of native persistence. Treat th
 - CK3 logs report a wrong-gender or parent-assignment error.
 
 Record the CK3 executable version, exact event ID, save/reload result, relevant UI result, and log output before changing the DLL or test fixture.
+
+## CK3 1.21 scripted acceptance
+
+The `tests/agp_native_121_tests.txt` file uses the installed 1.21 `tests/_tests.info` schema. In a disposable 1066 game, run `scripted_tests agp_native_121` to check setters, distinct-parent reassignment, character creation, close-family negatives, and pregnancy creation. These are scope assertions; they do not establish pregnancy-through-birth or UI acceptance. Save and reload that game, then run `scripted_tests agp_reload_121` to check the flagged distinct-parent child without recreating the fixtures. Repeat after restarting CK3. Record the game's test output and all native and CK3 logs.
+
+For an isolated run, install the matching native candidate and launch:
+
+```powershell
+& '.\Native Hook\tools\run-acceptance.ps1' -GameExecutable '<game>\binaries\ck3.exe'
+```
+
+The harness requires Python and generates its user data under ignored
+`Native Hook/build/ck3-user`. It runs the canonical assertions through a startup
+on-action and exposes debug controls. `AGP_ACCEPTANCE_PASS` and
+`AGP_ACCEPTANCE_FAIL` lines in that profile's `logs/debug.log` record results.
+The generated event avoids the scripted-test command's extra daily/event tick.
+Use **Save acceptance game**, close the test process, launch the harness with
+`-Mode reload`, and click **Check reloaded roles** after the game becomes
+responsive. Reload mode does not recreate the setup characters. It loads
+`agp_121_acceptance.ck3` from the isolated profile.
+
+For accelerated birth coverage, enable **Toggle instant birth**, generate the
+`birth_setup` runner, and click **Run scope assertions**. Advance the calendar,
+pause, generate `birth_check`, and run assertions again. The seven married-pair
+cases cover both role directions for female/female, male/male, and swapped
+opposite-sex parents, plus the ordinary opposite-sex control. Every newborn
+must resolve the expected native mother, father, and real father. Repeat with
+`no_checks_setup` / `no_checks_check` for the four
+`make_pregnant_no_checks` cases. These runs do not validate nine months of
+gestation or character-interaction visibility.
+
+Switch a running isolated session's generated event without restarting:
+
+```powershell
+python 'Native Hook/tools/generate_acceptance.py' 'Native Hook/native_test_mod/tests/agp_native_121_tests.txt' 'Native Hook/build/ck3-user/mod/agp-autorun' --mode birth_setup
+```
+
+Wait for the event reload entry in `debug.log` before clicking a test control.
+Save after births, restart with `-Mode birth_check`, and repeat the assertions
+to check newborn roles after serialization and process restart.
+
+## Recorded acceptance and remaining add-on coverage
+
+`release/validation.json` records passing native-package checks for the exact
+1.21.0.3 executable hash: scope assertions, seven accelerated birth cases, four
+make_pregnant_no_checks birth cases, newborn roles after restart, text and
+compressed-binary role persistence, main-menu reload, normal-mode exit autosave,
+and the tested parent, real-parent and close-family interaction actions.
+
+For manual interactions, select the correct portrait, choose the scope test,
+and press its confirmation button. A small confirmation window may be hidden
+behind the larger portrait event. Closing the interaction menu alone does not
+accept the action. Read the result event and retain its runtime flags/logs.
+The male-parent display uses distinct native mother and real-mother characters.
+
+The debug-mode exit-to-desktop autosave failed with AGP both enabled and disabled;
+normal-mode exit autosave and debug main-menu save/load passed. The cause remains
+unconfirmed. Do not describe administrator compatibility as a proven fix.
+
+Dynastic Priority is a separate optional component excluded from the native ZIPs.
+Its full matrix remains pending: all three choices of each of its four rules,
+higher-rank wins, equal-rank fall-through, missing-house guards, and ordinary
+opposite-sex controls. Retain native and CK3 logs with each result.

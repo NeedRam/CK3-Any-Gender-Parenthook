@@ -1,0 +1,40 @@
+{
+  "date": "2026-11-24",
+  "installer_tests": {
+    "full_suite_passed": 38,
+    "additional_storefront_identity_regression": "pass",
+    "distinct_tests_passed": 39
+  },
+  "native_tests": "pass: serialization, callbacks, family negatives, 24 emitted-stub cases, staged writes, abort, rollback, unknown executable",
+  "binary_audit_checks_passed": 30,
+  "payload_sha256": "093076fc5d60c5c5e16a8fba2b294f7b8cc73a644a5c9fb081e33d79eb9e0536",
+  "release_gate": "pass",
+  "canonical_ci_artifacts": false,
+  "published": false,
+  "packages": [
+    {
+      "archive": "AGP v1.1.0 Base Files (Manual Install).zip",
+      "sha256": "51cc83eb34c05e7f2583097c945b13583e866082d4adabbccaf1220f6a5059f9",
+      "files": 5,
+      "crc": "pass",
+      "internal_checksums": "pass",
+      "package_exclusions": "pass"
+    },
+    {
+      "archive": "AGP v1.1.0 Batch File Installer.zip",
+      "sha256": "73c405e7f03fc5288ee616717ea7bd0c78fd28bf88f34b14180724ddcd6949c5",
+      "files": 11,
+      "crc": "pass",
+      "internal_checksums": "pass",
+      "package_exclusions": "pass"
+    },
+    {
+      "archive": "AGP v1.1.0 EXE Installer.zip",
+      "sha256": "a42538853b5a11463ca0cdaef6b8a73ca8c0f13ee6e8e527233246f7be25015c",
+      "files": 8,
+      "crc": "pass",
+      "internal_checksums": "pass",
+      "package_exclusions": "pass"
+    }
+  ]
+}

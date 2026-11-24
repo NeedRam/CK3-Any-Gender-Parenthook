@@ -27,7 +27,7 @@ agp_native_father_test_make_pregnant_interaction = {
 		scope:recipient = { is_alive = yes }
 	}
 
-	on_accept = {
+	on_auto_accept = {
 		scope:recipient = {
 			make_pregnant = { father = scope:actor }
 		}
@@ -63,7 +63,7 @@ agp_native_father_test_become_pregnant_interaction = {
 		scope:recipient = { is_alive = yes }
 	}
 
-	on_accept = {
+	on_auto_accept = {
 		scope:actor = {
 			make_pregnant = { father = scope:recipient }
 		}
@@ -84,7 +84,7 @@ agp_native_father_test_mother_scope_interaction = {
 		scope:actor.mother = scope:recipient
 	}
 	is_valid = { scope:actor.mother = scope:recipient }
-	on_accept = { scope:actor = { add_character_flag = agp_native_father_test_mother_scope_interaction_used } }
+	on_auto_accept = { scope:actor = { add_character_flag = agp_native_father_test_mother_scope_interaction_used debug_log = "AGP_UI_ACCEPTED mother_scope" } }
 }
 
 agp_native_father_test_father_scope_interaction = {
@@ -100,7 +100,7 @@ agp_native_father_test_father_scope_interaction = {
 		scope:actor.father = scope:recipient
 	}
 	is_valid = { scope:actor.father = scope:recipient }
-	on_accept = { scope:actor = { add_character_flag = agp_native_father_test_father_scope_interaction_used } }
+	on_auto_accept = { scope:actor = { add_character_flag = agp_native_father_test_father_scope_interaction_used debug_log = "AGP_UI_ACCEPTED father_scope" } }
 }
 
 agp_native_father_test_real_father_scope_interaction = {
@@ -116,5 +116,5 @@ agp_native_father_test_real_father_scope_interaction = {
 		scope:actor.real_father = scope:recipient
 	}
 	is_valid = { scope:actor.real_father = scope:recipient }
-	on_accept = { scope:actor = { add_character_flag = agp_native_father_test_real_father_scope_interaction_used } }
+	on_auto_accept = { scope:actor = { add_character_flag = agp_native_father_test_real_father_scope_interaction_used debug_log = "AGP_UI_ACCEPTED real_father_scope" } }
 }

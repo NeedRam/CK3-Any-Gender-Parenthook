@@ -11,7 +11,7 @@
 		scope:actor.mother = scope:recipient
 	}
 	is_valid = { scope:actor.mother = scope:recipient }
-	on_accept = { scope:actor = { add_character_flag = agp_native_mother_test_mother_interaction_used } }
+	on_auto_accept = { scope:actor = { add_character_flag = agp_native_mother_test_mother_interaction_used } }
 }
 
 agp_native_mother_test_real_mother_scope_interaction = {
@@ -27,7 +27,7 @@ agp_native_mother_test_real_mother_scope_interaction = {
 		scope:actor.real_mother = scope:recipient
 	}
 	is_valid = { scope:actor.real_mother = scope:recipient }
-	on_accept = { scope:actor = { add_character_flag = agp_native_mother_test_real_mother_interaction_used } }
+	on_auto_accept = { scope:actor = { add_character_flag = agp_native_mother_test_real_mother_interaction_used } }
 }
 
 # Debug-only native pregnancy test with two male spouses. The actor is recorded
@@ -60,7 +60,7 @@ agp_native_mother_test_make_pregnant_interaction = {
 		scope:recipient = { is_alive = yes }
 	}
 
-	on_accept = {
+	on_auto_accept = {
 		scope:recipient = {
 			make_pregnant = { father = scope:actor }
 		}
@@ -97,7 +97,7 @@ agp_native_mother_test_become_pregnant_interaction = {
 		scope:recipient = { is_alive = yes }
 	}
 
-	on_accept = {
+	on_auto_accept = {
 		scope:actor = {
 			make_pregnant = { father = scope:recipient }
 		}

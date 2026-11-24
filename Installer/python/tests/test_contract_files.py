@@ -24,10 +24,9 @@ class ContractFileTests(unittest.TestCase):
         self.validate_pair("Installer/fixtures/scenarios.json", "Installer/spec/scenario-fixtures.schema.json")
 
     def test_compatibility_evidence(self) -> None:
-        self.validate_pair(
-            "Installer/fixtures/compatibility-evidence.json",
-            "Installer/spec/compatibility-evidence.schema.json",
-        )
+        for path in (ROOT / "Installer/fixtures").glob("compatibility-evidence*.json"):
+            with self.subTest(path=path.name):
+                self.validate_pair(str(path.relative_to(ROOT)), "Installer/spec/compatibility-evidence.schema.json")
 
     def test_end_user_entrypoints_are_at_package_root(self) -> None:
         manifest = json.loads((ROOT / "Installer" / "release-manifest.json").read_text(encoding="utf-8"))

@@ -6,19 +6,19 @@
     {
       "id": "known_clean",
       "safe_to_mutate": true,
-      "definition": "The CK3 executable and active dxcompiler.dll match a supported Steam seed; no schema-v1 state or AGP payload is present.",
+      "definition": "The CK3 executable and active dxcompiler.dll match a supported Steam seed; no schema-v2 state or AGP payload is present.",
       "default_decision": "proceed"
     },
     {
       "id": "managed_agp",
       "safe_to_mutate": true,
-      "definition": "A schema-v1 state is valid and every managed file matches its recorded hash and ownership.",
+      "definition": "A schema-v2 state is valid and every managed file matches its recorded hash and ownership.",
       "default_decision": "prompt"
     },
     {
       "id": "legacy_agp",
       "safe_to_mutate": false,
-      "definition": "The exact legacy AGP proxy/payload layout matches a compatibility seed but has no valid schema-v1 state.",
+      "definition": "The exact legacy AGP proxy/payload layout matches a compatibility seed but has no valid schema-v2 state.",
       "default_decision": "prompt"
     },
     {
@@ -28,7 +28,7 @@
       "default_decision": "prompt"
     },
     {
-      "id": "steam_updated",
+      "id": "game_updated",
       "safe_to_mutate": false,
       "definition": "The exact state-plus-supported-Steam hash layout identifies a newly supported active original replacing a stale state-recorded original backup.",
       "default_decision": "prompt"
@@ -68,7 +68,7 @@
       "mutation_allowed": false
     },
     {
-      "id": "state_and_journal_parse_as_schema_v1",
+      "id": "state_and_journal_parse_as_schema_v2",
       "failure_decision": "reject",
       "mutation_allowed": false
     },
@@ -196,9 +196,9 @@
       "id": "install_steam_update_rebaseline",
       "operation": "install",
       "from": [
-        "steam_updated"
+        "game_updated"
       ],
-      "confirmation": "ACCEPT_STEAM_UPDATE",
+      "confirmation": "ACCEPT_GAME_UPDATE",
       "decision": "proceed",
       "on_missing_confirmation": "abort_without_mutation",
       "to": "managed_agp",
@@ -283,7 +283,7 @@
       "operation": "uninstall",
       "from": [
         "managed_agp",
-        "steam_updated"
+        "game_updated"
       ],
       "confirmation": "I_UNDERSTAND_UNKNOWN_CONFLICT",
       "decision": "proceed",

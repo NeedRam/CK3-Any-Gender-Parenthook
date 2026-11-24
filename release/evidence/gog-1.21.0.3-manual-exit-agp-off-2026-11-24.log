@@ -1,0 +1,6 @@
+Manual exit-autosave control: AGP disabled
+Original compiler SHA-256: 40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65
+AGP payload absent.
+Result: same write exception; autosave_exit.ck3.tmp remains zero bytes.
+[00:06:39][D][application.cpp:1259]: Quit: Quit from inside game
+[00:06:40][E][savegamemanagerbase.cpp:176]: Failed to write to disk: Exception in: C:\mnt\gsg\ck3\titus\cw\clausewitz\pdx_core\virtualfilesystem.cpp, line: 745. Description: Failed writing file

@@ -1,4 +1,4 @@
-agp_native_father_test_father = {
+﻿agp_native_father_test_father = {
 	name = agp_native_father_test_father
 	female = yes
 	culture = "irish"

@@ -1,0 +1,53 @@
+﻿# Disposable debug controls. These use the same ExecuteConsoleCommand binding
+# as vanilla console.gui and are excluded from every end-user native package.
+flowcontainer = {
+    name = "agp_acceptance_controls"
+    parentanchor = top|left
+    position = { 480 120 }
+    layer = confirmation
+    direction = vertical
+    spacing = 4
+    visible = "[InDebugMode]"
+    using = dockable_background
+
+    dockable_button = {
+        size = { 300 32 }
+        raw_text = "AGP: Run scope assertions"
+        onclick = "[ExecuteConsoleCommand('scripted_tests agp_native_121')]"
+    }
+    dockable_button = {
+        size = { 300 32 }
+        raw_text = "AGP: Save acceptance game"
+        onclick = "[ExecuteConsoleCommand('save agp_121_acceptance')]"
+    }
+    dockable_button = {
+        size = { 300 32 }
+        raw_text = "AGP: Check reloaded roles"
+        onclick = "[ExecuteConsoleCommand('scripted_tests agp_reload_121')]"
+    }
+    dockable_button = {
+        size = { 300 32 }
+        raw_text = "AGP: Toggle instant birth"
+        onclick = "[ExecuteConsoleCommand('instant_birth')]"
+    }
+    dockable_button = {
+        size = { 300 32 }
+        raw_text = "AGP: Open debug console"
+        onclick = "[ExecuteConsoleCommand('gui.createwidget gui/console.gui console_window')]"
+    }
+    dockable_button = {
+        size = { 300 32 }
+        raw_text = "AGP: Show real parent test"
+        onclick = "[ExecuteConsoleCommand('event agp_native_father_test.0013')]"
+    }
+    dockable_button = {
+        size = { 300 32 }
+        raw_text = "AGP: Show male mother test"
+        onclick = "[ExecuteConsoleCommand('event agp_native_mother_test.0009')]"
+    }
+    dockable_button = {
+        size = { 300 32 }
+        raw_text = "AGP: Check male mother results"
+        onclick = "[ExecuteConsoleCommand('event agp_native_mother_test.0006')]"
+    }
+}

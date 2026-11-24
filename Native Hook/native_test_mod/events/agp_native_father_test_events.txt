@@ -266,3 +266,107 @@ agp_native_father_test.0008 = {
 	}
 	option = { name = agp_native_father_test.close }
 }
+
+# Interaction visibility is checked on the child after selecting each target.
+agp_native_father_test.0010 = {
+    type = character_event
+    orphan = yes
+    title = agp_native_father_test.0010.t
+    desc = {
+        first_valid = {
+            triggered_desc = {
+                trigger = {
+                    has_character_flag = agp_native_father_test_mother_scope_interaction_used
+                    has_character_flag = agp_native_father_test_father_scope_interaction_used
+                    has_character_flag = agp_native_father_test_real_father_scope_interaction_used
+                    has_character_flag = agp_native_family_test_close_family_interaction_used
+                }
+                desc = agp_native_father_test.0010.desc.success
+            }
+            desc = agp_native_father_test.0010.desc.failure
+        }
+    }
+    theme = family
+    option = { name = agp_native_father_test.close }
+}
+
+# Use the current player as actor so no switch to an unlanded fixture is needed.
+agp_native_father_test.0011 = {
+    type = character_event
+    orphan = yes
+    title = agp_native_father_test.0008.t
+    desc = {
+        first_valid = {
+            triggered_desc = {
+                trigger = { has_character_flag = agp_ui_parent_fixture_ready }
+                desc = agp_native_father_test_father_scope_interaction_desc
+            }
+            desc = agp_native_father_test.0008.desc.failure
+        }
+    }
+    theme = family
+    left_portrait = scope:test_father
+    center_portrait = scope:test_mother
+    right_portrait = scope:test_real_father
+    immediate = {
+        remove_character_flag = agp_ui_parent_fixture_ready
+        remove_character_flag = agp_ui_male_mother_fixture_ready
+        remove_character_flag = agp_native_father_test_mother_scope_interaction_used
+        remove_character_flag = agp_native_father_test_father_scope_interaction_used
+        remove_character_flag = agp_native_father_test_real_father_scope_interaction_used
+        remove_character_flag = agp_native_family_test_close_family_interaction_used
+        create_character = { gender = female age = 85 employer = root save_scope_as = test_real_father }
+        create_character = { gender = female age = 65 employer = root save_scope_as = test_father }
+        create_character = { gender = female age = 64 employer = root save_scope_as = test_mother }
+        scope:test_father = { set_mother = scope:test_real_father }
+        set_mother = scope:test_mother
+        set_father = scope:test_father
+        set_real_father = scope:test_real_father
+        if = {
+            limit = {
+                father = scope:test_father
+                mother = scope:test_mother
+                real_father = scope:test_real_father
+                father = { mother = scope:test_real_father }
+            }
+            add_character_flag = agp_ui_parent_fixture_ready
+            debug_log = "AGP_UI_PARENT_SETUP_PASS"
+        }
+        else = { debug_log = "AGP_UI_PARENT_SETUP_FAIL" }
+    }
+    option = { name = agp_native_father_test.close }
+}
+
+# Display the stored fixture without creating parents or resetting used flags.
+agp_native_father_test.0012 = {
+    type = character_event
+    orphan = yes
+    title = agp_native_father_test.0008.t
+    desc = agp_native_father_test_father_scope_interaction_desc
+    theme = family
+    left_portrait = scope:test_father
+    right_portrait = scope:test_mother
+    immediate = {
+        father = { save_scope_as = test_father }
+        mother = { save_scope_as = test_mother }
+        real_father = { save_scope_as = test_real_father }
+        debug_log = "AGP_UI_EXISTING_PARENTS"
+        debug_log_scopes = yes
+    }
+    option = { name = agp_native_father_test.close }
+}
+
+agp_native_father_test.0013 = {
+    type = character_event
+    orphan = yes
+    title = agp_native_father_test.0008.t
+    desc = agp_native_father_test_real_father_scope_interaction_desc
+    theme = family
+    left_portrait = scope:test_real_father
+    right_portrait = scope:test_mother
+    immediate = {
+        real_father = { save_scope_as = test_real_father }
+        mother = { save_scope_as = test_mother }
+    }
+    option = { name = agp_native_father_test.close }
+}

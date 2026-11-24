@@ -1,0 +1,1 @@
+﻿gui/agp_acceptance.gui = agp_acceptance_controls

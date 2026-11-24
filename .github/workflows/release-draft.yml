@@ -6,7 +6,7 @@ on:
       version:
         description: Release version from Installer/release-manifest.json
         required: true
-        default: 1.0.2
+        default: 1.1.0
   push:
     tags:
       - v*.*.*
@@ -70,7 +70,7 @@ jobs:
 
       - name: Build native x64 payload
         shell: powershell
-        run: "& '.\\Native Hook\\build.ps1' -Clean"
+        run: "& '.\\Native Hook\\test.ps1'"
 
       - name: Run installer contract and transition tests
         shell: cmd
@@ -111,7 +111,7 @@ jobs:
         with:
           tag_name: ${{ steps.release.outputs.tag }}
           name: Any-Gender Parenthook v${{ steps.release.outputs.version }}
-          draft: false
+          draft: true
           generate_release_notes: false
           body_path: release/RELEASE_NOTES.md
           fail_on_unmatched_files: true

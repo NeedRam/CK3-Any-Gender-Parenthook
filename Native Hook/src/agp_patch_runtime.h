@@ -12,6 +12,10 @@ struct TextSection {
 };
 
 void Log(const char* message);
+void BeginPatchTransaction();
+void AbortPatchTransaction();
+bool CommitPatchTransaction(std::size_t fault_after = static_cast<std::size_t>(-1));
+bool StageDetour(std::uint8_t* site, std::uint8_t* target, std::size_t overwrite);
 bool WriteBytes(std::uint8_t* address, const std::uint8_t* bytes, std::size_t count);
 bool GetTextSection(TextSection* result);
 std::vector<std::uint8_t*> FindPattern(const TextSection& section, const std::uint8_t* pattern, const char* mask, std::size_t length);

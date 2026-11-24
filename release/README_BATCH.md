@@ -1,7 +1,9 @@
-# AGP v1.0.2 Batch File Installer
+> CK3 1.21.0.3 only. Compatibility uses exact verified game-file hashes, regardless of launcher storefront metadata. The optional Dynastic Priority add-on is not included.
+
+# AGP v1.1.0 Batch File Installer
 
 This package contains the Any-Gender Parenthook batch/PowerShell installer and
-uninstaller for Windows x64 with Steam Crusader Kings III `1.19.0.6`.
+uninstaller for Windows x64 with Crusader Kings III `1.21.0.3`.
 
 ## Install
 
@@ -19,9 +21,11 @@ deleted.
 
 Close CK3 and run `Uninstall AGP.bat`. The uninstaller verifies AGP's recorded
 state, removes only recognized AGP files and logs, and restores the recorded
-Steam compiler. If recognized UFG files are active, it asks before removing
+original game compiler. If recognized UFG files are active, it asks before removing
 UFG and AGP components together.
 
 Keep the extracted folder together; the batch files require the `Installer`
 folder and native files beside them. This release is intentionally unsigned.
 `SHA256SUMS.txt` records the exact files in this package.
+
+For GOG or another installation path, pass `-TargetRoot "D:\Games\Crusader Kings III\binaries"` to either batch entrypoint. The path may also identify the game directory or `ck3.exe`. The executable hash determines compatibility.

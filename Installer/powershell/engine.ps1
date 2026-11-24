@@ -143,18 +143,30 @@ function Test-ValidRelative([object]$Value) {
 function Test-StateShape($State) {
     if ($null -eq $State) { return $false }
     try {
-        if ($State.schema_version -ne 1 -or $State.kind -ne 'agp_install_state' -or $State.status -ne 'managed_agp') { return $false }
+        if ($State.schema_version -notin @(1,2) -or $State.kind -ne 'agp_install_state' -or $State.status -ne 'managed_agp') { return $false }
         if ([string]$State.transaction_id -notmatch '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$') { return $false }
         if ($State.release.id -ne 'agp' -or $State.release.version -notmatch '^\d+\.\d+\.\d+$' -or -not (Test-Sha $State.release.manifest_sha256)) { return $false }
         if ($State.target.game_id -ne 'crusader_kings_iii' -or $State.target.binaries_relative_path -ne 'binaries' -or $State.target.executable_relative_path -ne 'ck3.exe') { return $false }
-        if ($State.target.target_root_kind -ne 'steam_game_binaries' -or $State.target.build_id -notmatch '^\d+\.\d+\.\d+\.\d+$') { return $false }
-        foreach ($base in @($State.baseline.original_dxcompiler, $State.baseline.executable)) {
-            if (-not (Test-ValidRelative $base.relative_path) -or -not (Test-Sha $base.sha256) -or [int64]$base.size_bytes -lt 0 -or $base.ownership -ne 'steam') { return $false }
+        if ($State.target.build_id -notmatch '^\d+\.\d+\.\d+\.\d+$') { return $false }
+        $originalOwner = 'steam'
+        if ($State.schema_version -eq 1) {
+            if ($State.target.target_root_kind -ne 'steam_game_binaries') { return $false }
+        } else {
+            $originalOwner = 'game'
+            if ($State.target.target_root_kind -ne 'ck3_game_binaries' -or $State.target.distribution -notin @('steam','gog') -or $State.target.profile_id -notmatch '^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$') { return $false }
         }
-        if (@($State.managed_files).Count -lt 2) { return $false }
+        foreach ($base in @($State.baseline.original_dxcompiler, $State.baseline.executable)) {
+            if (-not (Test-ValidRelative $base.relative_path) -or -not (Test-Sha $base.sha256) -or [int64]$base.size_bytes -lt 0 -or $base.ownership -ne $originalOwner) { return $false }
+        }
+        if ($State.baseline.original_dxcompiler.relative_path -ne 'dxcompiler_original.dll' -or $State.baseline.executable.relative_path -ne 'ck3.exe') { return $false }
+        if (@($State.managed_files).Count -ne 2) { return $false }
+        $roles = @($State.managed_files | ForEach-Object { $_.role } | Sort-Object -Unique)
+        if ($roles.Count -ne 2 -or 'agp_proxy' -notin $roles -or 'agp_payload' -notin $roles) { return $false }
         foreach ($managed in @($State.managed_files)) {
             if (-not (Test-ValidRelative $managed.relative_path) -or $managed.ownership -ne 'managed' -or -not (Test-Sha $managed.installed_sha256) -or [int64]$managed.installed_size_bytes -lt 0) { return $false }
             if ($managed.role -notin @('agp_proxy', 'agp_payload')) { return $false }
+            $expectedPath = if ($managed.role -eq 'agp_proxy') { 'dxcompiler.dll' } else { 'AGP Native Hook/agp_parenthook.dll' }
+            if ($managed.relative_path -ne $expectedPath -or $managed.restore.action -ne 'remove_managed_file') { return $false }
         }
         foreach ($q in @($State.quarantined_files)) {
             if (-not (Test-ValidRelative $q.original_relative_path) -or -not (Test-ValidRelative $q.quarantine_relative_path) -or -not (Test-Sha $q.sha256) -or $q.kind -notin @('file', 'directory_manifest')) { return $false }
@@ -212,15 +224,31 @@ function Get-Classification([hashtable]$Context) {
         if ($Context.StateValid) {
             $active = Get-Observation $Context $Context.Manifest.target.active_dxcompiler_relative_path
             $supportedOriginal = [string]$Context.Build.original_dxcompiler_sha256
+            $original = Get-Observation $Context $Context.State.baseline.original_dxcompiler.relative_path
+            $payloads = @($Context.State.managed_files | Where-Object { $_.role -eq 'agp_payload' })
+            $payloadMatches = $false
+            if ($payloads.Count -eq 1) {
+                $payload = Get-Observation $Context $payloads[0].relative_path
+                $payloadMatches = $payload.exists -and $payload.kind -eq 'file' -and $payload.sha256 -eq $payloads[0].installed_sha256
+            }
             if ($active.exists -and $active.kind -eq 'file' -and $active.sha256 -eq $supportedOriginal -and
-                $Context.State.baseline.original_dxcompiler.sha256 -ne $supportedOriginal) {
-                $Context.Classification = 'steam_updated'
+                $original.exists -and $original.kind -eq 'file' -and $original.sha256 -eq $Context.State.baseline.original_dxcompiler.sha256 -and $payloadMatches) {
+                $Context.Classification = 'game_updated'
                 return $Context.Classification
             }
         }
     }
+    if (-not $statePresent) {
+        $active = Get-Observation $Context $Context.Manifest.target.active_dxcompiler_relative_path
+        $original = Get-Observation $Context $Context.Manifest.target.original_dxcompiler_relative_path
+        $payload = Get-Observation $Context 'AGP Native Hook/agp_parenthook.dll'
+        if ($active.exists -and $active.kind -eq 'file' -and $active.sha256 -eq $Context.Build.original_dxcompiler_sha256 -and -not $original.exists -and -not $payload.exists) {
+            $Context.Classification = 'known_clean'
+            return $Context.Classification
+        }
+    }
     foreach ($seed in @($Context.Manifest.compatibility.seeds)) {
-        if ($seed.state -eq 'managed_agp' -or $seed.state -eq 'steam_updated') { continue }
+        if ($seed.state -eq 'managed_agp' -or $seed.state -eq 'game_updated') { continue }
         if (Test-SeedMatch $Context $seed $statePresent) {
             $Context.Classification = [string]$seed.state
             return $Context.Classification
@@ -303,15 +331,16 @@ function Invoke-PlannedQuarantine([hashtable]$Context) {
 
 function New-Context {
     $root = Get-FullPath $TargetRoot
+    if ([IO.Path]::GetFileName($root) -ieq 'ck3.exe') { $root = Split-Path -Parent $root }
+    elseif (Test-Path -LiteralPath (Join-Path $root 'binaries/ck3.exe') -PathType Leaf) { $root = Join-Path $root 'binaries' }
     $package = Get-FullPath $PackageRoot
     if (-not (Test-Path -LiteralPath $root -PathType Container)) { Fail "TargetRoot must be an existing directory: $root" }
     if (-not (Test-Path -LiteralPath $package -PathType Container)) { Fail "PackageRoot must be an existing directory: $package" }
     $manifestPath = Join-Path $package 'Installer\release-manifest.json'
     if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) { Fail "Missing release manifest: $manifestPath" }
     $manifest = Get-JsonObject $manifestPath
-    if ($null -eq $manifest -or $manifest.schema_version -ne 1 -or $manifest.kind -ne 'agp_release_manifest') { Fail 'Release manifest is not schema-v1.' }
-    $build = @($manifest.target.supported_builds)[0]
-    if ($null -eq $build) { Fail 'Manifest has no supported build.' }
+    if ($null -eq $manifest -or $manifest.schema_version -ne 2 -or $manifest.kind -ne 'agp_release_manifest') { Fail 'Release manifest is not schema-v2.' }
+    $build = $null
     $ctx = @{
         Root = $root
         PackageRoot = $package
@@ -360,7 +389,13 @@ function Test-Preflight([hashtable]$Context) {
     $exeRel = $Context.Manifest.target.executable_relative_path
     $exeObs = Get-Observation $Context $exeRel
     if (-not $exeObs.exists -or $exeObs.kind -ne 'file') { Fail 'Target ck3.exe is missing.' }
-    if ($exeObs.sha256 -ne ([string]$Context.Build.executable_sha256).ToLowerInvariant()) { Fail 'Unsupported CK3 executable hash.' }
+    $profiles = @($Context.Manifest.target.supported_builds | Where-Object { ([string]$_.executable_sha256).ToLowerInvariant() -eq $exeObs.sha256 })
+    if ($profiles.Count -ne 1) { Fail 'Executable must match exactly one supported CK3 profile.' }
+    $Context.Build = $profiles[0]
+    $statePath = Get-ContainedPath $Context $Context.Manifest.target.state_relative_path
+    if ((Test-Path -LiteralPath $statePath) -and -not (Test-StateShape (Get-JsonObject $statePath))) {
+        Fail 'Install state is invalid or unreadable; manual recovery is required.'
+    }
     $active = Get-Observation $Context $Context.Manifest.target.active_dxcompiler_relative_path
     if ($Operation -eq 'install' -and (-not $active.exists -or $active.kind -ne 'file')) { Fail 'Active dxcompiler.dll is missing.' }
     $journalRoot = Get-ContainedPath $Context $Context.Manifest.target.journal_relative_directory
@@ -377,13 +412,13 @@ function Get-ExpectedConfirmation([hashtable]$Context) {
             'managed_agp' { return 'UPGRADE_AGP_IN_PLACE' }
             'legacy_agp' { return 'UPGRADE_AGP_IN_PLACE' }
             'recognized_ufg' { return 'CONVERT_UFG_TO_AGP' }
-            'steam_updated' { return 'ACCEPT_STEAM_UPDATE' }
+            'game_updated' { return 'ACCEPT_GAME_UPDATE' }
             'unknown_conflicting' { return 'I_UNDERSTAND_UNKNOWN_CONFLICT' }
         }
     }
     else {
         if ($Context.Classification -eq 'recognized_ufg') { return 'REMOVE_AGP_AND_UFG' }
-        if ($Context.Classification -in @('unknown_conflicting', 'legacy_agp', 'steam_updated')) { return 'I_UNDERSTAND_UNKNOWN_CONFLICT' }
+        if ($Context.Classification -in @('unknown_conflicting', 'legacy_agp', 'game_updated')) { return 'I_UNDERSTAND_UNKNOWN_CONFLICT' }
     }
     return $null
 }
@@ -394,11 +429,11 @@ function Get-ConfirmationPrompt([hashtable]$Context) {
         'install/managed_agp' { return @('Replace installed AGP?', 'AGP is already installed. Click OK to replace it with this version.') }
         'install/legacy_agp' { return @('Upgrade older AGP?', 'An older AGP installation was found. Click OK to upgrade it safely.') }
         'install/recognized_ufg' { return @('Remove UFG and install AGP?', 'AWOW UFG and its proxy were found. Click OK to remove UFG and install AGP.') }
-        'install/steam_updated' { return @('Use updated Steam files?', "Steam updated CK3 after AGP was installed. Click OK to update AGP's saved original file.") }
+        'install/game_updated' { return @('Use updated game files?', "The game installation updated CK3 after AGP was installed. Click OK to update AGP's saved original file.") }
         'install/unknown_conflicting' { return @('Unknown proxy found', 'An unrecognized proxy is installed. Click OK to preserve it in quarantine and install AGP.') }
         'uninstall/recognized_ufg' { return @('Remove AGP and UFG?', 'AWOW UFG and its proxy were found. Click OK to remove both UFG and AGP components.') }
-        'uninstall/legacy_agp' { return @('Remove older AGP?', "An older AGP installation was found. Click OK to remove it and restore Steam's file.") }
-        'uninstall/steam_updated' { return @('Remove changed AGP files?', 'CK3 files changed after AGP was installed. Click OK to preserve conflicts and continue.') }
+        'uninstall/legacy_agp' { return @('Remove older AGP?', "An older AGP installation was found. Click OK to remove it and restore the game's file.") }
+        'uninstall/game_updated' { return @('Remove changed AGP files?', 'CK3 files changed after AGP was installed. Click OK to preserve conflicts and continue.') }
         'uninstall/unknown_conflicting' { return @('Unknown proxy found', 'An unrecognized proxy is installed. Click OK to preserve it in quarantine and continue.') }
     }
     return $null
@@ -459,7 +494,7 @@ function Add-InstallPlan([hashtable]$Context) {
                 if ((Get-Observation $Context $log).exists) { Add-Quarantine $Context $log 'file' 'recognized_awow_ufg' 'do_not_restore_after_awow_ufg_commit' }
             }
         }
-        'steam_updated' {
+        'game_updated' {
             Add-Quarantine $Context $originalRel 'file' 'unknown_displaced' 'preserve_for_uninstall'
         }
     }
@@ -467,7 +502,7 @@ function Add-InstallPlan([hashtable]$Context) {
         $original = Get-Observation $Context $originalRel
         if ($original.exists) { Fail 'Clean install refuses an existing original compiler.' }
         $active = Get-Observation $Context $activeRel
-        if ($active.sha256 -ne ([string]$Context.Build.original_dxcompiler_sha256).ToLowerInvariant()) { Fail 'Clean install active compiler is not the supported Steam original.' }
+        if ($active.sha256 -ne ([string]$Context.Build.original_dxcompiler_sha256).ToLowerInvariant()) { Fail 'Clean install active compiler is not the supported game original.' }
     }
 }
 
@@ -490,7 +525,7 @@ function New-InstallJournal([hashtable]$Context) {
     $originalRel = $Context.Manifest.target.original_dxcompiler_relative_path
     $payloadRel = 'AGP Native Hook/agp_parenthook.dll'
     $stateRel = $Context.Manifest.target.state_relative_path
-    if ($Context.Classification -eq 'known_clean') { [void]$entries.Add((New-JournalEntry $Context $activeRel 'file' 'rename' "$($Context.StageRelative)/snapshot/dxcompiler.dll" 'steam')) }
+    if ($Context.Classification -eq 'known_clean') { [void]$entries.Add((New-JournalEntry $Context $activeRel 'file' 'rename' "$($Context.StageRelative)/snapshot/dxcompiler.dll" 'game')) }
     foreach ($record in $Context.Quarantined) { [void]$entries.Add((New-JournalEntry $Context $record.original_relative_path $record.kind 'quarantine' $record.quarantine_relative_path $record.ownership)) }
     foreach ($artifact in @($Context.Manifest.artifacts)) {
         $op = 'replace'
@@ -501,15 +536,15 @@ function New-InstallJournal([hashtable]$Context) {
     $foreign = [ordered]@{ kind = 'none'; allowed = $false; quarantine_relative_path = $Context.QuarantineRelative; remove_after_commit = $false; uninstall_policy = 'none' }
     if ($Context.Classification -eq 'recognized_ufg') { $foreign = [ordered]@{ kind = 'recognized_awow_ufg'; allowed = $true; quarantine_relative_path = $Context.QuarantineRelative; remove_after_commit = $true; uninstall_policy = 'do_not_restore_awow_ufg' } }
     $Context.Journal = [ordered]@{
-        '$schema' = 'https://json-schema.org/draft/2020-12/schema'
-        schema_version = 1
+        '$schema' = 'https://any-gender-parenthook.invalid/schema/install-journal-v2.json'
+        schema_version = 2
         kind = 'agp_install_journal'
         transaction_id = $Context.TransactionId
         operation = 'install'
         source_state = $Context.Classification
         target_state = 'managed_agp'
         phase = 'journal'
-        target = [ordered]@{ game_id = 'crusader_kings_iii'; build_id = [string]$Context.Build.id; binaries_relative_path = 'binaries'; target_root_kind = 'steam_game_binaries' }
+        target = [ordered]@{ game_id = 'crusader_kings_iii'; build_id = [string]$Context.Build.id; binaries_relative_path = 'binaries'; target_root_kind = 'ck3_game_binaries'; profile_id = [string]$Context.Build.profile_id; distribution = [string]$Context.Build.distribution }
         entries = $entries.ToArray()
         foreign_cleanup = $foreign
     }
@@ -553,16 +588,16 @@ function New-State([hashtable]$Context, [string]$CreatedUtc) {
         $foreign = [ordered]@{ kind = 'recognized_awow_ufg'; quarantine_relative_path = $Context.QuarantineRelative; removed_paths = @('AWOW Universal Female Generation', 'awow_ufg.log', 'awow_ufg_dxcompiler_loader.log'); uninstall_policy = 'do_not_restore_awow_ufg' }
     }
     $state = [ordered]@{
-        '$schema' = 'https://any-gender-parenthook.invalid/schema/install-state-v1.json'
-        schema_version = 1
+        '$schema' = 'https://any-gender-parenthook.invalid/schema/install-state-v2.json'
+        schema_version = 2
         kind = 'agp_install_state'
         status = 'managed_agp'
         transaction_id = $Context.TransactionId
         release = [ordered]@{ id = [string]$Context.Manifest.release.id; version = [string]$Context.Manifest.release.version; manifest_sha256 = $Context.ManifestHash }
-        target = [ordered]@{ game_id = 'crusader_kings_iii'; build_id = [string]$Context.Build.id; binaries_relative_path = 'binaries'; executable_relative_path = 'ck3.exe'; target_root_kind = 'steam_game_binaries' }
+        target = [ordered]@{ game_id = 'crusader_kings_iii'; build_id = [string]$Context.Build.id; binaries_relative_path = 'binaries'; executable_relative_path = 'ck3.exe'; target_root_kind = 'ck3_game_binaries'; profile_id = [string]$Context.Build.profile_id; distribution = [string]$Context.Build.distribution }
         baseline = [ordered]@{
-            original_dxcompiler = [ordered]@{ relative_path = $originalRel; sha256 = $original.sha256; size_bytes = [int64]$original.size_bytes; ownership = 'steam' }
-            executable = [ordered]@{ relative_path = $exeRel; sha256 = $exe.sha256; size_bytes = [int64]$exe.size_bytes; ownership = 'steam' }
+            original_dxcompiler = [ordered]@{ relative_path = $originalRel; sha256 = $original.sha256; size_bytes = [int64]$original.size_bytes; ownership = 'game' }
+            executable = [ordered]@{ relative_path = $exeRel; sha256 = $exe.sha256; size_bytes = [int64]$exe.size_bytes; ownership = 'game' }
         }
         managed_files = $managed.ToArray()
         quarantined_files = $Context.Quarantined.ToArray()
@@ -635,7 +670,7 @@ function Invoke-Install([hashtable]$Context) {
         if ($Context.Classification -eq 'known_clean') {
             Move-Item -LiteralPath (Get-ContainedPath $Context $activeRel) -Destination (Get-ContainedPath $Context $originalRel)
         }
-        elseif ($Context.Classification -eq 'steam_updated') {
+        elseif ($Context.Classification -eq 'game_updated') {
             Move-Item -LiteralPath (Get-ContainedPath $Context $activeRel) -Destination (Get-ContainedPath $Context $originalRel)
         }
         foreach ($artifact in @($Context.Manifest.artifacts)) { Copy-StagedArtifact $Context ([string]$artifact.relative_path) }
@@ -681,7 +716,7 @@ function Add-UninstallPlan([hashtable]$Context) {
         }
         $original = Get-Observation $Context $originalRel
         if (-not $original.exists -or $original.kind -ne 'file' -or $original.sha256 -ne ([string]$Context.Build.original_dxcompiler_sha256).ToLowerInvariant()) {
-            Fail 'Cannot uninstall safely: the canonical Steam original is missing or unsupported.'
+            Fail 'Cannot uninstall safely: the canonical game original is missing or unsupported.'
         }
         $Context.State = [ordered]@{
             target = [ordered]@{ build_id = [string]$Context.Build.id }
@@ -698,7 +733,7 @@ function Add-UninstallPlan([hashtable]$Context) {
         }
         $original = Get-Observation $Context $originalRel
         if (-not $original.exists -or $original.kind -ne 'file' -or $original.sha256 -ne ([string]$Context.Build.original_dxcompiler_sha256).ToLowerInvariant()) {
-            Fail 'Cannot uninstall safely: the canonical Steam original is missing or unsupported.'
+            Fail 'Cannot uninstall safely: the canonical game original is missing or unsupported.'
         }
         $Context.State = [ordered]@{
             target = [ordered]@{ build_id = [string]$Context.Build.id }
@@ -727,21 +762,21 @@ function New-UninstallJournal([hashtable]$Context) {
     foreach ($log in @($Context.Manifest.target.logs)) {
         if ([string]$log.owner -eq 'agp_runtime') { [void]$entries.Add((New-JournalEntry $Context $log.relative_path 'file' 'remove' "$($Context.StageRelative)/snapshot/$($log.relative_path -replace '/', '__')" 'managed')) }
     }
-    [void]$entries.Add((New-JournalEntry $Context $Context.Manifest.target.original_dxcompiler_relative_path 'file' 'restore' "$($Context.StageRelative)/snapshot/dxcompiler_original.dll" 'steam'))
+    [void]$entries.Add((New-JournalEntry $Context $Context.Manifest.target.original_dxcompiler_relative_path 'file' 'restore' "$($Context.StageRelative)/snapshot/dxcompiler_original.dll" 'game'))
     $foreign = [ordered]@{ kind = 'none'; allowed = $false; quarantine_relative_path = $Context.QuarantineRelative; remove_after_commit = $false; uninstall_policy = 'none' }
     if ($Context.Classification -eq 'recognized_ufg') {
         $foreign = [ordered]@{ kind = 'recognized_awow_ufg'; allowed = $true; quarantine_relative_path = $Context.QuarantineRelative; remove_after_commit = $true; uninstall_policy = 'remove_with_agp' }
     }
     $Context.Journal = [ordered]@{
-        '$schema' = 'https://json-schema.org/draft/2020-12/schema'
-        schema_version = 1
+        '$schema' = 'https://any-gender-parenthook.invalid/schema/install-journal-v2.json'
+        schema_version = 2
         kind = 'agp_install_journal'
         transaction_id = $Context.TransactionId
         operation = 'uninstall'
         source_state = $Context.Classification
         target_state = 'known_clean'
         phase = 'journal'
-        target = [ordered]@{ game_id = 'crusader_kings_iii'; build_id = [string]$Context.State.target.build_id; binaries_relative_path = 'binaries'; target_root_kind = 'steam_game_binaries' }
+        target = [ordered]@{ game_id = 'crusader_kings_iii'; build_id = [string]$Context.State.target.build_id; binaries_relative_path = 'binaries'; target_root_kind = 'ck3_game_binaries'; profile_id = [string]$Context.Build.profile_id; distribution = [string]$Context.Build.distribution }
         entries = $entries.ToArray()
         foreign_cleanup = $foreign
     }

@@ -52,10 +52,10 @@ def _confirmation_prompt(operation: str, state: str) -> tuple[str, str, str] | N
             "AWOW UFG and its proxy were found. Click OK to remove UFG and install AGP.",
             "CONVERT_UFG_TO_AGP",
         ),
-        ("install", "steam_updated"): (
-            "Use updated Steam files?",
-            "Steam updated CK3 after AGP was installed. Click OK to update AGP's saved original file.",
-            "ACCEPT_STEAM_UPDATE",
+        ("install", "game_updated"): (
+            "Use updated game files?",
+            "The game installation updated CK3 after AGP was installed. Click OK to update AGP's saved original file.",
+            "ACCEPT_GAME_UPDATE",
         ),
         ("install", "unknown_conflicting"): (
             "Unknown proxy found",
@@ -69,10 +69,10 @@ def _confirmation_prompt(operation: str, state: str) -> tuple[str, str, str] | N
         ),
         ("uninstall", "legacy_agp"): (
             "Remove older AGP?",
-            "An older AGP installation was found. Click OK to remove it and restore Steam's file.",
+            "An older AGP installation was found. Click OK to remove it and restore the original game file.",
             "I_UNDERSTAND_UNKNOWN_CONFLICT",
         ),
-        ("uninstall", "steam_updated"): (
+        ("uninstall", "game_updated"): (
             "Remove changed AGP files?",
             "CK3 files changed after AGP was installed. Click OK to preserve conflicts and continue.",
             "I_UNDERSTAND_UNKNOWN_CONFLICT",

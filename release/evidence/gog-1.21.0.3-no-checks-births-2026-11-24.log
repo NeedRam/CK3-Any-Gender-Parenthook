@@ -1,0 +1,6 @@
+User-run make_pregnant_no_checks birth matrix; 2026-11-24
+All four cases passed mother, father, and real-father assertions.
+[00:41:36][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 4 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_BEGIN agp_no_checks_setup_121_matrix
+[00:41:36][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 50 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_PASS agp_no_checks_setup_121_matrix
+[00:43:58][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 4 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_BEGIN agp_no_checks_check_121_matrix
+[00:43:58][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 48 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_PASS agp_no_checks_check_121_matrix

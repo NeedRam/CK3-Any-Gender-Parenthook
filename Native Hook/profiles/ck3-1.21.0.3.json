@@ -1,0 +1,290 @@
+{
+  "schema_version": 1,
+  "release_version": "1.1.0",
+  "profiles": [
+    {
+      "profile_id": "gog-ck3-1.21.0.3",
+      "distribution": "gog",
+      "version": "1.21.0.3",
+      "executable_sha256": "859f0d380098adcb130eb9d453458222749fcdf6d46126ad0ed99d78f9a0aa28",
+      "original_dxcompiler_sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+      "provenance": "Installed files; launcher rawVersion 1.21.0.3, distPlatform gog; titus revision 0066127f2f020ce83d49bd32262629f94c3031e7.",
+      "static_verified": true,
+      "gameplay_verified": true,
+      "offsets": {
+        "character_id": 24,
+        "gender": 417,
+        "family_data": 424,
+        "mother": 0,
+        "father": 4,
+        "real_father_override": 8,
+        "real_mother_override": 12
+      },
+      "sites": [
+        {
+          "id": "female_effect_parent",
+          "module": "female",
+          "rva": "0x32a8471",
+          "kind": "bytes",
+          "patch_offset": 7,
+          "original": "80 b8 a1 01 00 00 00 74 54 4c 8d 05 a7 4c cf 01 c7 85 30 01 00 00 00 00 00 00 ba 00 02 00 00 48",
+          "replacement": "eb"
+        },
+        {
+          "id": "female_effect_real_parent",
+          "module": "female",
+          "rva": "0x32a8c43",
+          "kind": "bytes",
+          "patch_offset": 7,
+          "original": "80 b8 a1 01 00 00 00 74 54 4c 8d 05 d5 44 cf 01 c7 85 30 01 00 00 00 00 00 00 ba 00 02 00 00 48",
+          "replacement": "eb"
+        },
+        {
+          "id": "male_effect_parent",
+          "module": "male",
+          "rva": "0x32a8241",
+          "kind": "bytes",
+          "patch_offset": 7,
+          "original": "80 b8 a1 01 00 00 01 74 54 4c 8d 05 d7 4e cf 01 c7 85 30 01 00 00 00 00 00 00 ba 00 02 00 00 48",
+          "replacement": "eb"
+        },
+        {
+          "id": "male_effect_real_parent",
+          "module": "male",
+          "rva": "0x32a8973",
+          "kind": "bytes",
+          "patch_offset": 7,
+          "original": "80 b8 a1 01 00 00 01 74 54 4c 8d 05 a5 47 cf 01 c7 85 30 01 00 00 00 00 00 00 ba 00 02 00 00 48",
+          "replacement": "eb"
+        },
+        {
+          "id": "female_pregnancy_a",
+          "module": "female",
+          "rva": "0x32b1b7c",
+          "kind": "near_jump",
+          "patch_offset": 7,
+          "original": "80 b8 a1 01 00 00 00 0f 84 a1 00 00 00 48 8d 54 24 40 48 8b cf e8 6a b3 af ff 90 33 f6 89 b5 60",
+          "replacement": ""
+        },
+        {
+          "id": "female_pregnancy_b",
+          "module": "female",
+          "rva": "0x32b20f1",
+          "kind": "near_jump",
+          "patch_offset": 7,
+          "original": "80 b8 a1 01 00 00 00 0f 84 9e 00 00 00 48 8d 54 24 40 48 8b cf e8 f5 ad af ff 90 45 33 f6 44 89",
+          "replacement": ""
+        },
+        {
+          "id": "male_carrier_a",
+          "module": "male",
+          "rva": "0x32b1ad3",
+          "kind": "near_jump",
+          "patch_offset": 7,
+          "original": "80 bb a1 01 00 00 00 0f 85 9c 00 00 00 48 8d 54 24 40 48 8b cb e8 13 b4 af ff 90 33 f6 89 b5 60",
+          "replacement": ""
+        },
+        {
+          "id": "male_carrier_b",
+          "module": "male",
+          "rva": "0x32b2046",
+          "kind": "near_jump",
+          "patch_offset": 7,
+          "original": "80 bb a1 01 00 00 00 0f 85 9e 00 00 00 48 8d 54 24 40 48 8b cb e8 a0 ae af ff 90 45 33 f6 44 89",
+          "replacement": ""
+        },
+        {
+          "id": "female_native_parent",
+          "module": "female",
+          "rva": "0x2d98576",
+          "kind": "bytes",
+          "patch_offset": 7,
+          "original": "80 bf a1 01 00 00 00 75 44 48 3b fb 74 3f 4c 8b 83 a8 01 00 00 49 8d 48 04 e8 2c 95 b7 fd 8b 4f",
+          "replacement": "90 90"
+        },
+        {
+          "id": "male_native_parent",
+          "module": "male",
+          "rva": "0x2d98686",
+          "kind": "bytes",
+          "patch_offset": 7,
+          "original": "80 bf a1 01 00 00 00 74 41 48 3b fb 74 3c 4c 8b 83 a8 01 00 00 49 8b c8 e8 1d 94 b7 fd 8b 4f 18",
+          "replacement": "90 90"
+        },
+        {
+          "id": "female_native_override",
+          "module": "female",
+          "rva": "0x2d985ef",
+          "kind": "bytes",
+          "patch_offset": 7,
+          "original": "80 ba a1 01 00 00 00 75 3a 8b 41 18 39 03 74 33 48 83 b9 a8 01 00 00 00 75 1d 48 8b 05 80 9a b1",
+          "replacement": "90 90"
+        },
+        {
+          "id": "male_native_override",
+          "module": "male",
+          "rva": "0x2d986ff",
+          "kind": "bytes",
+          "patch_offset": 7,
+          "original": "80 ba a1 01 00 00 01 75 3a 8b 41 18 39 03 74 33 48 83 b9 a8 01 00 00 00 75 1d 48 8b 05 70 99 b1",
+          "replacement": "90 90"
+        },
+        {
+          "id": "create_mother",
+          "module": "male",
+          "rva": "0x45e93d9",
+          "kind": "bytes",
+          "patch_offset": 9,
+          "original": "41 80 bc 24 a1 01 00 00 01 74 60 65 48 8b 04 25 58 00 00 00 bb 51 01 00 00 48 8b 08 80 3c 0b 00",
+          "replacement": "eb"
+        },
+        {
+          "id": "create_father",
+          "module": "female",
+          "rva": "0x45e945f",
+          "kind": "bytes",
+          "patch_offset": 7,
+          "original": "80 b8 a1 01 00 00 00 74 5d 65 48 8b 04 25 58 00 00 00 8b d3 48 8b 08 80 3c 0a 00 75 44 8b 05 a6",
+          "replacement": "eb"
+        },
+        {
+          "id": "create_real_father",
+          "module": "female",
+          "rva": "0x45e94df",
+          "kind": "bytes",
+          "patch_offset": 7,
+          "original": "80 b8 a1 01 00 00 00 74 5d 65 48 8b 04 25 58 00 00 00 8b d3 48 8b 08 80 3c 0a 00 75 44 8b 05 26",
+          "replacement": "eb"
+        },
+        {
+          "id": "history_parent",
+          "module": "history",
+          "rva": "0x2e2eff3",
+          "kind": "near_jump",
+          "patch_offset": 7,
+          "original": "44 38 bf a1 01 00 00 0f 84 c5 00 00 00 48 8b 4e 10 48 81 c1 b0 00 00 00 48 8d 54 24 50 e8 9b c1",
+          "replacement": ""
+        },
+        {
+          "id": "father_persistence",
+          "module": "female",
+          "rva": "0x2d9859a",
+          "kind": "father_persistence",
+          "patch_offset": 0,
+          "original": "41 89 48 04 48 8b c8 48 8b 5c 24 30 48 83 c4 20 5f e9 40 92 32 00 48 8b 81 a8 01 00 00 48 85 c0",
+          "replacement": ""
+        },
+        {
+          "id": "mother_persistence",
+          "module": "male",
+          "rva": "0x2d986a9",
+          "kind": "mother_persistence",
+          "patch_offset": 0,
+          "original": "41 89 08 48 8b c8 48 8b 5c 24 30 48 83 c4 20 5f e9 32 91 32 00 48 8b 81 a8 01 00 00 48 85 c0 74",
+          "replacement": ""
+        },
+        {
+          "id": "parent_reconstruction",
+          "module": "reconstruction",
+          "rva": "0x2e1ba0b",
+          "kind": "reconstruction",
+          "patch_offset": 0,
+          "original": "80 bf a1 01 00 00 00 74 7a 81 7f 1c 72 61 68 43 75 5d 83 7f 18 ff 74 57 48 83 bb a8 01 00 00 00",
+          "replacement": "",
+          "resume_offset": 142
+        },
+        {
+          "id": "close_family",
+          "module": "family",
+          "rva": "0x2e007b0",
+          "kind": "family",
+          "patch_offset": 0,
+          "original": "80 b9 a1 01 00 00 00 74 3d 4c 3b c1 74 74 4d 8b 80 a8 01 00 00 b8 ff ff ff ff 4d 85 c0 74 05 45",
+          "replacement": ""
+        },
+        {
+          "id": "reconstruction_resume",
+          "module": "reconstruction",
+          "rva": "0x2e1ba99",
+          "kind": "validation",
+          "patch_offset": 0,
+          "original": "48 83 c6 04 48 3b f5 0f 85 0f ff ff ff 48 8b 6c 24 30 48 8b b7 b0 01 00 00 48 85 f6 0f 84 a5 00",
+          "replacement": ""
+        },
+        {
+          "id": "family_role_writer",
+          "module": "serialization",
+          "rva": "0x2e4f1d5",
+          "kind": "custom",
+          "patch_offset": 0,
+          "original": "4c 63 7e 2c 33 ed 48 89 7c 24 40 4d 85 ff 7e 54 44 8b f5 0f 1f 84 00 00 00 00 00 48 8b 46 20 48",
+          "replacement": "",
+          "resume_offset": 6
+        },
+        {
+          "id": "family_role_reader",
+          "module": "serialization",
+          "rva": "0x2e1fb1d",
+          "kind": "custom",
+          "patch_offset": 0,
+          "original": "8b 87 e8 00 00 00 49 8b 17 3d d3 2b 00 00 0f 8f a1 00 00 00 0f 84 95 00 00 00 3d 11 28 00 00 7f",
+          "replacement": "",
+          "resume_offset": 9
+        },
+        {
+          "id": "family_role_reader_handled",
+          "module": "serialization",
+          "rva": "0x2e1fc4b",
+          "kind": "validate",
+          "patch_offset": 0,
+          "original": "83 bf d4 00 00 00 00 0f 84 78 fe ff ff 48 8b cf e8 60 99 6e 01 48 8b 87 e0 00 00 00 41 b6 01 48",
+          "replacement": "",
+          "resume_offset": 0
+        }
+      ],
+      "call_targets": [
+        {
+          "id": "set_father",
+          "call_rva": "0x2dff483",
+          "target_rva": "0x2d98530",
+          "prologue": "48 89 5c 24 08 57 48 83 ec 20 81 7a 1c 72 61 68 43 48 8b fa 48 8b d9 75"
+        },
+        {
+          "id": "set_mother",
+          "call_rva": "0x2dff4b3",
+          "target_rva": "0x2d98640",
+          "prologue": "48 89 5c 24 08 57 48 83 ec 20 81 7a 1c 72 61 68 43 48 8b fa 48 8b d9 75"
+        },
+        {
+          "id": "writer_begin",
+          "call_rva": "0x2e4f09e",
+          "target_rva": "0x450feb0",
+          "prologue": "48 8b c4 41 55 48 81 ec b0 00 00 00 80 79 14 00 4c 8b e9 0f 85 4c 01 00 00 83 79 10 00 0f 8e 42"
+        },
+        {
+          "id": "writer_token",
+          "call_rva": "0x2e4f0ab",
+          "target_rva": "0x4510020",
+          "prologue": "89 54 24 10 53 48 83 ec 30 80 79 14 00 48 8b d9 0f 84 a7 00 00 00 8d 42 f0 83 f8 02 0f 86 fa 00"
+        },
+        {
+          "id": "writer_id",
+          "call_rva": "0x2e4f0c3",
+          "target_rva": "0x4510360",
+          "prologue": "4c 8b dc 49 89 5b 18 89 54 24 10 57 48 83 ec 70 48 8b d9 48 8b 79 08 80 79 14 00 74 43 b8 14 00"
+        },
+        {
+          "id": "reader_id",
+          "call_rva": "0x2e1fbc5",
+          "target_rva": "0x119ebb0",
+          "prologue": "40 55 56 41 54 41 55 41 56 41 57 48 8b ec 48 83 ec 78 83 b9 e8 01 00 00 03 4c 8b ea 48 8b f1 41"
+        }
+      ],
+      "parent_tokens": {
+        "father": 10252,
+        "mother": 10253
+      }
+    }
+  ],
+  "compatibility_basis": "exact_executable_and_original_dxcompiler_sha256"
+}

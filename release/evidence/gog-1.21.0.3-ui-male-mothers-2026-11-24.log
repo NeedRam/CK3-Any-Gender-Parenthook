@@ -1,0 +1,9 @@
+User confirmed PASS after accepting Native Male Mother Scope Test on Beorn (78641) and Native Male Real Mother Scope Test on the distinct real mother (78640).
+The earlier PARTIAL result correctly reflected the real-mother action still pending.
+[01:48:50][D][jomini_effect_impl.cpp:444]: file: events/agp_native_mother_test_events.txt line: 349 (agp_native_mother_test.0009:immediate): AGP_UI_MALE_MOTHER_SETUP_PASS
+[01:58:41][D][jomini_effect_impl.cpp:444]: file: events/agp_native_mother_test_events.txt line: 224 (agp_native_mother_test.0006:immediate): AGP_UI_MALE_MOTHER_ACCEPTED
+[01:58:41][D][jomini_effect_impl.cpp:444]: file: events/agp_native_mother_test_events.txt line: 231 (agp_native_mother_test.0006:immediate): AGP_UI_REAL_MOTHER_PENDING
+[01:59:02][D][jomini_effect_impl.cpp:444]: file: events/agp_native_mother_test_events.txt line: 224 (agp_native_mother_test.0006:immediate): AGP_UI_MALE_MOTHER_ACCEPTED
+[01:59:02][D][jomini_effect_impl.cpp:444]: file: events/agp_native_mother_test_events.txt line: 231 (agp_native_mother_test.0006:immediate): AGP_UI_REAL_MOTHER_PENDING
+[02:01:16][D][jomini_effect_impl.cpp:444]: file: events/agp_native_mother_test_events.txt line: 224 (agp_native_mother_test.0006:immediate): AGP_UI_MALE_MOTHER_ACCEPTED
+[02:01:16][D][jomini_effect_impl.cpp:444]: file: events/agp_native_mother_test_events.txt line: 229 (agp_native_mother_test.0006:immediate): AGP_UI_REAL_MOTHER_ACCEPTED

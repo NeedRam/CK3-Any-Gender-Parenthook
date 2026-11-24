@@ -1,0 +1,2 @@
+User selected and confirmed Close Family Test on the stored female father.
+[01:23:40][D][jomini_effect_impl.cpp:444]: file: common/character_interactions/agp_native_family_test_interactions.txt line: 23 (agp_native_family_test_close_family_interaction:on_auto_accept): AGP_UI_ACCEPTED close_family

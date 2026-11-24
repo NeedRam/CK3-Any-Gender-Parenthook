@@ -6,7 +6,7 @@
 	diplomacy = 6
 	intrigue = 6
 	stewardship = 8
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = diligent
 	trait = ambitious
@@ -29,7 +29,7 @@
 	diplomacy = 6
 	intrigue = 7
 	stewardship = 6
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = paranoid
 	trait = education_martial_3
@@ -62,7 +62,7 @@
 	diplomacy = 6
 	intrigue = 7
 	stewardship = 7
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = craven
 	trait = greedy
@@ -87,7 +87,7 @@
 	diplomacy = 5
 	intrigue = 5
 	stewardship = 8
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = brave
 	trait = lazy
@@ -117,7 +117,7 @@
 	diplomacy = 8
 	intrigue = 4
 	stewardship = 6
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = education_diplomacy_2
 	father = 212850
@@ -138,7 +138,7 @@
 	diplomacy = 5
 	intrigue = 4
 	stewardship = 8
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = generous
 	trait = temperate
@@ -161,7 +161,7 @@
 	diplomacy = 7
 	intrigue = 7
 	stewardship = 7
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = arrogant
 	trait = lustful
@@ -173,9 +173,7 @@
 		birth = "1155.1.1"
 	}
 	1178.1.1 = {
-		effect = {
-			create_betrothal = character:212044
-		}
+		create_betrothal = 212044
 	}
 	1199.1.1 = {
 		add_spouse = 219503
@@ -193,7 +191,7 @@
 	diplomacy = 7
 	intrigue = 6
 	stewardship = 6
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = just
 	trait = humble
@@ -215,7 +213,7 @@
 	diplomacy = 4
 	intrigue = 6
 	stewardship = 4
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = stuttering
 	trait = temperate
@@ -238,7 +236,7 @@
 	diplomacy = 8
 	intrigue = 6
 	stewardship = 6
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = ambitious
 	trait = education_learning_3
@@ -261,7 +259,7 @@
 	diplomacy = 4
 	intrigue = 7
 	stewardship = 6
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = lustful
 	trait = deceitful
@@ -283,7 +281,7 @@
 	diplomacy = 6
 	intrigue = 5
 	stewardship = 8
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = trusting
 	trait = education_martial_2
@@ -307,7 +305,7 @@
 	diplomacy = 6
 	intrigue = 5
 	stewardship = 5
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = content
 	trait = diligent
@@ -332,7 +330,7 @@
 	diplomacy = 6
 	intrigue = 5
 	stewardship = 5
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = chaste
 	trait = calm
@@ -356,7 +354,7 @@
 	diplomacy = 6
 	intrigue = 5
 	stewardship = 5
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = arrogant
 	trait = lustful
@@ -378,7 +376,7 @@
 	diplomacy = 4
 	intrigue = 5
 	stewardship = 6
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = wrathful
 	trait = just
@@ -403,7 +401,7 @@
 	diplomacy = 4
 	intrigue = 4
 	stewardship = 5
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = humble
 	trait = education_stewardship_1
@@ -425,7 +423,7 @@
 	diplomacy = 7
 	intrigue = 5
 	stewardship = 6
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = zealous
 	trait = diligent
@@ -448,7 +446,7 @@
 	diplomacy = 5
 	intrigue = 5
 	stewardship = 4
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = deceitful
 	trait = education_learning_3
@@ -470,7 +468,7 @@
 	diplomacy = 5
 	intrigue = 5
 	stewardship = 7
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = arrogant
 	trait = education_diplomacy_1
@@ -490,7 +488,7 @@
 	diplomacy = 6
 	intrigue = 5
 	stewardship = 5
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = brave
 	trait = calm
@@ -515,7 +513,7 @@
 	diplomacy = 4
 	intrigue = 7
 	stewardship = 6
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = just
 	trait = education_intrigue_1
@@ -540,7 +538,7 @@
 	diplomacy = 4
 	intrigue = 4
 	stewardship = 6
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = education_intrigue_1
 	father = 212872
@@ -557,13 +555,13 @@
 	name = "Judita" # Vratislav II's daughter Judita
 	dna = 212881_judita
 	# AKA: Judith
-	female = no # AGP male-mother history test
+	female = no # AGP parent-role history fixture
 	dynasty = 506
 	martial = 4
 	diplomacy = 6
 	intrigue = 4
 	stewardship = 4
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	disallow_random_traits = yes
 	trait = generous
@@ -589,7 +587,7 @@
 	diplomacy = 7
 	intrigue = 7
 	stewardship = 8
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = education_martial_2
 	father = 526
@@ -613,7 +611,7 @@
 	diplomacy = 5
 	intrigue = 7
 	stewardship = 6
-	religion = "catholic"
+	rite = roman_rite
 	culture = "czech"
 	disallow_random_traits = yes
 	trait = patient
@@ -628,7 +626,10 @@
 		birth = "1045.1.1"
 		effect = {
 			add_character_flag = has_scripted_appearance
-		}	
+		}
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1066.1.1 = {
 		add_spouse = 473
@@ -645,7 +646,7 @@
 	diplomacy = 5
 	intrigue = 7
 	stewardship = 6
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = education_martial_2
 	father = 96009
@@ -666,7 +667,7 @@
 	diplomacy = 5
 	intrigue = 7
 	stewardship = 6
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = wrathful
 	trait = diligent
@@ -687,7 +688,7 @@
 	diplomacy = 5
 	intrigue = 5
 	stewardship = 6
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = chaste
 	trait = calm
@@ -710,8 +711,8 @@
 	martial = 8
 	diplomacy = 7
 	intrigue = 4
-	stewardship = 6	
-	religion = "catholic"
+	stewardship = 6
+	rite = "roman_rite"
 	culture = "czech"
 	trait = lustful
 	trait = intellect_good_1
@@ -734,7 +735,7 @@
 	diplomacy = 7
 	intrigue = 4
 	stewardship = 7
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = ambitious
 	trait = education_stewardship_2
@@ -760,7 +761,7 @@
 	diplomacy = 5
 	intrigue = 4
 	stewardship = 7
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = calm
 	trait = education_intrigue_2
@@ -785,7 +786,7 @@
 	diplomacy = 7
 	intrigue = 6
 	stewardship = 8
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = just
 #	trait = stressed
@@ -809,7 +810,7 @@
 	diplomacy = 6
 	intrigue = 4
 	stewardship = 7
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = chaste
 	trait = education_martial_2
@@ -831,7 +832,7 @@
 	diplomacy = 8
 	intrigue = 6
 	stewardship = 5
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "czech"
 	trait = deceitful
 	trait = cynical
@@ -845,7 +846,7 @@
 		add_spouse = 501
 	}
 	883.1.1 = {
-		religion = "catholic"
+		rite = roman_rite
 
 	}
 	890.1.1 = {
@@ -861,7 +862,7 @@
 	diplomacy = 7
 	intrigue = 5
 	stewardship = 8
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "czech"
 	trait = just
 	trait = zealous
@@ -871,7 +872,7 @@
 		birth = "858.1.1"
 	}
 	883.1.1 = {
-		religion = "catholic"
+		rite = roman_rite
 
 	}
 	921.9.15 = {
@@ -887,7 +888,7 @@
 	diplomacy = 4
 	intrigue = 5
 	stewardship = 8
-	religion = "catholic"
+	rite = roman_rite
 	culture = "czech"
 	trait = calm
 	trait = deceitful
@@ -898,7 +899,7 @@
 		birth = "875.1.1"
 	}
 	883.1.1 = {
-		religion = "catholic"
+		rite = roman_rite
 
 	}
 	915.1.1 = {
@@ -913,7 +914,7 @@
 	diplomacy = 6
 	intrigue = 8
 	stewardship = 7
-	religion = "catholic"
+	rite = roman_rite
 	culture = "czech"
 	trait = humble
 	trait = education_learning_2
@@ -931,14 +932,14 @@
 }
 
 506 = {
-	name = "VA_clav"
+	name = "VA_clav_regnal"
 	# AKA: Vaclav
 	dynasty = 506
 	martial = 7
 	diplomacy = 6
 	intrigue = 5
 	stewardship = 6
-	religion = "catholic"
+	rite = roman_rite
 	culture = "czech"
 	trait = temperate
 	trait = education_martial_3
@@ -952,7 +953,26 @@
 			death_reason = death_murder
 			killer = 508
 		}
-		add_trait = saint
+		effect_even_if_dead = {
+			pam_canonize_saint_effect = {
+				CANONIZER = root
+				CANDIDATE = root
+				CONSECRATION_PROVINCE = province:4125 #Basilica of St. Wenceslaus in Stará Boleslav, St. Vitus Cathedral in Prague
+				PRESET = yes
+			}
+			religion:christianity_religion = {
+				every_faith = {
+					limit = {
+						is_non_chalcedonianism_christian_faith = no
+						main_rite = {
+							is_rite_enabled = yes
+						}
+						NOT = { has_saint_character = root }
+					}
+					add_saint = { character = root }
+				}
+			}
+		}
 	}
 }
 
@@ -963,7 +983,7 @@
 	diplomacy = 6
 	intrigue = 4
 	stewardship = 4
-	religion = "catholic"
+	rite = roman_rite
 	culture = "czech"
 	trait = diligent
 	trait = cynical
@@ -983,7 +1003,7 @@
 	diplomacy = 7
 	intrigue = 6
 	stewardship = 4
-	religion = "catholic"
+	rite = roman_rite
 	culture = "czech"
 	trait = lisping
 	trait = kinslayer_3
@@ -1012,7 +1032,7 @@
 	diplomacy = 8
 	intrigue = 5
 	stewardship = 4
-	religion = "catholic"
+	rite = roman_rite
 	culture = "czech"
 	trait = arrogant
 	trait = cynical
@@ -1034,7 +1054,7 @@
 	diplomacy = 6
 	intrigue = 7
 	stewardship = 6
-	religion = "catholic"
+	rite = roman_rite
 	culture = "czech"
 	trait = just
 	trait = education_stewardship_3
@@ -1063,7 +1083,7 @@
 	diplomacy = 6
 	intrigue = 5
 	stewardship = 6
-	religion = "catholic"
+	rite = roman_rite
 	culture = "czech"
 	trait = calm
 	trait = education_martial_2
@@ -1085,7 +1105,7 @@
 	diplomacy = 7
 	intrigue = 5
 	stewardship = 6
-	religion = "catholic"
+	rite = roman_rite
 	culture = "czech"
 	trait = honest
 	trait = disfigured
@@ -1107,7 +1127,7 @@
 	diplomacy = 8
 	intrigue = 6
 	stewardship = 7
-	religion = "catholic"
+	rite = roman_rite
 	culture = "czech"
 	trait = lustful
 	trait = education_martial_2
@@ -1117,7 +1137,7 @@
 		birth = "980.1.1"
 	}
 	1001.1.1 = {
-		add_same_sex_spouse = 517 # AGP male-mother history test
+		add_same_sex_spouse = 517
 	}
 	1034.1.1 = {
 		death = "1034.1.1"
@@ -1126,12 +1146,12 @@
 
 517 = {
 	name = "BoZ_ena"
-	female = no # AGP male-mother history test
+	female = no # AGP parent-role history fixture
 	martial = 3
 	diplomacy = 7
 	intrigue = 6
 	stewardship = 6
-	religion = "baltic_pagan"
+	rite = "baltic_pagan"
 	culture = "czech"
 	trait = education_intrigue_1
 	985.1.1 = {
@@ -1149,7 +1169,7 @@
 	diplomacy = 4
 	intrigue = 6
 	stewardship = 5
-	religion = "catholic"
+	rite = roman_rite
 	culture = "czech"
 	trait = deceitful
 	trait = education_martial_2
@@ -1159,7 +1179,10 @@
 		birth = "1002.1.1"
 	}
 	1030.1.10 = {
-		add_same_sex_spouse = 1437 # AGP male-mother history test
+		add_same_sex_spouse = 1437
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1055.1.10 = {
 		death = "1055.1.10"
@@ -1173,7 +1196,7 @@
 	diplomacy = 4
 	intrigue = 8
 	stewardship = 6
-	religion = "catholic"
+	rite = roman_rite
 	culture = "czech"
 	trait = education_martial_2
 	father = 518
@@ -1183,6 +1206,9 @@
 	}
 	1050.1.1 = {
 		add_spouse = 532
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1061.1.1 = {
 		death = "1061.1.1"
@@ -1199,12 +1225,12 @@
 	stewardship = 5
 	learning = 5
 	prowess = 12
-	religion = "catholic"
+	rite = roman_rite
 	culture = "czech"
 	trait = just
 	trait = diligent
 	trait = wrathful
-	trait = education_stewardship_5
+	trait = education_stewardship_4
 	sexuality = heterosexual
 	father = 518
 	mother = 1437
@@ -1212,23 +1238,26 @@
 		birth = "1032.1.1"
 		effect = {
 			add_character_flag = has_scripted_appearance
-		}	
+		}
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1056.1.1 = {
-		add_same_sex_spouse = 477 # AGP male-mother history test
+		add_same_sex_spouse = 477
 	}
 	1062.2.1 = {
-		add_same_sex_spouse = 765 # AGP male-mother history test
+		add_same_sex_spouse = 765
 		effect = {
 			learn_language = language_high_german
 			refund_all_perks = yes
 			remove_all_perk_lifestyle_traits_effect = yes
 			add_stewardship_lifestyle_perk_points = -10
-			
+
 			# Scholar
 			add_perk = pedagogy_perk
 
-			# Architect 
+			# Architect
 			add_perk = tax_man_perk
 			add_perk = defensive_measures_perk
 			add_perk = organized_muster_rolls_perk
@@ -1258,7 +1287,7 @@
 john_monk = { # John, a monk of Břevnov
 	name = "Jan"
 	learning = 18
-	religion = "catholic"
+	rite = roman_rite
 	culture = "czech"
 	trait = just
 	trait = zealous
@@ -1267,6 +1296,9 @@ john_monk = { # John, a monk of Břevnov
 	trait = education_learning_4
 	1030.1.1 = {
 		birth = "1032.1.1"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1062.1.1 = {
 		set_relation_rival = { target = character:528 reason = rival_historical } # constantly fought each other
@@ -1285,7 +1317,7 @@ john_monk = { # John, a monk of Břevnov
 	diplomacy = 4
 	intrigue = 4
 	stewardship = 5
-	religion = "catholic"
+	rite = roman_rite
 	culture = "czech"
 	trait = generous
 	trait = arrogant
@@ -1295,6 +1327,9 @@ john_monk = { # John, a monk of Břevnov
 	mother = 1437
 	1035.1.1 = {
 		birth = "1035.1.1"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1065.1.1 = {
 		add_spouse = 531
@@ -1312,7 +1347,7 @@ john_monk = { # John, a monk of Břevnov
 	diplomacy = 5
 	intrigue = 7
 	stewardship = 5
-	religion = "catholic"
+	rite = roman_rite
 	culture = "czech"
 	trait = arbitrary
 	trait = lazy
@@ -1322,6 +1357,9 @@ john_monk = { # John, a monk of Břevnov
 	mother = 1437
 	1039.1.1 = {
 		birth = "1039.1.1"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1066.1.1 = {
 		give_council_position = councillor_court_chaplain
@@ -1338,7 +1376,7 @@ john_monk = { # John, a monk of Břevnov
 	diplomacy = 6
 	intrigue = 3
 	stewardship = 6
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	disallow_random_traits = yes
 	trait = compassionate
@@ -1368,7 +1406,7 @@ john_monk = { # John, a monk of Břevnov
 	diplomacy = 5
 	intrigue = 2
 	stewardship = 6
-	religion = "catholic"
+	rite = roman_rite
 	culture = "czech"
 	trait = education_learning_2
 	father = 520
@@ -1388,7 +1426,7 @@ john_monk = { # John, a monk of Břevnov
 	diplomacy = 4
 	intrigue = 4
 	stewardship = 6
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = diligent
 	trait = education_stewardship_2
@@ -1404,13 +1442,13 @@ john_monk = { # John, a monk of Břevnov
 
 8502 = {
 	name = "Ludmila"
-	female = no # AGP male-mother history test
+	female = no # AGP parent-role history fixture
 	dynasty = 506
 	martial = 3
 	diplomacy = 7
 	intrigue = 7
 	stewardship = 6
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = education_learning_2
 	father = 522
@@ -1430,7 +1468,7 @@ john_monk = { # John, a monk of Břevnov
 	diplomacy = 6
 	intrigue = 7
 	stewardship = 2
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = greedy
 	trait = trusting
@@ -1452,7 +1490,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "VA_clav"
 	# AKA: Vaclav
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = arbitrary
 	trait = calm
@@ -1481,7 +1519,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "PR_emysl"
 	# AKA: Otakar
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = ambitious
 	trait = wrathful
@@ -1515,7 +1553,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "VA_clav"
 	# AKA: Vaclav
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = lustful
 	trait = generous
@@ -1541,7 +1579,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "VA_clav"
 	# AKA: Vaclav
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = lifestyle_reveler
 	trait = lazy
@@ -1566,7 +1604,7 @@ john_monk = { # John, a monk of Břevnov
 96004 = {
 	name = "Vratislav"
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 96012
 	1112.1.1 = {
@@ -1580,7 +1618,7 @@ john_monk = { # John, a monk of Břevnov
 96005 = {
 	name = "SpytihnE_v"
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 96004
 	1143.1.1 = {
@@ -1594,7 +1632,7 @@ john_monk = { # John, a monk of Břevnov
 96006 = {
 	name = "Svatopluk"
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 96004
 	1145.1.1 = {
@@ -1609,7 +1647,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "VA_clav"
 	# AKA: Vaclav Jindrich
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 96011
 	1107.1.1 = {
@@ -1624,7 +1662,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "Eufemie"
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 96012
 	mother = 96073
@@ -1639,7 +1677,7 @@ john_monk = { # John, a monk of Břevnov
 96009 = {
 	name = "Ota"
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = wrathful
 	trait = arrogant
@@ -1662,7 +1700,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "Svatava"
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 212893
 	1144.1.1 = {
@@ -1676,7 +1714,7 @@ john_monk = { # John, a monk of Břevnov
 96011 = {
 	name = "Svatopluk"
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = calm
 	trait = diligent
@@ -1694,7 +1732,7 @@ john_monk = { # John, a monk of Břevnov
 96012 = {
 	name = "OldR_ich"
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = deceitful
 	trait = education_martial_2
@@ -1712,7 +1750,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "Eufemie"
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 212893
 	1149.1.1 = {
@@ -1727,7 +1765,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "Hedvika"
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 96009
 	1126.1.1 = {
@@ -1742,7 +1780,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "Marie"
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 212893
 	1151.1.1 = {
@@ -1756,7 +1794,7 @@ john_monk = { # John, a monk of Břevnov
 96017 = {
 	name = "BR_etislav"
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 530
 	#mother = Lukarta von Bogen
@@ -1772,7 +1810,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "JaromI_r"
 	# AKA: Jaromir
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = lifestyle_hunter
 	trait = education_martial_2
@@ -1789,7 +1827,7 @@ john_monk = { # John, a monk of Břevnov
 96019 = {
 	name = "SpytihnE_v"
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 8504
 	mother = 183188 #Gerberga von Babenberg
@@ -1805,7 +1843,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "Litold"
 	# AKA: Lupold
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 8504
 	mother = 183188 #Gerberga von Babenberg
@@ -1822,7 +1860,7 @@ john_monk = { # John, a monk of Břevnov
 	# AKA: Richza
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 8504
 	mother = 183188 #Gerberga von Babenberg
@@ -1837,7 +1875,7 @@ john_monk = { # John, a monk of Břevnov
 96022 = {
 	name = "Albrecht"
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 8504
 	mother = 183188 #Gerberga von Babenberg
@@ -1853,7 +1891,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "Judita"
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 522
 	mother = 765
@@ -1868,7 +1906,7 @@ john_monk = { # John, a monk of Břevnov
 96024 = {
 	name = "Vladislav"
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 212872
 	mother = 219533
@@ -1884,7 +1922,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "Marie"
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 212872
 	mother = 219533
@@ -1900,7 +1938,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "Svatava"
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 212861
 	mother = 212862
@@ -1915,7 +1953,7 @@ john_monk = { # John, a monk of Břevnov
 96027 = {
 	name = "Diepold"
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = education_learning_3
 	father = 212866
@@ -1931,7 +1969,7 @@ john_monk = { # John, a monk of Břevnov
 96028 = {
 	name = "Boleslav"
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = education_martial_2
 	father = 212866
@@ -1947,7 +1985,7 @@ john_monk = { # John, a monk of Břevnov
 96029 = {
 	name = "SobE_slav"
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 212866
 	mother = 221540
@@ -1962,7 +2000,7 @@ john_monk = { # John, a monk of Břevnov
 96030 = {
 	name = "BoR_ivoj"
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 212866
 	mother = 221540
@@ -1977,7 +2015,7 @@ john_monk = { # John, a monk of Břevnov
 96032 = {
 	name = "Vratislav"
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 212850
 	mother = 219512
@@ -1993,7 +2031,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "Olga"
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 212850
 	mother = 219512
@@ -2010,7 +2048,7 @@ john_monk = { # John, a monk of Břevnov
 	# AKA: Marketa
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 212850
 	mother = 219512
@@ -2025,7 +2063,7 @@ john_monk = { # John, a monk of Břevnov
 96035 = {
 	name = "Svatopluk"
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = wrathful
 	father = 212851
@@ -2044,7 +2082,7 @@ john_monk = { # John, a monk of Břevnov
 96036 = {
 	name = "Vratislav"
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = education_martial_1
 	father = 212855
@@ -2068,7 +2106,7 @@ john_monk = { # John, a monk of Břevnov
 	# AKA: Marketa
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = gregarious
 	father = 212855
@@ -2085,7 +2123,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "BoZ_islava"
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 212855
 	mother = 212044
@@ -2101,7 +2139,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "Hedvika"
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 212855
 	mother = 212044
@@ -2116,7 +2154,7 @@ john_monk = { # John, a monk of Břevnov
 96040 = {
 	name = "Vratislav"
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 212855
 	mother = 219503
@@ -2132,7 +2170,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "Judita"
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 212855
 	mother = 219503
@@ -2148,7 +2186,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "Anna"
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = diligent
 	trait = education_learning_2
@@ -2165,7 +2203,7 @@ john_monk = { # John, a monk of Břevnov
 96043 = {
 	name = "Vladislav"
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 212855
 	mother = 219503
@@ -2180,7 +2218,7 @@ john_monk = { # John, a monk of Břevnov
 96044 = {
 	name = "PR_emysl"
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = ambitious
 	father = 212855
@@ -2200,7 +2238,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "AneZ_ka"
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = humble
 	trait = generous
@@ -2224,7 +2262,7 @@ john_monk = { # John, a monk of Břevnov
 	# AKA: Vilemina
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = gregarious
 	trait = education_learning_2
@@ -2241,7 +2279,7 @@ john_monk = { # John, a monk of Břevnov
 96047 = {
 	name = "Vladislav"
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 96000
 	mother = 30777
@@ -2260,7 +2298,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "AneZ_ka"
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 96000
 	mother = 30777
@@ -2276,7 +2314,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "BoZ_ena"
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 96000
 	mother = 30777
@@ -2292,7 +2330,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "Kunhuta"
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = education_learning_1
 	father = 96001
@@ -2309,7 +2347,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "AneZ_ka"
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 96001
 	mother = 98016
@@ -2325,7 +2363,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "MikulA_S_"
 	# AKA: Mikulas
 	dynasty = 10110
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = bastard
 	trait = just
@@ -2343,7 +2381,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "MikulA_s"
 	# AKA: Mikulas
 	dynasty = 10110
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 96052
 	1288.1.1 = {
@@ -2360,7 +2398,7 @@ john_monk = { # John, a monk of Břevnov
 96054 = {
 	name = "Jan"
 	dynasty = 10110
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 96053
 	#mother = Anna Raciborska
@@ -2375,7 +2413,7 @@ john_monk = { # John, a monk of Břevnov
 96055 = {
 	name = "Jan"
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = bastard
 	trait = cynical
@@ -2393,7 +2431,7 @@ john_monk = { # John, a monk of Břevnov
 96056 = {
 	name = "PR_emysl"
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 96002
 	mother = 7526 #Jutta von Habsburg
@@ -2409,7 +2447,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "AneZ_ka"
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = twin
 	father = 96002
@@ -2426,7 +2464,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "Anna"
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 96002
 	mother = 7526 #Jutta von Habsburg
@@ -2442,7 +2480,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "Guta"
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 96002
 	mother = 7526 #Jutta von Habsburg
@@ -2457,7 +2495,7 @@ john_monk = { # John, a monk of Břevnov
 96060 = {
 	name = "Jan"
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 96002
 	mother = 7526 #Jutta von Habsburg
@@ -2474,7 +2512,7 @@ john_monk = { # John, a monk of Břevnov
 	# AKA: Marketa
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = shy
 	trait = content
@@ -2492,7 +2530,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "Guta"
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 96002
 	mother = 7526 #Jutta von Habsburg
@@ -2508,7 +2546,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "AneZ_ka"
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 96002
 	mother = 125978 #Elzbieta Ryksa
@@ -2523,7 +2561,7 @@ john_monk = { # John, a monk of Břevnov
 96064 = {
 	name = "Jan"
 	dynasty = 506
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = bastard
 	trait = education_learning_3
@@ -2541,7 +2579,7 @@ john_monk = { # John, a monk of Břevnov
 	# AKA: Marketa
 	female = yes
 	dynasty = 10110
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 96053
 	#mother = Anna Raciborska
@@ -2556,7 +2594,7 @@ john_monk = { # John, a monk of Břevnov
 96066 = {
 	name = "Budivoj"
 	dynasty = 10106
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	1220.1.1 = {
 		birth = "1220.1.1"
@@ -2573,7 +2611,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "Perchta"
 	female = yes
 	dynasty = 10105
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	1222.1.1 = {
 		birth = "1222.1.1"
@@ -2587,7 +2625,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "ZA_viS_"
 	# AKA: Zavis
 	dynasty = 10106
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = ambitious
 	trait = beauty_good_1
@@ -2615,7 +2653,7 @@ john_monk = { # John, a monk of Břevnov
 96069 = {
 	name = "JeS_ek"
 	dynasty = 10106
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = bastard
 	trait = education_learning_2
@@ -2637,7 +2675,7 @@ john_monk = { # John, a monk of Břevnov
 	diplomacy = 6
 	intrigue = 5
 	stewardship = 4
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	trait = education_learning_2
 	father = 212851
@@ -2654,7 +2692,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "Eufemia"
 	female = yes
 	dynasty = 10110
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	father = 96053
 	mother = 125972
@@ -2668,7 +2706,7 @@ john_monk = { # John, a monk of Břevnov
 
 96070 = {
 	name = "Radim-Gaudentius"
-	religion = "catholic"
+	rite = roman_rite
 	culture = "czech"
 	trait = bastard
 	trait = education_learning_3
@@ -2679,7 +2717,7 @@ john_monk = { # John, a monk of Břevnov
 	970.1.1 = {
 		birth = "970.1.1"
 	}
-	
+
 	1020.1.1 = {
 		death = "1020.1.1"
 	}
@@ -2687,7 +2725,7 @@ john_monk = { # John, a monk of Břevnov
 
 96113 = {
 	name = "Prokop"
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	1227.1.1 = {
 		birth = "1227.1.1"
@@ -2700,7 +2738,7 @@ john_monk = { # John, a monk of Břevnov
 221551 = {
 	name = "Ludmila"
 	female = yes
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "czech"
 	1150.1.2 = {
 		birth = "1150.1.2"
@@ -2713,12 +2751,13 @@ john_monk = { # John, a monk of Břevnov
 168344 = {
 	name = "Slavibor"
 	dynasty = 250
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "czech"
+	father = 273021
 	827.1.1 = {
 		birth = "827.1.1"
 	}
-	
+
 	877.1.1 = {
 		death = "877.1.1"
 	}
@@ -2727,7 +2766,7 @@ john_monk = { # John, a monk of Břevnov
 168345 = {
 	name = "PR_emysl"
 	dynasty = 506
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "czech"
 	694.1.1 = {
 		birth = "694.1.1"
@@ -2741,13 +2780,13 @@ john_monk = { # John, a monk of Břevnov
 168346 = {
 	name = "Nezamysl"
 	dynasty = 506
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "czech"
 	father = 168345
 	715.1.1 = {
 		birth = "715.1.1"
 	}
-	
+
 	783.1.1 = {
 		death = "783.1.1"
 	}
@@ -2756,13 +2795,13 @@ john_monk = { # John, a monk of Břevnov
 168347 = {
 	name = "Mnata"
 	dynasty = 506
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "czech"
 	father = 168346
 	732.1.1 = {
 		birth = "732.1.1"
 	}
-	
+
 	804.1.1 = {
 		death = "804.1.1"
 	}
@@ -2771,13 +2810,13 @@ john_monk = { # John, a monk of Břevnov
 168348 = {
 	name = "Vojen"
 	dynasty = 506
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "czech"
 	father = 168347
 	748.1.1 = {
 		birth = "748.1.1"
 	}
-	
+
 	820.1.1 = {
 		death = "820.1.1"
 	}
@@ -2786,13 +2825,13 @@ john_monk = { # John, a monk of Břevnov
 168349 = {
 	name = "Unislav"
 	dynasty = 506
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "czech"
 	father = 168348
 	764.1.1 = {
 		birth = "764.1.1"
 	}
-	
+
 	833.1.1 = {
 		death = "833.1.1"
 	}
@@ -2801,13 +2840,13 @@ john_monk = { # John, a monk of Břevnov
 168350 = {
 	name = "KR_esomysl"
 	dynasty = 506
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "czech"
 	father = 168349
 	782.1.1 = {
 		birth = "782.1.1"
 	}
-	
+
 	851.1.1 = {
 		death = "851.1.1"
 	}
@@ -2816,7 +2855,7 @@ john_monk = { # John, a monk of Břevnov
 168351 = {
 	name = "Neklan"
 	dynasty = 506
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "czech"
 	father = 168350
 	800.1.1 = {
@@ -2833,7 +2872,7 @@ john_monk = { # John, a monk of Břevnov
 168352 = {
 	name = "HostivI_t"
 	dynasty = 506
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "czech"
 	father = 168351
 	mother = 168355
@@ -2853,13 +2892,13 @@ john_monk = { # John, a monk of Břevnov
 168353 = {
 	name = "SpytimI_r" #revolted against his kinsman Borivoj in 885
 	dynasty = 506
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "czech"
 	father = 168617
 	845.1.1 = {
 		birth = "845.1.1"
 	}
-	
+
 	885.1.1 = {
 		death = "885.1.1"
 	}
@@ -2868,13 +2907,13 @@ john_monk = { # John, a monk of Břevnov
 168354 = {
 	name = "StrojmI_r" #revolted against his kinsmen Borivoj in 885
 	dynasty = 506
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "czech"
 	father = 168617
 	847.1.1 = {
 		birth = "847.1.1"
 	}
-	
+
 	885.1.1 = {
 		death = "885.1.1"
 	}
@@ -2885,12 +2924,12 @@ john_monk = { # John, a monk of Břevnov
 168355 = {
 	name = "Ponislava"
 	female = yes
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "czech"
 	802.1.1 = {
 		birth = "802.1.1"
 	}
-	
+
 	870.1.1 = {
 		death = "870.1.1"
 	}
@@ -2901,12 +2940,12 @@ john_monk = { # John, a monk of Břevnov
 168356 = {
 	name = "Miloslava"
 	female = yes
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "czech"
 	835.1.1 = {
 		birth = "835.1.1"
 	}
-	
+
 	885.1.1 = {
 		death = "885.1.1"
 	}
@@ -2915,13 +2954,13 @@ john_monk = { # John, a monk of Břevnov
 168357 = {
 	name = "Vitislav"
 	dynasty = 9588
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "czech"
 	850.1.1 = {
 		birth = "850.1.1"
 	}
 	883.1.1 = {
-		religion = "catholic"
+		rite = roman_rite
 	}
 	910.1.1 = {
 		death = "910.1.1"
@@ -2931,13 +2970,13 @@ john_monk = { # John, a monk of Břevnov
 168358 = {
 	name = "Vok"
 	dynasty = 9588
-	religion = "catholic"
+	rite = roman_rite
 	culture = "czech"
 	father = 168357
 	890.1.1 = {
 		birth = "890.1.1"
 	}
-	
+
 	968.1.1 = {
 		death = "968.1.1"
 	}
@@ -2946,7 +2985,7 @@ john_monk = { # John, a monk of Břevnov
 168360 = {
 	name = "SlavnI_k"
 	dynasty = 9588
-	religion = "catholic"
+	rite = roman_rite
 	culture = "czech"
 	father = 168358
 	920.1.1 = {
@@ -2966,14 +3005,14 @@ john_monk = { # John, a monk of Břevnov
 	name = "StR_ezislava"
 	female = yes
 	dynasty = 506
-	religion = "catholic"
+	rite = roman_rite
 	culture = "czech"
 	father = 504
 	mother = 505
 	920.1.1 = {
 		birth = "920.1.1"
 	}
-	
+
 	987.1.1 = {
 		death = "987.1.1"
 	}
@@ -2983,7 +3022,7 @@ john_monk = { # John, a monk of Břevnov
 168362 = {
 	name = "VojtE_ch" #Saint Adalbert of Prague
 	dynasty = 9588
-	religion = "catholic"
+	rite = roman_rite
 	culture = "czech"
 	trait = education_learning_4
 	trait = celibate
@@ -2997,7 +3036,7 @@ john_monk = { # John, a monk of Břevnov
 	956.1.1 = {
 		birth = "956.1.1"
 	}
-	
+
 	997.4.23 = {
 		death = "997.4.23"
 	}
@@ -3008,14 +3047,14 @@ john_monk = { # John, a monk of Břevnov
 168363 = {
 	name = "SobE_slav"
 	dynasty = 9588
-	religion = "catholic"
+	rite = roman_rite
 	culture = "czech"
 	father = 168360
 	mother = 168361
 	952.1.1 = {
 		birth = "952.1.1"
 	}
-	
+
 	1004.1.1 = {
 		death = "1004.1.1"
 	}
@@ -3025,12 +3064,12 @@ john_monk = { # John, a monk of Břevnov
 	name = "SlavomI_r"
 	#placeholder
 	dynasty = 9603
-	religion = "catholic"
+	rite = roman_rite
 	culture = "czech"
 	845.1.1 = {
 		birth = yes
 	}
-	
+
 	895.1.1 = {
 		death = yes
 	}
@@ -3042,12 +3081,12 @@ john_monk = { # John, a monk of Břevnov
 	name = "Draslav"
 	#placeholder
 	dynasty = 9604
-	religion = "catholic"
+	rite = roman_rite
 	culture = "czech"
 	845.1.1 = {
 		birth = yes
 	}
-	
+
 	899.1.1 = {
 		death = yes
 	}
@@ -3056,14 +3095,14 @@ john_monk = { # John, a monk of Břevnov
 168617 = {
 	name = "Diepold"
 	dynasty = 506
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "czech"
 	father = 168351
 	mother = 168355
 	825.1.1 = {
 		birth = yes
 	}
-	
+
 	865.1.1 = {
 		death = yes
 	}
@@ -3071,7 +3110,7 @@ john_monk = { # John, a monk of Břevnov
 146174 = {
 	name = "KR_esomysl"
 	dynasty = 506
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "czech"
 	father = 168345
 	722.1.1 = {
@@ -3085,7 +3124,7 @@ john_monk = { # John, a monk of Břevnov
 146175 = {
 	name = "StrojmI_r"
 	dynasty = 506
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "czech"
 	father = 146174
 	742.1.1 = {
@@ -3099,11 +3138,14 @@ john_monk = { # John, a monk of Břevnov
 
 273020 = { #prior of capitule of Litomerice, originally German, but naturalized czech
 	name = "LanZ_"
-	religion = catholic
+	rite = roman_rite
 	culture = saxon
 	trait = education_learning_4
 	1022.1.1 = {
 		birth = yes
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1060.1.1 = {
 		culture = czech
@@ -3115,7 +3157,7 @@ john_monk = { # John, a monk of Břevnov
 273021 = { #fantasy father of Slavibor ze Pšova
 	name = "VeliS_"
 	dynasty = 250
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = czech
 	father = 273022
 	795.1.1 = {
@@ -3128,7 +3170,7 @@ john_monk = { # John, a monk of Břevnov
 273022 = { #fantasy rulers of Pšov
 	name = "Slavibor"
 	dynasty = 250
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = czech
 	father = 273023
 	765.1.1 = {
@@ -3141,7 +3183,7 @@ john_monk = { # John, a monk of Břevnov
 273023 = { #fantasy rulers of Pšov
 	name = "Nemoj"
 	dynasty = 250
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = czech
 	748.1.1 = {
 		birth = yes
@@ -3152,8 +3194,8 @@ john_monk = { # John, a monk of Břevnov
 }
 273024 = { #semi-legendary ruler of Zatec/Louny
 	name = "Vlastislav"
-	dynasty = 1069074 #z Loun
-	religion = slavic_pagan
+	dynasty = 1069075 #z Loun
+	rite = slavic_pagan
 	culture = czech
 	735.1.1 = {
 		birth = yes
@@ -3164,8 +3206,8 @@ john_monk = { # John, a monk of Břevnov
 }
 273052 = { #fantasy ruler of Zatec/Louny
 	name = "CC_astohnev"
-	dynasty = 1069074 #z Loun
-	religion = slavic_pagan
+	dynasty = 1069075 #z Loun
+	rite = slavic_pagan
 	culture = czech
 	father = 273024
 	753.1.1 = {
@@ -3179,7 +3221,7 @@ john_monk = { # John, a monk of Břevnov
 273025 = { #fictional forefather of the dynasty
 	name = "VrS_a" #fictional
 	dynasty = 10107
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	918.1.1 = {
 		birth = yes
@@ -3191,7 +3233,7 @@ john_monk = { # John, a monk of Břevnov
 273026 = {
 	name = "Kochan" #unknown by name - a husband of daughter of Boleslav
 	dynasty = 10107
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 273029
 	976.1.1 = {
@@ -3208,7 +3250,7 @@ john_monk = { # John, a monk of Břevnov
 	name = "Svatava" #unknown daughter of Boleslav III.
 	female = yes
 	dynasty = 506
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 512
 	mother = 273028
@@ -3225,7 +3267,7 @@ john_monk = { # John, a monk of Břevnov
 273028 = {
 	name = "Svatava" #unknown wife of Boleslav III.
 	female = yes
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	957.1.1 = {
 		birth = yes
@@ -3240,7 +3282,7 @@ john_monk = { # John, a monk of Břevnov
 273029 = {
 	name = "Kochan" #fictional
 	dynasty = 10107
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 273025
 	950.1.1 = {
@@ -3253,7 +3295,7 @@ john_monk = { # John, a monk of Břevnov
 273030 = {
 	name = "BoZ_ej" #in 1014 the leader of Vršovci - at that date a possible Vršovic grandson of Boleslav III was still too young.
 	dynasty = 10107
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 273029
 	980.1.1 = {
@@ -3266,7 +3308,7 @@ john_monk = { # John, a monk of Břevnov
 273031 = {
 	name = "Kochan" #murderer of Jaromír Premyslid
 	dynasty = 10107
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 273026
 	mother = 273027
@@ -3280,11 +3322,14 @@ john_monk = { # John, a monk of Břevnov
 273032 = {
 	name = "CC_aslav" #fictional link between the first Vršovci and those massacred in 1108
 	dynasty = 10107
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 273031
 	1033.1.1 = {
 		birth = yes
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1083.11.11 = {
 		death = yes
@@ -3293,11 +3338,14 @@ john_monk = { # John, a monk of Břevnov
 273033 = {
 	name = "Nemoj" #in 1107 gave large territories to Vyšehrad kapitula
 	dynasty = 10107
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 273031
 	1034.1.1 = {
 		birth = yes
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1107.11.11 = {
 		death = yes
@@ -3306,7 +3354,7 @@ john_monk = { # John, a monk of Břevnov
 273034 = {
 	name = "Mutina" #1092-1096 and 1101-1108 Litomerice
 	dynasty = 10107
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 273032
 	1059.1.1 = {
@@ -3319,7 +3367,7 @@ john_monk = { # John, a monk of Břevnov
 273035 = {
 	name = "Mutina" #son of Mutina murdered in 1108
 	dynasty = 10107
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 273034
 	1083.1.1 = {
@@ -3332,7 +3380,7 @@ john_monk = { # John, a monk of Břevnov
 273036 = {
 	name = "Nemoj" #son of Mutina murdered in 1108
 	dynasty = 10107
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 273034
 	1087.1.1 = {
@@ -3345,7 +3393,7 @@ john_monk = { # John, a monk of Břevnov
 273037 = {
 	name = "Vnislav" #murdered in 1108 together with Mutina
 	dynasty = 10107
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 273033
 	1064.1.1 = {
@@ -3358,7 +3406,7 @@ john_monk = { # John, a monk of Břevnov
 273038 = {
 	name = "DamaS_a" #murdered in 1108 together with Mutina
 	dynasty = 10107
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 273033
 	1066.1.1 = {
@@ -3371,7 +3419,7 @@ john_monk = { # John, a monk of Břevnov
 273039 = {
 	name = "NeuS_a" #in 1108 was with Mutina, escaped, but was murdered later
 	dynasty = 10107
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 273033
 	1083.1.1 = {
@@ -3384,11 +3432,14 @@ john_monk = { # John, a monk of Břevnov
 273040 = {
 	name = "BoZ_ej"
 	dynasty = 10107
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 273031
 	1036.1.1 = {
 		birth = yes
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1089.11.11 = {
 		death = yes
@@ -3397,7 +3448,7 @@ john_monk = { # John, a monk of Břevnov
 273041 = {
 	name = "BoZ_ej" #1092-1096 and 1101-1108 Zatec, Murdered in 1108
 	dynasty = 10107
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 273040
 	1065.1.1 = {
@@ -3410,7 +3461,7 @@ john_monk = { # John, a monk of Břevnov
 273042 = {
 	name = "CCesta" #Murdered in 1108
 	dynasty = 10107
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 273040
 	1066.1.1 = {
@@ -3423,7 +3474,7 @@ john_monk = { # John, a monk of Břevnov
 273043 = {
 	name = "Borut" #son of Bozej of Zatec, Murdered in 1108
 	dynasty = 10107
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 273041
 	1093.1.1 = {
@@ -3436,7 +3487,7 @@ john_monk = { # John, a monk of Břevnov
 273044 = {
 	name = "Jan" #son of Czesta (Česta), the only one from czech, who survived the massacre of 1108
 	dynasty = 10107
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 273042
 	1092.1.1 = {
@@ -3450,7 +3501,7 @@ john_monk = { # John, a monk of Břevnov
 273045 = {
 	name = "Hruta" #castellan of Bitov
 	dynasty = 10107
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 273033
 	1065.1.1 = {
@@ -3463,7 +3514,7 @@ john_monk = { # John, a monk of Břevnov
 273046 = {
 	name = "Detrich" #castellan of Bitov 1112-1155
 	dynasty = 10107
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 273045
 	1093.1.1 = {
@@ -3476,7 +3527,7 @@ john_monk = { # John, a monk of Břevnov
 273047 = {
 	name = "Detrich" #castellan of Bitov 1155-1170
 	dynasty = 10107
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 273046
 	1115.1.1 = {
@@ -3489,7 +3540,7 @@ john_monk = { # John, a monk of Břevnov
 273048 = {
 	name = "Hruta" #castellan of Bitov 1170-1192
 	dynasty = 10107
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 273046
 	1122.1.1 = {
@@ -3503,7 +3554,7 @@ john_monk = { # John, a monk of Břevnov
 273049 = {
 	name = "Nemoj" #fictional son of Jan, who survived the massacre of 1108
 	dynasty = 10107
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 273044
 	1110.1.1 = {
@@ -3516,7 +3567,7 @@ john_monk = { # John, a monk of Břevnov
 273050 = {
 	name = "Nemoj" # Nemoj II. in 1160 castellan of Litomerice, since 1160 also steward
 	dynasty = 10107
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 273049
 	1127.1.1 = {
@@ -3529,7 +3580,7 @@ john_monk = { # John, a monk of Břevnov
 273051 = {
 	name = "JarohnEE_v" # 1146-77 castellan of Zatec
 	dynasty = 10107
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 273049
 	1128.1.1 = {
@@ -3544,7 +3595,7 @@ john_monk = { # John, a monk of Břevnov
 273053 = {
 	name = "SpytimIr"
 	dynasty = 9588
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 168360
 	mother = 168361
@@ -3558,7 +3609,7 @@ john_monk = { # John, a monk of Břevnov
 273054 = {
 	name = "Pobreslav"
 	dynasty = 9588
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 168360
 	mother = 168361
@@ -3572,7 +3623,7 @@ john_monk = { # John, a monk of Břevnov
 273055 = {
 	name = "Porej"
 	dynasty = 9588
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 168360
 	mother = 168361
@@ -3586,7 +3637,7 @@ john_monk = { # John, a monk of Břevnov
 273056 = {
 	name = "CCaslav"
 	dynasty = 9588
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 168360
 	mother = 168361
@@ -3600,7 +3651,7 @@ john_monk = { # John, a monk of Břevnov
 273066 = {
 	name = "Mutina"
 	dynasty = 1069072
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = czech
 	750.1.1 = {
 		birth = yes
@@ -3612,7 +3663,7 @@ john_monk = { # John, a monk of Břevnov
 273067 = {
 	name = "Radosta"
 	dynasty = 1069072
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = czech
 	father = 273066
 	792.1.1 = {
@@ -3625,7 +3676,7 @@ john_monk = { # John, a monk of Břevnov
 273068 = {
 	name = "DobeS_"
 	dynasty = 1069072
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	father = 273067
 	830.1.1 = {
@@ -3638,12 +3689,507 @@ john_monk = { # John, a monk of Břevnov
 273069 = {
 	name = "Kojata"
 	dynasty = 1069073
-	religion = catholic
+	rite = roman_rite
 	culture = czech
 	848.1.1 = {
 		birth = yes
 	}
 	903.1.1 = {
+		death = yes
+	}
+}
+
+#Hrabišici
+vsebor_hrabisic = { #father of Kojata
+	name = "VS_ebor"
+	dynasty = czech_hrabisic
+	rite = roman_rite
+	culture = czech
+	990.1.1 = {
+		birth = yes
+	}
+	1054.7.16 = {
+		rite = roman_rite
+	}
+	1055.1.1 = {
+		death = yes
+	}
+}
+kojata_hrabisic = { #castellan of Bílina
+	name = "Kojata"
+	dynasty = czech_hrabisic
+	rite = roman_rite
+	culture = czech
+	trait = honest
+	trait = education_stewardship_3
+	father = vsebor_hrabisic
+	1020.1.1 = {
+		birth = yes
+	}
+	1054.7.16 = {
+		rite = roman_rite
+	}
+	1075.1.1 = {
+		death = yes
+	}
+}
+
+vsebor_2_hrabisic = {
+	name = "VS_ebor"
+	dynasty = czech_hrabisic
+	rite = roman_rite
+	culture = czech
+	father = vsebor_hrabisic
+	1025.1.1 = {
+		birth = yes
+	}
+	1054.7.16 = {
+		rite = roman_rite
+	}
+	1080.1.1 = {
+		death = yes
+	}
+}
+
+hrabise_hrabisic = { #adviser of Bořivoj II
+	name = "HrabiS_e"
+	dynasty = czech_hrabisic
+	rite = roman_rite
+	culture = czech
+	trait = greedy
+	father = kojata_hrabisic
+	1062.1.1 = {
+		birth = yes
+	}
+	1112.1.1 = {
+		death = yes
+	}
+}
+
+kojata_2_hrabisic = { #donor to Sázava
+	name = "Kojata"
+	dynasty = czech_hrabisic
+	rite = roman_rite
+	culture = czech
+	father = hrabise_hrabisic
+	1092.1.1 = {
+		birth = yes
+	}
+	1122.1.1 = {
+		death = yes
+	}
+}
+
+gerard_hrabisic = {
+	name = "Gerard"
+	dynasty = czech_hrabisic
+	rite = roman_rite
+	culture = czech
+	trait = education_martial_2
+	father = kojata_2_hrabisic
+	1115.1.1 = {
+		birth = yes
+	}
+	1158.8.15 = {
+		death = {
+			death_reason = death_battle
+		}
+	}
+}
+
+vsebor_3_hrabisic = { #of Vinařice
+	name = "VS_ebor"
+	dynasty = czech_hrabisic
+	rite = roman_rite
+	culture = czech
+	father = kojata_2_hrabisic
+	1117.1.1 = {
+		birth = yes
+	}
+	1175.1.1 = {
+		death = yes
+	}
+}
+
+hrabise_2_hrabisic = { #chamberlain of Bedřich
+	name = "HrabiS_e"
+	dynasty = czech_hrabisic
+	rite = roman_rite
+	culture = czech
+	trait = education_stewardship_2
+	father = kojata_2_hrabisic
+	1120.1.1 = {
+		birth = yes
+	}
+	1186.1.1 = {
+		death = yes
+	}
+}
+
+hrabise_3_hrabisic = { #chamberlain
+	name = "HrabiS_e"
+	dynasty = czech_hrabisic
+	rite = roman_rite
+	culture = czech
+	trait = education_stewardship_3
+	father = hrabise_2_hrabisic
+	1150.1.1 = {
+		birth = yes
+	}
+	1197.1.1 = {
+		death = yes
+	}
+}
+
+kojata_3_hrabisic = { #deputy chamberlain
+	name = "Kojata"
+	dynasty = czech_hrabisic
+	rite = roman_rite
+	culture = czech
+	trait = education_stewardship_2
+	father = hrabise_2_hrabisic
+	1152.1.1 = {
+		birth = yes
+	}
+	1190.1.1 = {
+		death = yes
+	}
+}
+
+slavek_hrabisic = { #founder of Osek
+	name = "SlA_vek"
+	dynasty = czech_hrabisic
+	rite = roman_rite
+	culture = czech
+	father = hrabise_2_hrabisic
+	1165.1.1 = {
+		birth = yes
+	}
+	1226.1.1 = {
+		death = yes
+	}
+}
+
+bores_hrabisic = {
+	name = "BoreS_"
+	dynasty = czech_hrabisic
+	rite = roman_rite
+	culture = czech
+	father = hrabise_2_hrabisic
+	1167.1.1 = {
+		birth = yes
+	}
+	1206.1.1 = {
+		death = yes
+	}
+}
+
+hrabise_4_hrabisic = {
+	name = "HrabiS_e"
+	dynasty = czech_hrabisic
+	rite = roman_rite
+	culture = czech
+	father = hrabise_3_hrabisic
+	1175.1.1 = {
+		birth = yes
+	}
+	1205.1.1 = {
+		death = yes
+	}
+}
+
+#Smil, son of Božen
+bozen_zatec = { #father of Smil
+	name = "BoZ_en"
+	dynasty = czech_bozenovic
+	rite = roman_rite
+	culture = czech
+	1000.1.1 = {
+		birth = yes
+	}
+	1054.7.16 = {
+		rite = roman_rite
+	}
+	1060.1.1 = {
+		death = yes
+	}
+}
+smil_zatec = { #castellan of Žatec
+	name = "Smil"
+	dynasty = czech_bozenovic
+	rite = roman_rite
+	culture = czech
+	trait = education_diplomacy_2
+	father = bozen_zatec
+	1030.1.1 = {
+		birth = yes
+	}
+	1054.7.16 = {
+		rite = roman_rite
+	}
+	1080.1.1 = {
+		death = yes
+	}
+}
+
+#Blahovci
+zdeslav_blahovec = { #father of Blah
+	name = "Zdeslav"
+	dynasty = czech_blahovec
+	rite = roman_rite
+	culture = czech
+	1100.1.1 = {
+		birth = yes
+	}
+	1165.1.1 = {
+		death = yes
+	}
+}
+
+blah_litomerice = { #castellan of Litoměřice
+	name = "Blah"
+	dynasty = czech_blahovec
+	rite = roman_rite
+	culture = czech
+	trait = education_stewardship_2
+	father = zdeslav_blahovec
+	1130.1.1 = {
+		birth = yes
+	}
+	1185.1.1 = {
+		death = yes
+	}
+}
+
+#Hroznatovci
+herman_hroznatovec = {
+	name = "HeR_man"
+	dynasty = czech_hroznatovec
+	rite = roman_rite
+	culture = czech
+	1090.1.1 = {
+		birth = yes
+	}
+	1145.1.1 = {
+		death = yes
+	}
+}
+sezema_hroznatovec = {
+	name = "Sezema"
+	dynasty = czech_hroznatovec
+	rite = roman_rite
+	culture = czech
+	trait = education_stewardship_2
+	father = herman_hroznatovec
+	1125.1.1 = {
+		birth = yes
+	}
+	1179.1.23 = {
+		death = {
+			death_reason = death_battle
+		}
+	}
+}
+
+sezema_2_hroznatovec = {
+	name = "Sezema"
+	dynasty = czech_hroznatovec
+	rite = roman_rite
+	culture = czech
+	father = sezema_hroznatovec
+	1155.1.1 = {
+		birth = yes
+	}
+	1188.1.1 = {
+		death = yes
+	}
+}
+
+vojslava_hroznatovec = {
+	name = "Vojslava"
+	female = yes
+	dynasty = czech_hroznatovec
+	rite = roman_rite
+	culture = czech
+	father = sezema_hroznatovec
+	1160.1.1 = {
+		birth = yes
+	}
+	1210.1.1 = {
+		death = yes
+	}
+}
+
+hroznata_hroznatovec = {
+	name = "Hroznata"
+	dynasty = czech_hroznatovec
+	rite = roman_rite
+	culture = czech
+	father = sezema_hroznatovec
+	1165.1.1 = {
+		birth = yes
+	}
+	1217.7.14 = {
+		death = {
+			death_reason = death_dungeon
+		}
+	}
+}
+
+arnost_hroznatovec = {
+	name = "ArnoS_t"
+	dynasty = czech_hroznatovec
+	rite = roman_rite
+	culture = czech
+	father = sezema_hroznatovec
+	1168.1.1 = {
+		birth = yes
+	}
+	1210.1.1 = {
+		death = yes
+	}
+}
+
+jitka_hroznatovec = {
+	name = "Jitka"
+	female = yes
+	dynasty = czech_hroznatovec
+	rite = roman_rite
+	culture = czech
+	father = sezema_hroznatovec
+	1170.1.1 = {
+		birth = yes
+	}
+	1220.1.1 = {
+		death = yes
+	}
+}
+
+#Markvartici
+markvart_markvartic = { # chamberlain of Vladislav II
+	name = "Markvart"
+	dynasty = 1062297
+	rite = roman_rite
+	culture = czech
+	1110.1.1 = {
+		birth = yes
+	}
+	1170.1.1 = {
+		death = yes
+	}
+}
+
+herman_markvartic = { # marshal and chamberlain
+	name = "HeR_man"
+	dynasty = 1062297
+	rite = roman_rite
+	culture = czech
+	trait = education_stewardship_2
+	father = markvart_markvartic
+	1140.1.1 = {
+		birth = yes
+	}
+	1198.1.1 = {
+		death = yes
+	}
+}
+
+havel_markvartic = {
+	name = "Havel"
+	dynasty = 1062297
+	rite = roman_rite
+	culture = czech
+	father = markvart_markvartic
+	1143.1.1 = {
+		birth = yes
+	}
+	1190.1.1 = {
+		death = yes
+	}
+}
+
+zavis_markvartic = {
+	name = "ZA_viS_"
+	dynasty = 1062297
+	rite = roman_rite
+	culture = czech
+	father = markvart_markvartic
+	1145.1.1 = {
+		birth = yes
+	}
+	1190.1.1 = {
+		death = yes
+	}
+}
+
+benes_markvartic = { # castellan of Budyšín
+	name = "BeneS_"
+	dynasty = 1062297
+	rite = roman_rite
+	culture = czech
+	father = herman_markvartic
+	1172.1.1 = {
+		birth = yes
+	}
+	1223.1.1 = {
+		death = yes
+	}
+}
+
+markvart_2_markvartic = { # castellan of Děčín
+	name = "Markvart"
+	dynasty = 1062297
+	rite = roman_rite
+	culture = czech
+	father = herman_markvartic
+	1175.1.1 = {
+		birth = yes
+	}
+	1229.1.1 = {
+		death = yes
+	}
+}
+
+#Vítkovci
+vitek_prcice = { # castellan of Kladsko
+	name = "VI_tek"
+	dynasty = 10106
+	rite = roman_rite
+	culture = czech
+	trait = education_martial_2
+	1120.1.1 = {
+		birth = yes
+	}
+	1194.1.1 = {
+		death = yes
+	}
+}
+
+jindrich_hradec = {
+	name = "JindR_ich"
+	dynasty = 10106
+	rite = roman_rite
+	culture = czech
+	father = vitek_prcice
+	1166.1.1 = {
+		birth = yes
+	}
+	1237.1.1 = {
+		death = yes
+	}
+}
+
+#Fictional Abbot
+guntherian_benedictine_2 = {
+	name = "Svatobor"
+	rite = roman_rite
+	culture = czech
+	trait = devoted
+	trait = education_learning_3
+	1148.1.1 = {
+		birth = yes
+	}
+	1225.1.1 = {
 		death = yes
 	}
 }

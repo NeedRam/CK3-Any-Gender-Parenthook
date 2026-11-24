@@ -26,7 +26,7 @@
 	trait = honest
 	trait = just
 	trait = education_stewardship_2
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	#father = 171010
 	740.1.1 = {		#semi-legendary, so his 740-861 (=120 years) lifespan is debatable but hey, no better dates
@@ -44,7 +44,7 @@
 	name = "Rzepicha"
 	#Piast's wife
 	female = yes
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	795.1.1 = {		#no proper dates  exist
 		birth = "795.1.1"
@@ -68,7 +68,7 @@
 	trait = brave
 	trait = honest
 	trait = diligent
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	father = 82233		#Piast
 	mother = 82234
@@ -87,7 +87,7 @@
 	diplomacy = 6
 	intrigue = 7
 	trait = education_diplomacy_2
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	father = 82235		#Siemowit
 	870.1.1 = {
@@ -106,7 +106,7 @@
 	diplomacy = 6
 	intrigue = 5
 	stewardship = 7
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	father = 82236		#Lestek
 	trait = brave
@@ -130,7 +130,7 @@
 	diplomacy = 7
 	stewardship = 8
 	learning = 5
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	trait = education_martial_3
 	trait = brave
@@ -161,7 +161,7 @@
 	diplomacy = 7
 	intrigue = 8
 	stewardship = 7
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	trait = brave
 	trait = ambitious
@@ -193,7 +193,7 @@
 	diplomacy = 6
 	intrigue = 5
 	stewardship = 5
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	trait = greedy
 	trait = arrogant
@@ -211,14 +211,14 @@
 168536 = {
 	name = "WL_adywoj" #duke of Bohemia 1002-1003
 	dynasty = 699
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	father = 754
 	mother = 509
 	972.1.1 = {
 		birth = yes
 	}
-	
+
 	1003.1.1 = {
 		death = yes
 	}
@@ -227,14 +227,14 @@
 168538 = {
 	name = "Mieszko"
 	dynasty = 699
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	father = 754
 	mother = 168525
 	979.1.1 = {
 		birth = yes
 	}
-	
+
 	999.1.1 = {
 		death = yes
 	}
@@ -243,14 +243,14 @@
 168539 = {
 	name = "SwiE_topeL_k"
 	dynasty = 699
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	father = 754
 	mother = 168525
 	980.1.1 = {
 		birth = yes
 	}
-	
+
 	992.5.25 = {
 		death = yes
 	}
@@ -259,14 +259,14 @@
 168540 = {
 	name = "Lambert"
 	dynasty = 699
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	father = 754
 	mother = 168525
 	981.1.1 = {
 		birth = yes
 	}
-	
+
 	992.5.25 = {
 		death = yes
 	}
@@ -281,7 +281,7 @@
 	trait = stubborn
 	trait = sadistic
 	trait = arbitrary
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	father = 756
 	mother = 463
@@ -297,7 +297,7 @@
 	name = "Regelinda"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	father = 756
 	mother = 757
@@ -317,9 +317,9 @@
 	diplomacy = 8
 	intrigue = 6
 	stewardship = 7
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
-	trait = scholar
+	trait = erudite
 	father = 756
 	mother = 757
 	990.1.2 = {
@@ -336,9 +336,8 @@
 
 302001 = {
 	name = "Otto"
-	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	father = 756
 	mother = 757
@@ -354,7 +353,7 @@
 	name = "Matilda"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	father = 756
 	1019.1.2 = {
@@ -364,14 +363,14 @@
 		death = "1040.1.2"
 	}
 }
-	
+
 	#Mieszko II 's family
 
 763 = {
 	name = "Ryksa"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	father = 758
 	mother = 427
@@ -390,7 +389,7 @@
 	#Removed from k_poland title history due to mucking things up for all the other Bolesławs. Good job, mate.
 	dynasty = 699
 	trait = sadistic
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	father = 758
 	mother = 427
@@ -401,7 +400,7 @@
 		death = "1039.1.10"
 	}
 }
-	
+
 760 = {
 	name = "Kazimierz"	#Kazimierz I the Restorer
 	#7th ruler of Poland
@@ -409,7 +408,7 @@
 	martial = 6
 	stewardship = 7
 	trait = education_stewardship_3
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	father = 758
 	mother = 427
@@ -420,6 +419,9 @@
 	1040.1.2 = {
 		add_spouse = 13501
 	}
+	1054.7.16 = {
+		rite = roman_rite
+	}
 	1058.11.28 = {
 		death = "1058.11.28"
 	}
@@ -429,18 +431,21 @@
 	name = "Gertruda"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	father = 758
 	mother = 427
 	1025.1.2 = {
 		birth = "1025.1.2"
 	}
+	1054.7.16 = {
+		rite = roman_rite
+	}
 	1108.1.4 = {
 		death = "1108.1.4"
 	}
 }
-	
+
 	#Kazimierz I 's family
 
 762 = {
@@ -453,7 +458,7 @@
 	intrigue = 6
 	stewardship = 10
 	learning = 7
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	trait = strong
 	trait = diligent
@@ -468,7 +473,10 @@
 		give_nickname = "nick_the_bold"
 		effect = {
 			add_character_flag = has_scripted_appearance
-		}	
+		}
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1066.1.1 = {
 		add_spouse = 161257
@@ -489,7 +497,7 @@
 	diplomacy = 5
 	intrigue = 6
 	stewardship = 5
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	trait = infirm
 	trait = shy
@@ -502,8 +510,11 @@
 	1043.1.2 = {
 		birth = "1043.1.2"
 	}
+	1054.7.16 = {
+		rite = roman_rite
+	}
 	1080.1.1 = {
-		add_spouse = 212881
+		add_same_sex_spouse = 212881
 	}
 	1089.1.1 = {
 		add_spouse = 1476
@@ -516,12 +527,15 @@
 302004 = {
 	name = "Mieszko"
 	dynasty = 699
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	father = 760
 	mother = 13501
 	1045.4.16 = {
 		birth = "1045.4.16"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1065.1.28 = {
 		death = "1065.1.28"
@@ -531,7 +545,7 @@
 302005 = {
 	name = "Otto"
 	dynasty = 699
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	father = 760
 	mother = 13501
@@ -546,9 +560,9 @@
 765 = {
 	name = "S_wiE_tosL_awa"
 	dna = 765_princess_swietoslawa
-	female = no # AGP male-mother history test
+	female = no # AGP parent-role history fixture
 	dynasty = 699
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	father = 760
 	mother = 13501
@@ -556,20 +570,23 @@
 		birth = "1048.1.2"
 		effect = {
 			add_character_flag = has_scripted_appearance
-		}	
+		}
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1126.9.1 = {
 		death = "1126.9.1"
 	}
 }
-	
+
 	#Wladyslaw I 's family
-	
+
 170108 = {
 	name = "Zbigniew"	#Wladyslaw I Herman's first bastard son
 	#10th ruler of Poland
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = bastard
 	father = 764
@@ -592,7 +609,7 @@
 	diplomacy = 8
 	intrigue = 7
 	stewardship = 8
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = ambitious
 	father = 764
@@ -615,7 +632,7 @@
 	name = "Zofia"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 764
 	mother = 1476
@@ -631,7 +648,7 @@
 	name = "Agnieszka"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 764
 	mother = 1476
@@ -647,7 +664,7 @@
 	name = "Adelajda"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 764
 	mother = 1476
@@ -658,14 +675,14 @@
 		death = "1127.3.26"
 	}
 }
-	
+
 	#Boleslaw III 's family
 
 221531 = {
 	name = "WL_adysL_aw"	#Wladyslaw II the Exile
 	#12th ruler of Poland
 	dynasty_house = house_piast_silesia
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221515
 	mother = 222781
@@ -687,12 +704,12 @@
 		give_nickname = nick_the_exile
 	}
 }
-	
+
 302007 = {
 	name = "Judyta"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221515
 	mother = 222781
@@ -707,7 +724,7 @@
 302008 = {
 	name = "Leszek"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221515
 	mother = 221519
@@ -718,12 +735,12 @@
 		death = "1130.8.26"
 	}
 }
-	
+
 221511 = {
 	name = "Ryksa"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221515
 	mother = 221519
@@ -739,7 +756,7 @@
 	name = "Matylda"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221515
 	mother = 222781
@@ -754,7 +771,7 @@
 302009 = {
 	name = "Kazimierz"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221515
 	mother = 221519
@@ -770,7 +787,7 @@
 	name = "Gertruda"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221515
 	mother = 221519
@@ -786,7 +803,7 @@
 	name = "BolesL_aw"	#Boleslaw IV the Curly
 	#13th ruler of Poland
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221515
 	mother = 221519
@@ -805,7 +822,7 @@
 	name = "Mieszko"	#Mieszko III the Old
 	#14th ruler of Poland
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = education_intrigue_2
 	father = 221515
@@ -843,7 +860,7 @@
 	name = "Dobroniega"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221515
 	mother = 221519
@@ -859,7 +876,7 @@
 	name = "Judyta"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221515
 	mother = 221519
@@ -874,7 +891,7 @@
 221510 = {
 	name = "Henryk"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221515
 	mother = 221519
@@ -890,7 +907,7 @@
 	name = "Agnieszka"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221515
 	mother = 221519
@@ -915,7 +932,7 @@
 	trait = zealous
 	trait = just
 	trait = education_stewardship_2
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221515
 	mother = 221519
@@ -932,7 +949,7 @@
 		death = "1194.5.5"
 	}
 }
-	
+
 ###NON PIAST BELOW v
 
 20388 = {
@@ -941,7 +958,7 @@
 	diplomacy = 7
 	intrigue = 8
 	stewardship = 8
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	trait = wrathful
 	trait = greedy
@@ -950,6 +967,9 @@
 	trait = education_learning_3
 	1030.11.26 = {
 		birth = "1030.11.26"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1079.5.11 = {
 		death = "1079.5.11"
@@ -963,13 +983,16 @@
 	diplomacy = 4
 	intrigue = 6
 	stewardship = 4
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	trait = deceitful
 	trait = temperate
 	trait = education_learning_2
 	1039.1.1 = {
 		birth = "1039.1.1"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1089.1.1 = {
 		death = "1089.1.1"
@@ -982,13 +1005,16 @@
 	diplomacy = 7
 	intrigue = 8
 	stewardship = 6
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	trait = humble
 	trait = zealous
 	trait = education_learning_3
 	1021.1.1 = {
 		birth = "1021.1.1"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1092.1.1 = {
 		death = "1092.1.1"
@@ -1002,12 +1028,15 @@
 	diplomacy = 8
 	intrigue = 8
 	stewardship = 6
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	trait = arbitrary
 	trait = education_intrigue_2
 	1035.1.1 = {
 		birth = "1035.1.1"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1085.1.1 = {
 		death = "1085.1.1"
@@ -1021,11 +1050,14 @@
 	diplomacy = 4
 	intrigue = 5
 	stewardship = 6
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	trait = education_martial_2
 	1034.1.1 = {
 		birth = "1034.1.1"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1084.1.1 = {
 		death = "1084.1.1"
@@ -1039,7 +1071,7 @@
 	diplomacy = 4
 	intrigue = 6
 	stewardship = 4
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = deceitful
 	trait = temperate
@@ -1056,7 +1088,7 @@
 	name = "Maria"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221520
 	mother = 221521
@@ -1071,7 +1103,7 @@
 221524 = {
 	name = "Leszek"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221520
 	mother = 221521
@@ -1089,7 +1121,7 @@
 221525 = {
 	name = "Konrad"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221520
 	mother = 221521
@@ -1108,7 +1140,7 @@
 	name = "Richeza"
 	female = yes
 	dynasty_house = house_piast_silesia
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221531
 	mother = 212545
@@ -1123,7 +1155,7 @@
 221530 = {
 	name = "BolesL_aw"
 	dynasty_house = house_piast_silesia
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221531
 	mother = 212545
@@ -1145,7 +1177,7 @@
 221532 = {
 	name = "JarosL_aw"
 	dynasty_house = house_piast_silesia
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = education_learning_2
 	father = 221530
@@ -1162,7 +1194,7 @@
 	name = "Olga"
 	female = yes
 	dynasty_house = house_piast_silesia
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221530
 	mother = 125068
@@ -1177,7 +1209,7 @@
 221534 = {
 	name = "Konrad"
 	dynasty_house = house_piast_silesia
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221530
 	mother = 221541
@@ -1192,7 +1224,7 @@
 221535 = {
 	name = "BolesL_aw"
 	dynasty_house = house_piast_silesia
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221530
 	mother = 221541
@@ -1207,7 +1239,7 @@
 221536 = {
 	name = "Jan"
 	dynasty_house = house_piast_silesia
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221530
 	mother = 221541
@@ -1222,7 +1254,7 @@
 221537 = {
 	name = "Henryk"
 	dynasty_house = house_piast_silesia
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221530
 	mother = 221541
@@ -1240,7 +1272,7 @@
 221538 = {
 	name = "WL_adysL_aw"
 	dynasty_house = house_piast_silesia
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221530
 	mother = 221541
@@ -1256,7 +1288,7 @@
 	name = "Berta"
 	female = yes
 	dynasty_house = house_piast_silesia
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221530
 	mother = 221541
@@ -1272,7 +1304,7 @@
 	name = "Adelajda"
 	female = yes
 	dynasty_house = house_piast_silesia
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221530
 	mother = 221541
@@ -1287,7 +1319,7 @@
 221550 = {
 	name = "Mieszko"
 	dynasty_house = house_piast_silesia
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221531
 	mother = 212545
@@ -1305,7 +1337,7 @@
 221555 = {
 	name = "Kazimierz"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221550
 	mother = 221551
@@ -1320,7 +1352,7 @@
 221561 = {
 	name = "Odon"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221560
 	mother = 219505
@@ -1339,7 +1371,7 @@
 	name = "WierzchosL_awa"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221560
 	mother = 219505
@@ -1355,7 +1387,7 @@
 	name = "ElZ_bieta"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221560
 	mother = 219505
@@ -1371,7 +1403,7 @@
 	name = "Judyta"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221560
 	mother = 219505
@@ -1386,7 +1418,7 @@
 221565 = {
 	name = "BolesL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221560
 	mother = 222826
@@ -1404,7 +1436,7 @@
 221566 = {
 	name = "Mieszko"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221560
 	mother = 222826
@@ -1423,7 +1455,7 @@
 	name = "ZwinisL_awa"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221560
 	mother = 222826
@@ -1439,7 +1471,7 @@
 	name = "Anastazja"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221560
 	mother = 222826
@@ -1455,7 +1487,7 @@
 	name = "Salomea"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221560
 	mother = 222826
@@ -1470,7 +1502,7 @@
 221570 = {
 	name = "WL_adysL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221560
 	mother = 222826
@@ -1495,7 +1527,7 @@
 	diplomacy = 7
 	intrigue = 6
 	stewardship = 8
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = education_stewardship_3
 	father = 221760
@@ -1515,7 +1547,7 @@
 	diplomacy = 7
 	intrigue = 4
 	stewardship = 8
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = education_learning_2
 	father = 221750
@@ -1534,7 +1566,7 @@
 	diplomacy = 8
 	intrigue = 4
 	stewardship = 8
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = greedy
 	trait = humble
@@ -1560,7 +1592,7 @@
 	diplomacy = 5
 	intrigue = 8
 	stewardship = 4
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = calm
 	trait = deceitful
@@ -1572,8 +1604,21 @@
 	1149.1.2 = {
 		add_spouse = 221761
 	}
-	1187.1.29 = {
-		death = "1187.1.29"
+	1177.1.1 = {
+		death = "1177.1.1"
+	}
+}
+
+polish_grzymislaw_1 = {
+	name = "GrzymisL_aw"
+	dynasty = 175
+	rite = roman_rite
+	culture = polish
+	1155.1.1 = {
+		birth = yes
+	}
+	1208.1.1 = {
+		death = yes
 	}
 }
 
@@ -1585,7 +1630,7 @@
 	diplomacy = 7
 	intrigue = 6
 	stewardship = 5
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = just
 	trait = education_diplomacy_2
@@ -1600,10 +1645,10 @@
 30450 = {
 	name = "S_wiE_topeL_k" #Swietopelk I
 	dynasty = 175
-	
-	religion = "catholic"
+
+	rite = "roman_rite"
 	culture = "polish"
-	
+
 	father = 221750
 	1193.1.1 = {
 		birth = "1193.1.1"
@@ -1616,13 +1661,13 @@
 30451 = {
 	name = "S_wiE_topeL_k" #Swietopelk II
 	dynasty = 175
-	
-	religion = "catholic"
+
+	rite = "roman_rite"
 	culture = "polish"
-	
+
 	father = 221755
 	mother = 221567
-	
+
 	1195.1.1 = {
 		birth = "1195.1.1"
 	}
@@ -1634,13 +1679,13 @@
 30452 = {
 	name = "WarcisL_aw" #Wartislaw I
 	dynasty = 175
-	
-	religion = "catholic"
+
+	rite = "roman_rite"
 	culture = "polish"
-	
+
 	father = 221755
 	mother = 221567
-	
+
 	1197.1.1 = {
 		birth = "1197.1.1"
 	}
@@ -1652,13 +1697,13 @@
 30453 = {
 	name = "Sambor" #Sambor II
 	dynasty = 175
-	
-	religion = "catholic"
+
+	rite = "roman_rite"
 	culture = "polish"
-	
+
 	father = 221755
 	mother = 221567
-	
+
 	1206.1.1 = {
 		birth = "1206.1.1"
 	}
@@ -1673,13 +1718,13 @@
 30454 = {
 	name = "Ratibor"
 	dynasty = 175
-	
-	religion = "catholic"
+
+	rite = "roman_rite"
 	culture = "polish"
-	
+
 	father = 221755
 	mother = 221567
-	
+
 	1212.1.1 = {
 		birth = "1212.1.1"
 	}
@@ -1692,13 +1737,13 @@
 	name = "WitosL_awa"
 	female = yes
 	dynasty = 175
-	
-	religion = "catholic"
+
+	rite = "roman_rite"
 	culture = "polish"
-	
+
 	father = 221755
 	mother = 221567
-	
+
 	1205.1.1 = {
 		birth = "1205.1.1"
 	}
@@ -1711,13 +1756,13 @@
 	name = "MirosL_awa"
 	female = yes
 	dynasty = 175
-	
-	religion = "catholic"
+
+	rite = "roman_rite"
 	culture = "polish"
-	
+
 	father = 221755
 	mother = 221567
-	
+
 	1190.1.1 = {
 		birth = "1190.1.1"
 	}
@@ -1730,13 +1775,13 @@
 	name = "Jadwiga"
 	female = yes
 	dynasty = 175
-	
-	religion = "catholic"
+
+	rite = "roman_rite"
 	culture = "polish"
-	
+
 	father = 221755
 	mother = 221567
-	
+
 	1200.1.1 = {
 		birth = "1200.1.1"
 	}
@@ -1748,20 +1793,20 @@
 30458 = {
 	name = "Mszczuj" #Mszczuj II
 	dynasty = 175
-	
-	religion = "catholic"
+
+	rite = "roman_rite"
 	culture = "polish"
-	
+
 	father = 30451
-	
-	
+
+
 	1228.1.1 = {
 		birth = "1228.1.1"
 	}
 	1248.1.1 = {
 		add_spouse = 30471
 	}
-	
+
 	1294.12.25 = {
 		death = "1294.12.25"
 	}
@@ -1770,13 +1815,13 @@
 30459 = {
 	name = "WarcisL_aw" #Wartislaw II
 	dynasty = 175
-	
-	religion = "catholic"
+
+	rite = "roman_rite"
 	culture = "polish"
-	
+
 	father = 30451
-	
-	
+
+
 	1227.1.1 = {
 		birth = "1227.1.1"
 	}
@@ -1788,13 +1833,13 @@
 30460 = {
 	name = "Jan"
 	dynasty = 175
-	
-	religion = "catholic"
+
+	rite = "roman_rite"
 	culture = "polish"
-	
+
 	father = 30451
-	
-	
+
+
 	1230.1.1 = {
 		birth = "1230.1.1"
 	}
@@ -1807,13 +1852,13 @@
 	name = "Eufemia"
 	female = yes
 	dynasty = 175
-	
-	religion = "catholic"
+
+	rite = "roman_rite"
 	culture = "polish"
-	
+
 	father = 30451
-	
-	
+
+
 	1225.1.1 = {
 		birth = "1225.1.1"
 	}
@@ -1826,13 +1871,13 @@
 	name = "Eufemia"
 	female = yes
 	dynasty = 175
-	
-	religion = "catholic"
+
+	rite = "roman_rite"
 	culture = "polish"
-	
+
 	father = 30458
 	mother = 30471
-	
+
 	1260.1.1 = {
 		birth = "1260.1.1"
 	}
@@ -1844,13 +1889,13 @@
 30464 = {
 	name = "SubisL_aw"
 	dynasty = 175
-	
-	religion = "catholic"
+
+	rite = "roman_rite"
 	culture = "polish"
-	
+
 	father = 30453
 	mother = 30470
-	
+
 	1235.1.1 = {
 		birth = "1235.1.1"
 	}
@@ -1863,13 +1908,13 @@
 	name = "SwinisL_awa"
 	female = yes
 	dynasty = 175
-	
-	religion = "catholic"
+
+	rite = "roman_rite"
 	culture = "polish"
-	
+
 	father = 30453
 	mother = 30470
-	
+
 	1240.1.1 = {
 		birth = "1240.1.1"
 	}
@@ -1883,13 +1928,13 @@
 	# AKA: Gertrude
 	female = yes
 	dynasty = 175
-	
-	religion = "catholic"
+
+	rite = "roman_rite"
 	culture = "polish"
-	
+
 	father = 30453
 	mother = 30470
-	
+
 	1250.1.1 = {
 		birth = "1250.1.1"
 	}
@@ -1902,13 +1947,13 @@
 	name = "Eufemia"
 	female = yes
 	dynasty = 175
-	
-	religion = "catholic"
+
+	rite = "roman_rite"
 	culture = "polish"
-	
+
 	father = 30453
 	mother = 30470
-	
+
 	1254.1.1 = {
 		birth = "1254.1.1"
 	}
@@ -1921,13 +1966,13 @@
 	name = "Salome"
 	female = yes
 	dynasty = 175
-	
-	religion = "catholic"
+
+	rite = "roman_rite"
 	culture = "polish"
-	
+
 	father = 30453
 	mother = 30470
-	
+
 	1255.1.1 = {
 		birth = "1255.1.1"
 	}
@@ -1945,13 +1990,13 @@
 	diplomacy = 5
 	intrigue = 6
 	stewardship = 8
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = generous
 	trait = education_intrigue_1
 	father = 30453
 	mother = 30470
-	
+
 	1230.1.1 = {
 		birth = "1230.1.1"
 	}
@@ -1968,7 +2013,7 @@
 	diplomacy = 5
 	intrigue = 4
 	stewardship = 4
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = arrogant
 	trait = temperate
@@ -1988,7 +2033,7 @@
 	diplomacy = 8
 	intrigue = 7
 	stewardship = 9
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = intellect_good_3
 	trait = education_stewardship_4
@@ -2010,7 +2055,7 @@
 	name = "ElZ_bieta"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471510
 	mother = 471555
@@ -2026,7 +2071,7 @@
 	name = "Kunegunda"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471510
 	mother = 471555
@@ -2042,7 +2087,7 @@
 	name = "ElZ_bieta"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471500
 	mother = 471503
@@ -2058,7 +2103,7 @@
 	name = "Kunegunda"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471500
 	mother = 471503
@@ -2077,7 +2122,7 @@
 	diplomacy = 8
 	intrigue = 8
 	stewardship = 7
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = ambitious
 	trait = education_diplomacy_3
@@ -2097,7 +2142,7 @@
 471515 = {
 	name = "Trojden"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125990
 	mother = 125313
@@ -2119,7 +2164,7 @@
 	diplomacy = 4
 	intrigue = 7
 	stewardship = 7
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = chaste
 	trait = education_martial_3
@@ -2140,7 +2185,7 @@
 	name = "Eufemia"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471515
 	mother = 471516
@@ -2155,7 +2200,7 @@
 471520 = {
 	name = "Kazimierz"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221525
 	mother = 125073
@@ -2179,7 +2224,7 @@
 471521 = {
 	name = "Kazimierz"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471515
 	mother = 471516
@@ -2194,7 +2239,7 @@
 471530 = {
 	name = "SiemomysL_"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471520
 	mother = 125907
@@ -2212,7 +2257,7 @@
 471533 = {
 	name = "PrzemysL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471530
 	mother = 30469
@@ -2227,7 +2272,7 @@
 471534 = {
 	name = "Leszek"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471530
 	mother = 30469
@@ -2242,7 +2287,7 @@
 471535 = {
 	name = "Kazimierz"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471530
 	mother = 30469
@@ -2257,7 +2302,7 @@
 471536 = {
 	name = "WL_adysL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471535
 	1327.1.2 = {
@@ -2275,7 +2320,7 @@
 	diplomacy = 6
 	intrigue = 7
 	stewardship = 4
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = arrogant
 	trait = education_stewardship_2
@@ -2291,7 +2336,7 @@
 	name = "ElZ_bieta"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471535
 	1308.1.2 = {
@@ -2306,7 +2351,7 @@
 	name = "Eufrozyna"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221555
 	1228.1.2 = {
@@ -2320,7 +2365,7 @@
 471550 = {
 	name = "BolesL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 7689
 	1224.1.1 = {
@@ -2339,7 +2384,7 @@
 	name = "Jadwiga"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471550
 	mother = 98038
@@ -2358,7 +2403,7 @@
 	diplomacy = 8
 	intrigue = 5
 	stewardship = 5
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = education_martial_2
 	father = 471570
@@ -2380,7 +2425,7 @@
 	diplomacy = 4
 	intrigue = 4
 	stewardship = 6
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = chaste
 	trait = calm
@@ -2402,7 +2447,7 @@
 	diplomacy = 8
 	intrigue = 7
 	stewardship = 7
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = lustful
 	trait = education_martial_2
@@ -2421,7 +2466,7 @@
 	diplomacy = 8
 	intrigue = 5
 	stewardship = 5
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = diligent
 	trait = arbitrary
@@ -2442,7 +2487,7 @@
 	diplomacy = 5
 	intrigue = 8
 	stewardship = 6
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = education_intrigue_1
 	1261.1.2 = {
@@ -2460,7 +2505,7 @@
 	diplomacy = 6
 	intrigue = 6
 	stewardship = 8
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = honest
 	trait = arrogant
@@ -2480,7 +2525,7 @@
 	diplomacy = 8
 	intrigue = 4
 	stewardship = 7
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = greedy
 	trait = craven
@@ -2501,7 +2546,7 @@
 	diplomacy = 4
 	intrigue = 8
 	stewardship = 6
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = diligent
 	trait = education_martial_3
@@ -2522,7 +2567,7 @@
 	diplomacy = 7
 	intrigue = 5
 	stewardship = 4
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = arrogant
 	trait = cynical
@@ -2539,7 +2584,7 @@
 471652 = {
 	name = "Henryk"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125905
 	mother = 96042
@@ -2564,7 +2609,7 @@
 	diplomacy = 6
 	intrigue = 8
 	stewardship = 6
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = lustful
 	trait = arrogant
@@ -2581,7 +2626,7 @@
 471700 = {
 	name = "BolesL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = education_martial_2
 	father = 471710
@@ -2597,7 +2642,7 @@
 471710 = {
 	name = "Bernard"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471735
 	mother = 33740
@@ -2615,7 +2660,7 @@
 471720 = {
 	name = "BolesL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471722
 	mother = 471723
@@ -2634,7 +2679,7 @@
 	name = "ElZ_bieta"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471710
 	mother = 471502
@@ -2649,7 +2694,7 @@
 471722 = {
 	name = "BolesL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471724
 	mother = 125980
@@ -2667,7 +2712,7 @@
 471723 = {
 	name = "GrzymisL_awa"
 	female = yes
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	1260.1.2 = {
 		birth = "1260.1.2"
@@ -2680,7 +2725,7 @@
 471724 = {
 	name = "WL_adysL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221555
 	1225.1.2 = {
@@ -2697,7 +2742,7 @@
 471725 = {
 	name = "WL_adysL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471720
 	mother = 471721
@@ -2712,7 +2757,7 @@
 471726 = {
 	name = "BolesL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471720
 	mother = 471721
@@ -2728,7 +2773,7 @@
 	name = "Euphemia"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471732
 	mother = 471733
@@ -2743,7 +2788,7 @@
 471730 = {
 	name = "BolesL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = generous
 	father = 471732
@@ -2765,7 +2810,7 @@
 471732 = {
 	name = "Henryk"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471734
 	mother = 125997
@@ -2788,7 +2833,7 @@
 	name = "ElZ_bieta"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471550
 	mother = 98038
@@ -2803,7 +2848,7 @@
 471734 = {
 	name = "BolesL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125905
 	mother = 96042
@@ -2824,7 +2869,7 @@
 471735 = {
 	name = "BolesL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = just
 	trait = greedy
@@ -2845,7 +2890,7 @@
 471736 = {
 	name = "WL_adysL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471732
 	mother = 471733
@@ -2866,7 +2911,7 @@
 471737 = {
 	name = "WacL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471730
 	mother = 96061
@@ -2881,7 +2926,7 @@
 471738 = {
 	name = "Ludwik"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = just
 	father = 471730
@@ -2898,7 +2943,7 @@
 	name = "Katarzyna"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471730
 	mother = 96061
@@ -2913,7 +2958,7 @@
 471740 = {
 	name = "Kazimierz"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471741
 	1280.1.2 = {
@@ -2930,7 +2975,7 @@
 471741 = {
 	name = "Mieszko"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471724
 	mother = 125980
@@ -2945,7 +2990,7 @@
 471742 = {
 	name = "WL_adysL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471740
 	mother = 471519
@@ -2960,7 +3005,7 @@
 471743 = {
 	name = "PrzemysL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471740
 	mother = 471519
@@ -2975,7 +3020,7 @@
 472900 = {
 	name = "BolesL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471515
 	mother = 471516
@@ -2984,7 +3029,7 @@
 	}
 	1325.1.2 = {
 		name = "Yuriy"
-		religion = "orthodox"
+		rite = byzantine_rite
 	}
 	1331.1.2 = {
 		add_spouse = 472901
@@ -2998,7 +3043,7 @@
 	name = "Eudoxia"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221525
 	mother = 125073
@@ -3017,7 +3062,7 @@
 	diplomacy = 7
 	intrigue = 6
 	stewardship = 4
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	trait = calm
 	trait = education_intrigue_1
@@ -3033,7 +3078,7 @@
 	name = "Adleta"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	father = 752
 	934.1.2 = {
@@ -3051,11 +3096,14 @@
 	diplomacy = 5
 	intrigue = 10
 	stewardship = 4
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	trait = education_intrigue_2
 	1044.1.2 = {
 		birth = "1044.1.2"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1094.1.2 = {
 		death = "1094.1.2"
@@ -3065,7 +3113,7 @@
 7689 = {
 	name = "WL_adysL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221561
 	mother = 222509
@@ -3080,7 +3128,7 @@
 7690 = {
 	name = "PrzemysL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 7689
 	1220.6.5 = {
@@ -3098,7 +3146,7 @@
 	name = "Konstancja"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 7690
 	mother = 125927
@@ -3117,11 +3165,14 @@
 	diplomacy = 6
 	intrigue = 8
 	stewardship = 7
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	trait = education_learning_3
 	1020.1.2 = {
 		birth = "1020.1.2"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1070.1.2 = {
 		death = "1070.1.2"
@@ -3131,7 +3182,7 @@
 125901 = {
 	name = "Mieszko"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 762
 	mother = 161257
@@ -3149,7 +3200,7 @@
 125903 = {
 	name = "BolesL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221537
 	mother = 212943
@@ -3164,7 +3215,7 @@
 125904 = {
 	name = "Konrad"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221537
 	mother = 212943
@@ -3179,7 +3230,7 @@
 125905 = {
 	name = "Henryk"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221537
 	mother = 212943
@@ -3202,7 +3253,7 @@
 	name = "Gertruda"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125905
 	mother = 96042
@@ -3218,7 +3269,7 @@
 	name = "Konstancja"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125905
 	mother = 96042
@@ -3233,7 +3284,7 @@
 125908 = {
 	name = "Mieszko"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125905
 	mother = 96042
@@ -3248,7 +3299,7 @@
 125909 = {
 	name = "Henryk"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = honest
 	father = 471652
@@ -3264,7 +3315,7 @@
 	}
 	1287.1.1 = {
 		add_spouse = 33741
-	}	
+	}
 	1290.6.24 = {
 		death = "1290.6.24"
 	}
@@ -3273,7 +3324,7 @@
 125910 = {
 	name = "Konrad"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125905
 	mother = 96042
@@ -3295,7 +3346,7 @@
 	name = "Anna"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125910
 	mother = 125979
@@ -3310,7 +3361,7 @@
 125912 = {
 	name = "Henryk"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125910
 	mother = 125979
@@ -3328,7 +3379,7 @@
 125913 = {
 	name = "Henryk"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125912
 	mother = 125998
@@ -3347,7 +3398,7 @@
 	name = "Jadwiga"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = education_learning_3
 	father = 125913
@@ -3363,7 +3414,7 @@
 125915 = {
 	name = "Henryk"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125913
 	mother = 33746
@@ -3380,7 +3431,7 @@
 	name = "Salomea"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125913
 	mother = 33746
@@ -3396,7 +3447,7 @@
 	name = "Agnieszka"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125913
 	mother = 33746
@@ -3411,7 +3462,7 @@
 125918 = {
 	name = "Konrad"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125912
 	mother = 125998
@@ -3432,7 +3483,7 @@
 125919 = {
 	name = "BolesL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125912
 	mother = 125998
@@ -3448,7 +3499,7 @@
 	name = "Agnieszka"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125912
 	mother = 125998
@@ -3463,7 +3514,7 @@
 125921 = {
 	name = "Jan"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125912
 	mother = 125998
@@ -3482,7 +3533,7 @@
 	name = "Katarzyna"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125912
 	mother = 125998
@@ -3497,7 +3548,7 @@
 125923 = {
 	name = "PrzemysL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125912
 	mother = 125998
@@ -3515,7 +3566,7 @@
 125924 = {
 	name = "Konrad"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = education_learning_3
 	father = 125910
@@ -3532,7 +3583,7 @@
 	name = "Eufemia"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125910
 	mother = 125979
@@ -3547,7 +3598,7 @@
 125926 = {
 	name = "PrzemysL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125910
 	mother = 125979
@@ -3563,7 +3614,7 @@
 	name = "ElZ_bieta"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125905
 	mother = 96042
@@ -3578,7 +3629,7 @@
 125928 = {
 	name = "WL_adysL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = education_learning_3
 	father = 125905
@@ -3595,7 +3646,7 @@
 	name = "Agnieszka"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471734
 	mother = 125997
@@ -3611,7 +3662,7 @@
 	name = "Hedwig"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471732
 	mother = 471733
@@ -3626,7 +3677,7 @@
 125931 = {
 	name = "Henryk"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = generous
 	trait = just
@@ -3650,7 +3701,7 @@
 	name = "ElZ_bieta"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125931
 	mother = 125999
@@ -3666,7 +3717,7 @@
 	name = "Eufemia"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125931
 	mother = 125999
@@ -3682,7 +3733,7 @@
 	name = "Jadwiga"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471734
 	mother = 125997
@@ -3698,7 +3749,7 @@
 	name = "Judyta"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471735
 	mother = 33740
@@ -3714,7 +3765,7 @@
 	name = "Anna"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471735
 	mother = 33740
@@ -3730,7 +3781,7 @@
 	name = "Konstancja"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471710
 	mother = 471502
@@ -3745,7 +3796,7 @@
 125938 = {
 	name = "Henryk"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471710
 	mother = 471502
@@ -3760,7 +3811,7 @@
 125939 = {
 	name = "Henryk"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471735
 	mother = 33740
@@ -3778,7 +3829,7 @@
 125940 = {
 	name = "BolesL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471735
 	mother = 33740
@@ -3796,7 +3847,7 @@
 125941 = {
 	name = "MikoL_aj"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125940
 	mother = 462144
@@ -3811,7 +3862,7 @@
 125942 = {
 	name = "Bernard"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471734
 	mother = 125997
@@ -3826,7 +3877,7 @@
 125943 = {
 	name = "Konrad"
 	dynasty_house = house_piast_silesia
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221531
 	mother = 212545
@@ -3841,7 +3892,7 @@
 125944 = {
 	name = "Mieszko"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = gluttonous
 	father = 221555
@@ -3857,7 +3908,7 @@
 125946 = {
 	name = "WL_adysL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471741
 	1275.1.2 = {
@@ -3874,7 +3925,7 @@
 125947 = {
 	name = "Jan"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = education_learning_3
 	father = 125946
@@ -3891,7 +3942,7 @@
 	name = "Anna"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125946
 	mother = 125995
@@ -3907,7 +3958,7 @@
 	name = "Anna"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471740
 	mother = 471519
@@ -3923,7 +3974,7 @@
 	name = "Jolanta"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471740
 	mother = 471519
@@ -3938,7 +3989,7 @@
 125951 = {
 	name = "BolesL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471740
 	mother = 471519
@@ -3954,7 +4005,7 @@
 	name = "ElZ_bieta"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = beauty_good_1
 	father = 471741
@@ -3969,7 +4020,7 @@
 125953 = {
 	name = "Kazimierz"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471724
 	mother = 125980
@@ -3984,7 +4035,7 @@
 125954 = {
 	name = "BolesL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125953
 	1276.1.2 = {
@@ -3998,7 +4049,7 @@
 125955 = {
 	name = "WL_adysL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125953
 	1277.1.2 = {
@@ -4015,7 +4066,7 @@
 125956 = {
 	name = "Kazimierz"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125955
 	1312.1.2 = {
@@ -4030,7 +4081,7 @@
 	name = "Eufemia"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125955
 	1313.1.2 = {
@@ -4045,7 +4096,7 @@
 	name = "Agnieszka"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125955
 	mother = 451987
@@ -4061,7 +4112,7 @@
 	name = "Katarzyna"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125955
 	mother = 451987
@@ -4076,7 +4127,7 @@
 125960 = {
 	name = "BolesL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125955
 	mother = 451987
@@ -4092,7 +4143,7 @@
 	name = "Beata"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125955
 	mother = 451987
@@ -4108,7 +4159,7 @@
 	name = "Maria"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125953
 	1282.1.2 = {
@@ -4122,7 +4173,7 @@
 125963 = {
 	name = "Siemowit"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125953
 	1292.1.2 = {
@@ -4136,7 +4187,7 @@
 125964 = {
 	name = "Mieszko"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125953
 	1305.1.2 = {
@@ -4150,7 +4201,7 @@
 125965 = {
 	name = "BolesL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471722
 	mother = 471723
@@ -4168,7 +4219,7 @@
 125966 = {
 	name = "BolesL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125965
 	mother = 125933
@@ -4183,7 +4234,7 @@
 125967 = {
 	name = "WacL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125965
 	mother = 125933
@@ -4198,7 +4249,7 @@
 125968 = {
 	name = "Albert"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471722
 	mother = 471723
@@ -4214,7 +4265,7 @@
 	name = "Konstancja"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471724
 	mother = 125980
@@ -4229,7 +4280,7 @@
 125970 = {
 	name = "PrzemysL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471724
 	mother = 125980
@@ -4247,7 +4298,7 @@
 125971 = {
 	name = "Leszek"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125970
 	mother = 125989
@@ -4266,7 +4317,7 @@
 	name = "Anna"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125970
 	mother = 125989
@@ -4281,7 +4332,7 @@
 125974 = {
 	name = "BolesL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125973
 	mother = 222823
@@ -4296,7 +4347,7 @@
 125975 = {
 	name = "Leszek"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125973
 	1162.1.1 = {
@@ -4311,7 +4362,7 @@
 	name = "Jadwiga"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 7689
 	1218.1.1 = {
@@ -4325,7 +4376,7 @@
 125977 = {
 	name = "PrzemysL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 7690
 	mother = 125927
@@ -4350,7 +4401,7 @@
 	name = "Ryksa_ElZ_bieta"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125977
 	mother = 126001
@@ -4366,7 +4417,7 @@
 	name = "Salomea"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 7689
 	1225.1.1 = {
@@ -4381,7 +4432,7 @@
 	name = "Eufemia"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 7689
 	1230.1.1 = {
@@ -4396,7 +4447,7 @@
 	name = "Salomea"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221524
 	mother = 125134
@@ -4411,7 +4462,7 @@
 125982 = {
 	name = "BolesL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = chaste
 	father = 221524
@@ -4431,7 +4482,7 @@
 125983 = {
 	name = "BolesL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221525
 	mother = 125073
@@ -4452,7 +4503,7 @@
 125984 = {
 	name = "Leszek"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471520
 	mother = 125907
@@ -4470,7 +4521,7 @@
 125985 = {
 	name = "Siemowit"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471520
 	mother = 471540
@@ -4489,7 +4540,7 @@
 	name = "Eufemia"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471520
 	mother = 471540
@@ -4504,7 +4555,7 @@
 125987 = {
 	name = "Siemowit"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221525
 	mother = 125073
@@ -4522,7 +4573,7 @@
 125988 = {
 	name = "Konrad"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125987
 	mother = 125124
@@ -4541,7 +4592,7 @@
 	name = "Anna"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125988
 	mother = 125934
@@ -4556,7 +4607,7 @@
 125990 = {
 	name = "BolesL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125987
 	mother = 125124
@@ -4577,7 +4628,7 @@
 125991 = {
 	name = "Siemowit"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125990
 	mother = 125313
@@ -4592,7 +4643,7 @@
 125992 = {
 	name = "WacL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125990
 	mother = 96050
@@ -4610,7 +4661,7 @@
 125993 = {
 	name = "BolesL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125992
 	mother = 125319
@@ -4626,7 +4677,7 @@
 	name = "Anna"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125992
 	mother = 125319
@@ -4642,7 +4693,7 @@
 	name = "Eufrozyna"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125990
 	mother = 96050
@@ -4658,7 +4709,7 @@
 	name = "Judyta"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221525
 	mother = 125073
@@ -4672,7 +4723,7 @@
 
 96071 = {
 	name = "Hipolit"
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	trait = education_learning_3
 	965.1.1 = {
@@ -4685,7 +4736,7 @@
 
 96072 = {
 	name = "Stefan"
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	971.1.1 = {
 		birth = "971.1.1"
@@ -4697,10 +4748,13 @@
 
 96075 = {
 	name = "Marcin"		#Archbishop of Gniezno
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	1043.1.1 = {
 		birth = "1043.1.1"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1112.1.1 = {
 		death = "1112.1.1"
@@ -4709,7 +4763,7 @@
 
 96076 = {
 	name = "Jakub"
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	1074.1.1 = {
 		birth = "1074.1.1"
@@ -4722,7 +4776,7 @@
 96077 = {
 	name = "JanisL_aw"
 	dynasty = 21012
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	1099.1.1 = {
 		birth = "1099.1.1"
@@ -4734,7 +4788,7 @@
 
 96079 = {
 	name = "BogumiL_"
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	1125.1.1 = {
 		birth = "1125.1.1"
@@ -4746,7 +4800,7 @@
 
 96080 = {
 	name = "Piotr"
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	1125.1.1 = {
 		birth = "1125.1.1"
@@ -4758,7 +4812,7 @@
 
 96081 = {
 	name = "Henryk"
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	1150.1.1 = {
 		birth = "1150.1.1"
@@ -4770,7 +4824,7 @@
 
 96082 = {
 	name = "Wincenty"
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	1176.1.1 = {
 		birth = "1176.1.1"
@@ -4783,7 +4837,7 @@
 96083 = {
 	name = "PeL_ka"
 	dynasty = 21016
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	1181.1.1 = {
 		birth = "1181.1.1"
@@ -4795,7 +4849,7 @@
 
 96084 = {
 	name = "Janusz"
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	1203.1.1 = {
 		birth = "1203.1.1"
@@ -4807,7 +4861,7 @@
 
 96085 = {
 	name = "Marcin"
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = education_learning_3
 	1225.1.1 = {
@@ -4820,7 +4874,7 @@
 
 96086 = {
 	name = "Jakub"
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = education_learning_4
 	1247.1.1 = {
@@ -4833,7 +4887,7 @@
 
 96087 = {
 	name = "BorzysL_aw"
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	1256.1.1 = {
 		birth = "1256.1.1"
@@ -4845,7 +4899,7 @@
 
 96088 = {
 	name = "JanisL_aw"
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	1279.1.1 = {
 		birth = "1279.1.1"
@@ -4858,11 +4912,14 @@
 96089 = {
 	name = "Krystyn"
 	dynasty = 21010
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	trait = education_martial_2
 	1049.1.1 = {
 		birth = "1049.1.1"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1112.1.1 = {
 		death = "1112.1.1"
@@ -4872,7 +4929,7 @@
 96090 = {
 	name = "Krystyn"
 	dynasty = 21010
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 96089
 	1083.1.1 = {
@@ -4886,10 +4943,13 @@
 96091 = {
 	name = "Maciej"
 	dynasty = 11114
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	1043.1.1 = {
 		birth = "1043.1.1"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1110.1.1 = {
 		death = "1110.1.1"
@@ -4899,7 +4959,7 @@
 96092 = {
 	name = "Andrzej"
 	dynasty = 11114
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 96091
 	1075.1.1 = {
@@ -4913,10 +4973,13 @@
 96093 = {
 	name = "WL_ost"
 	dynasty = 10111
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	1045.1.1 = {
 		birth = "1045.1.1"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1116.1.1 = {
 		death = "1116.1.1"
@@ -4926,7 +4989,7 @@
 96094 = {
 	name = "Piotr"
 	dynasty = 10111
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = generous
 	father = 96093
@@ -4935,7 +4998,7 @@
 	}
 	1116.1.1 = {
 		add_spouse = 96095
-	}	
+	}
 	1153.4.16 = {
 		death = "1153.4.16"
 	}
@@ -4944,7 +5007,7 @@
 96096 = {
 	name = "Wszebor"
 	dynasty = 10111
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 96094
 	mother = 96095
@@ -4959,7 +5022,7 @@
 96097 = {
 	name = "SwiE_tosL_aw"
 	dynasty = 10111
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 96094
 	mother = 96095
@@ -4973,10 +5036,13 @@
 
 96098 = {
 	name = "Lambert"
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	1005.1.1 = {
 		birth = "1005.1.1"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1071.8.22 = {
 		death = "1071.8.22"
@@ -4985,10 +5051,13 @@
 
 96099 = {
 	name = "Lambert"
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	1035.1.1 = {
 		birth = "1035.1.1"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1101.1.1 = {
 		death = "1101.1.1"
@@ -4997,10 +5066,13 @@
 
 96100 = {
 	name = "CzesL_aw"
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	1047.1.1 = {
 		birth = "1047.1.1"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1103.1.1 = {
 		death = "1103.1.1"
@@ -5009,7 +5081,7 @@
 
 96105 = {
 	name = "Mateusz"
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	1099.1.1 = {
 		birth = "1099.1.1"
@@ -5021,7 +5093,7 @@
 
 96106 = {
 	name = "Gedko"
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	1127.1.1 = {
 		birth = "1127.1.1"
@@ -5033,7 +5105,7 @@
 
 96107 = {
 	name = "PeL_ka"
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	1127.1.1 = {
 		birth = "1127.1.1"
@@ -5045,7 +5117,7 @@
 
 96108 = {
 	name = "Wincenty"
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = education_learning_4
 	1160.1.1 = {
@@ -5059,7 +5131,7 @@
 96109 = {
 	name = "Iwo"
 	dynasty = 21021
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	trait = humble
 	1163.1.1 = {
@@ -5072,7 +5144,7 @@
 
 96110 = {
 	name = "WiesL_aw"
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	1174.1.1 = {
 		birth = "1174.1.1"
@@ -5085,7 +5157,7 @@
 96111 = {
 	name = "Prendota"
 	dynasty = 21021
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	1200.1.1 = {
 		birth = "1200.1.1"
@@ -5098,7 +5170,7 @@
 96112 = {
 	name = "PaweL_"
 	dynasty = 21023
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	1226.1.1 = {
 		birth = "1226.1.1"
@@ -5110,7 +5182,7 @@
 
 96114 = {
 	name = "Jan"
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	1250.1.1 = {
 		birth = "1250.1.1"
@@ -5122,7 +5194,7 @@
 
 96115 = {
 	name = "Jan"
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	1279.1.1 = {
 		birth = "1279.1.1"
@@ -5134,7 +5206,7 @@
 
 96116 = {
 	name = "Jan"
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	1283.1.1 = {
 		birth = "1283.1.1"
@@ -5147,10 +5219,13 @@
 96117 = {
 	name = "PrzemysL_aw"
 	dynasty = 21025
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	1046.1.1 = {
 		birth = "1046.1.1"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1107.1.1 = {
 		death = "1107.1.1"
@@ -5160,7 +5235,7 @@
 96118 = {
 	name = "Jerzy"
 	dynasty = 21025
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 96117
 	1074.1.1 = {
@@ -5175,7 +5250,7 @@
 	name = "Hedwig"
 	female = yes
 	dynasty = 175
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 30451
 	1212.1.1 = {
@@ -5190,7 +5265,7 @@
 	name = "Beatrycza" # Beatrycza of Schweidnitz
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125912
 	mother = 125998
@@ -5206,7 +5281,7 @@
 82232 = {
 	name = "Popiel"
 	dynasty = 9120
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	trait = callous
 	trait = lustful
@@ -5228,7 +5303,7 @@
 82237 = {
 	name = "SobiesL_aw"
 	dynasty = 9122
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	father = 194093
 	830.1.1 = {
@@ -5242,7 +5317,7 @@
 82238 = {
 	name = "Racibor"
 	dynasty = 9122
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	father = 82237
 	882.1.1 = {
@@ -5258,7 +5333,7 @@
 82239 = {
 	name = "Niklot"
 	dynasty = 9122
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	father = 82238
 	932.1.1 = {
@@ -5274,7 +5349,7 @@
 82240 = {
 	name = "Racibor"
 	dynasty = 9122
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	father = 82239
 	967.1.1 = {
@@ -5290,11 +5365,14 @@
 82241 = {
 	name = "S_wiE_tobor"
 	dynasty = 9122
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	father = 82240
 	1023.1.1 = {
 		birth = "1023.1.1"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1079.1.1 = {
 		death = "1079.1.1"
@@ -5307,7 +5385,7 @@
 82242 = {
 	name = "WarcisL_aw"
 	dynasty = 9121
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	father = 194083
 	830.1.1 = {
@@ -5324,7 +5402,7 @@
 	name = "Leszek"
 	dynasty = 9121
 	father = 82242
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	870.1.1 = {
 		birth = "871.1.1"
@@ -5339,7 +5417,7 @@
 	name = "WsiesL_aw"
 	dynasty = 9121
 	father = 82243
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	911.1.1 = {
 		birth = "911.1.1"
@@ -5355,7 +5433,7 @@
 	name = "BogusL_aw"
 	dynasty = 9121
 	father = 82244
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	945.1.1 = {
 		birth = "945.1.1"
@@ -5371,10 +5449,13 @@
 	name = "WL_odzimierz"
 	dynasty = 9121
 	father = 82245
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	983.1.1 = {
 		birth = "983.1.1"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1055.1.1 = {
 		death = "1055.1.1"
@@ -5387,10 +5468,13 @@
 	name = "WarcisL_aw"
 	dynasty = 9121
 	father = 82246
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	1044.1.1 = {
 		birth = "1044.1.1"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1101.1.1 = {
 		death = "1101.1.1"
@@ -5403,7 +5487,7 @@
 82248 = {
 	name = "Drogomir"
 	dynasty = 9123
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	810.1.1 = {
 		birth = "810.1.1"
@@ -5419,7 +5503,7 @@
 	name = "Drogowit"
 	dynasty = 9123
 	father = 82248
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	847.1.1 = {
 		birth = "847.1.1"
@@ -5433,7 +5517,7 @@
 	name = "Goscimir"
 	dynasty = 9123
 	father = 82248
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	849.1.1 = {
 		birth = "849.1.1"
@@ -5447,7 +5531,7 @@
 	name = "Przedabog"
 	dynasty = 9123
 	father = 82249
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	910.1.1 = {
 		birth = "910.1.1"
@@ -5462,7 +5546,7 @@
 	dynasty = 9123
 	father = 82249
 	culture = "polish"
-	religion = "catholic"
+	rite = roman_rite
 	921.1.1 = {
 		birth = "921.1.1"
 	}
@@ -5476,9 +5560,12 @@
 	dynasty = 9123
 	father = 82252
 	culture = "polish"
-	religion = "catholic"
+	rite = roman_rite
 	972.1.1 = {
 		birth = "972.1.1"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1060.1.1 = {
 		death = "1060.1.1"
@@ -5491,9 +5578,12 @@
 	dynasty = 9123
 	father = 82253
 	culture = "polish"
-	religion = "catholic"
+	rite = roman_rite
 	1020.1.1 = {
 		birth = "1020.1.1"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1064.1.2 = {
 		add_spouse = 82221
@@ -5508,7 +5598,7 @@
 	name = "Tegomir"
 	dynasty = 9123
 	father = 82250
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	900.1.1 = {
 		birth = "900.1.1"
@@ -5522,7 +5612,7 @@
 	name = "Modlibog"
 	dynasty = 9123
 	father = 82255
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	951.1.1 = {
 		birth = "951.1.1"
@@ -5537,13 +5627,16 @@
 	name = "LutosL_aw"
 	dynasty = 9123
 	father = 82256
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	1014.1.1 = {
 		birth = "1014.1.1"
 	}
 	1034.5.12 = {
 		employer = 760
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1079.1.1 = {
 		death = "1079.1.1"
@@ -5553,7 +5646,7 @@
 82258 = {
 	name = "Lech"
 	dynasty = 9124
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	father = 194090
 	800.1.1 = {
@@ -5568,7 +5661,7 @@
 	name = "LechosL_aw"
 	dynasty = 9124
 	father = 82258
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	845.1.1 = {
 		birth = "845.1.1"
@@ -5584,7 +5677,7 @@
 	name = "Ostrowod"
 	dynasty = 9124
 	father = 82259
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	905.1.1 = {
 		birth = "905.1.1"
@@ -5600,7 +5693,7 @@
 	name = "PeL_czybog"
 	dynasty = 9124
 	father = 82259
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	950.1.1 = {
 		birth = "950.1.1"
@@ -5617,7 +5710,7 @@
 	name = "Nadbor"
 	dynasty = 9124
 	father = 82258
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	847.1.1 = {
 		birth = "847.1.1"
@@ -5633,7 +5726,7 @@
 	name = "Wolrad"
 	dynasty = 9124
 	father = 82262
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	903.1.1 = {
 		birth = "903.1.1"
@@ -5649,7 +5742,7 @@
 	name = "Lederg"
 	dynasty = 9124
 	father = 82263
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	950.1.1 = {
 		birth = "950.1.1"
@@ -5665,10 +5758,13 @@
 	name = "MS_cigniew"
 	dynasty = 9124
 	father = 82264
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	1022.1.1 = {
 		birth = "1022.1.1"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1061.1.1 = {
 		employer = 96098
@@ -5684,7 +5780,7 @@
 82291 = {
 	name = "SlezasL_aw"
 	dynasty = 9127
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	father = 194085
 	805.1.1 = {
@@ -5701,7 +5797,7 @@
 82292 = {
 	name = "Gniewosadka"
 	female = yes
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	825.1.1 = {
 		birth = "825.1.1"
@@ -5716,7 +5812,7 @@
 	dynasty = 9127
 	father = 82291
 	mother = 82292
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	844.1.1 = {
 		birth = "844.1.1"
@@ -5736,7 +5832,7 @@
 	dynasty = 9127
 	father = 82291
 	mother = 82292
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	847.1.1 = {
 		birth = "847.1.1"
@@ -5754,7 +5850,7 @@
 	dynasty = 9127
 	father = 82291
 	mother = 82292
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	851.1.1 = {
 		birth = "851.1.1"
@@ -5769,7 +5865,7 @@
 82296 = {
 	name = "SL_awomira"
 	female = yes
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	846.1.1 = {
 		birth = "846.1.1"
@@ -5785,7 +5881,7 @@
 	dynasty = 9127
 	father = 82293
 	mother = 82296
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	863.1.1 = {
 		birth = "863.1.1"
@@ -5803,7 +5899,7 @@
 	dynasty = 9127
 	father = 82293
 	mother = 82296
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	864.1.1 = {
 		birth = "864.1.1"
@@ -5820,7 +5916,7 @@
 	dynasty = 9127
 	father = 82293
 	mother = 82296
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	865.1.1 = {
 		birth = "865.1.1"
@@ -5837,7 +5933,7 @@
 	name = "MaL_ogost"
 	dynasty = 9127
 	father = 82299
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	900.1.1 = {
 		birth = "900.1.1"
@@ -5853,7 +5949,7 @@
 	name = "Mirogod"
 	dynasty = 9127
 	father = 82297
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	912.1.1 = {
 		birth = "912.1.1"
@@ -5869,7 +5965,7 @@
 	name = "Uniedrog"
 	dynasty = 9127
 	father = 82300
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	960.1.1 = {
 		birth = "960.1.1"
@@ -5885,10 +5981,13 @@
 	name = "Odolan"
 	dynasty = 9127
 	father = 82302
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	1000.1.1 = {
 		birth = "1000.1.1"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1060.1.1 = {
 		death = "1060.1.1"
@@ -5900,7 +5999,7 @@
 82304 = {
 	name = "WratysL_aw"
 	dynasty = 9128
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	815.1.1 = {
 		birth = "815.1.1"
@@ -5921,7 +6020,7 @@
 	dynasty = 9127
 	father = 82291
 	mother = 82292
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	843.1.1 = {
 		birth = "843.1.1"
@@ -5939,7 +6038,7 @@
 	dynasty = 9128
 	father = 82304
 	mother = 82305
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	860.1.1 = {
 		birth = "860.1.1"
@@ -5956,7 +6055,7 @@
 	dynasty = 9128
 	father = 82304
 	mother = 82305
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	862.1.1 = {
 		birth = "862.1.1"
@@ -5974,7 +6073,7 @@
 	dynasty = 9128
 	father = 82304
 	mother = 82305
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	862.1.1 = {
 		birth = "862.1.1"
@@ -5990,7 +6089,7 @@
 	name = "Braturad"
 	dynasty = 9128
 	father = 82307
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	892.1.1 = {
 		birth = "892.1.1"
@@ -6006,7 +6105,7 @@
 	name = "IwosL_aw"
 	dynasty = 9128
 	father = 82309
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	929.1.1 = {
 		birth = "929.1.1"
@@ -6022,7 +6121,7 @@
 	name = "Strachomir"
 	dynasty = 9128
 	father = 82310
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	971.1.1 = {
 		birth = "971.1.1"
@@ -6038,10 +6137,13 @@
 	name = "Dargorad"
 	dynasty = 9128
 	father = 82311
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	1029.1.1 = {
 		birth = "1029.1.1"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1058.11.28 = {
 		employer = 96093
@@ -6057,7 +6159,7 @@
 82313 = {
 	name = "Jutrogost"
 	dynasty = 9129
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	father = 194087
 	820.1.1 = {
@@ -6077,7 +6179,7 @@
 	dynasty = 9127
 	father = 82291
 	mother = 82292
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	845.1.1 = {
 		birth = "843.1.1"
@@ -6094,7 +6196,7 @@
 	dynasty = 9129
 	father = 82313
 	mother = 82314
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	864.1.1 = {
 		birth = "864.1.1"
@@ -6111,7 +6213,7 @@
 	dynasty = 9129
 	father = 82313
 	mother = 82314
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	866.1.1 = {
 		birth = "866.1.1"
@@ -6127,7 +6229,7 @@
 	name = "Wilkomir"
 	dynasty = 9129
 	father = 82316
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	900.1.1 = {
 		birth = "900.1.1"
@@ -6144,7 +6246,7 @@
 	name = "Izbygniew"
 	dynasty = 9129
 	father = 82317
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	930.1.1 = {
 		birth = "930.1.1"
@@ -6161,7 +6263,7 @@
 	name = "Bytomir"
 	dynasty = 9129
 	father = 82318
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	960.1.1 = {
 		birth = "960.1.1"
@@ -6178,7 +6280,7 @@
 	name = "Niemironieg"
 	dynasty = 9129
 	father = 82319
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	1001.1.1 = {
 		birth = "1001.1.1"
@@ -6195,10 +6297,13 @@
 	name = "Tatomir"
 	dynasty = 9129
 	father = 82320
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	1025.1.1 = {
 		birth = "1025.1.1"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1058.11.28 = {
 		employer = 762
@@ -6214,7 +6319,7 @@
 82322 = {
 	name = "Bolko"
 	dynasty = 9130
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	father = 194088
 	770.1.1 = {
@@ -6229,7 +6334,7 @@
 	name = "Leszko"
 	father = 82322
 	dynasty = 9130
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	790.1.1 = {
 		birth = "790.1.1"
@@ -6245,7 +6350,7 @@
 	name = "Cieszko"
 	father = 82323
 	dynasty = 9130
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	810.1.1 = {
 		birth = "810.1.1"
@@ -6261,7 +6366,7 @@
 	name = "Cirzpibog"
 	father = 82323
 	dynasty = 9130
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	810.1.1 = {
 		birth = "810.1.1"
@@ -6279,7 +6384,7 @@
 82326 = {
 	name = "Przybyrada"
 	female = yes
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	825.1.1 = {
 		birth = "825.1.1"
@@ -6294,7 +6399,7 @@
 	father = 82325
 	mother = 82326
 	dynasty = 9130
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	843.1.1 = {
 		birth = "843.1.1"
@@ -6312,7 +6417,7 @@
 	father = 82325
 	mother = 82326
 	dynasty = 9130
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	845.1.1 = {
 		birth = "845.1.1"
@@ -6329,7 +6434,7 @@
 	father = 82325
 	mother = 82326
 	dynasty = 9130
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	847.1.1 = {
 		birth = "847.1.1"
@@ -6346,7 +6451,7 @@
 	father = 82325
 	mother = 82326
 	dynasty = 9130
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	849.1.1 = {
 		birth = "849.1.1"
@@ -6362,7 +6467,7 @@
 	name = "DrogosL_aw"
 	father = 82327
 	dynasty = 9130
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	880.1.1 = {
 		birth = "880.1.1"
@@ -6378,7 +6483,7 @@
 	name = "Bronisad"
 	father = 82327
 	dynasty = 9130
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	908.1.1 = {
 		birth = "908.1.1"
@@ -6394,7 +6499,7 @@
 	name = "ZwnisL_aw"
 	father = 82332
 	dynasty = 9130
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	940.1.1 = {
 		birth = "940.1.1"
@@ -6410,10 +6515,13 @@
 	name = "S_wiE_topeL_k"
 	father = 82333
 	dynasty = 9130
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	990.1.1 = {
 		birth = "990.1.1"
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1060.1.1 = {
 		death = "1060.1.1"
@@ -6423,13 +6531,13 @@
 168541 = {
 	name = "Dytryk"
 	dynasty = 699
-	religion = "catholic"
+	rite = roman_rite
 	culture = "polish"
 	father = 168538
 	995.1.1 = {
 		birth = yes
 	}
-	
+
 	1032.7.7 = {
 		death = yes
 	}
@@ -6438,7 +6546,7 @@
 170096 = {
 	name = "BolesL_aw"
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221520
 	mother = 221521
@@ -6454,7 +6562,7 @@
 	name = "Anna"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471732
 	mother = 471733
@@ -6470,7 +6578,7 @@
 	name = "Elisabeth"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471732
 	mother = 471733
@@ -6486,7 +6594,7 @@
 	name = "Helena"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 471732
 	mother = 471733
@@ -6502,7 +6610,7 @@
 	name = "Anna"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125990
 	mother = 125313
@@ -6518,7 +6626,7 @@
 	name = "MaL_gorzata"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125931
 	mother = 125999
@@ -6534,7 +6642,7 @@
 	name = "Alenta"
 	female = yes
 	dynasty = 175
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 30453
 	mother = 30470
@@ -6550,7 +6658,7 @@
 	name = "Agnes"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221537
 	mother = 212943
@@ -6566,7 +6674,7 @@
 	name = "Gertrud"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 221537
 	mother = 212943
@@ -6582,7 +6690,7 @@
 	name = "Ryksa"
 	female = yes
 	dynasty = 699
-	religion = "catholic"
+	rite = "roman_rite"
 	culture = "polish"
 	father = 125973
 	mother = 222823
@@ -6596,7 +6704,7 @@
 194079 = {
 	name = "DobiesL_aw"
 	dynasty = 9120
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = polish
 	733.1.1 = {
 		birth = yes
@@ -6608,7 +6716,7 @@
 194080 = {
 	name = "Popiel"
 	dynasty = 9120
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = polish
 	father = 194079
 	770.1.1 = {
@@ -6621,7 +6729,7 @@
 194081 = {
 	name = "SE_dziej"
 	dynasty = 9121
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = polish
 	733.1.1 = {
 		birth = yes
@@ -6633,7 +6741,7 @@
 194082 = {
 	name = "SE_dzimir"
 	dynasty = 9121
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = polish
 	father = 194081
 	770.1.1 = {
@@ -6646,7 +6754,7 @@
 194083 = {
 	name = "WiesL_aw"
 	dynasty = 9121
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = polish
 	father = 194082
 	810.1.1 = {
@@ -6659,7 +6767,7 @@
 194084 = {
 	name = "Witosz"
 	dynasty = 9127
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = polish
 	733.1.1 = {
 		birth = yes
@@ -6671,7 +6779,7 @@
 194085 = {
 	name = "Witosz"
 	dynasty = 9127
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = polish
 	father = 194084
 	770.1.1 = {
@@ -6684,7 +6792,7 @@
 194086 = {
 	name = "Sambor"
 	dynasty = 9129
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = polish
 	733.1.1 = {
 		birth = yes
@@ -6696,7 +6804,7 @@
 194087 = {
 	name = "WielisL_aw"
 	dynasty = 9129
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = polish
 	father = 194086
 	770.1.1 = {
@@ -6709,7 +6817,7 @@
 194088 = {
 	name = "Milzas"
 	dynasty = 9130
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = polish
 	733.1.1 = {
 		birth = yes
@@ -6721,7 +6829,7 @@
 194089 = {
 	name = "Siemowit"
 	dynasty = 9124
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = polish
 	733.1.1 = {
 		birth = yes
@@ -6733,7 +6841,7 @@
 194090 = {
 	name = "Nadbor"
 	dynasty = 9124
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = polish
 	father = 194089
 	770.1.1 = {
@@ -6746,7 +6854,7 @@
 194091 = {
 	name = "Witosz"
 	dynasty = 9122
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = polish
 	733.1.1 = {
 		birth = yes
@@ -6758,7 +6866,7 @@
 194092 = {
 	name = "Imram"
 	dynasty = 9122
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = polish
 	father = 194091
 	770.1.1 = {
@@ -6771,7 +6879,7 @@
 194093 = {
 	name = "Czcibor"
 	dynasty = 9122
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = polish
 	father = 194092
 	810.1.1 = {
@@ -6784,7 +6892,7 @@
 ###Archbishops of Gniezno
 302011 = {
 	name = "Radzim_Gaudenty"	#Archbishop of Gniezno
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	trait = education_learning_3
 	970.1.1 = {
@@ -6796,7 +6904,7 @@
 }
 302012 = {
 	name = "Bossuta_Stefan"	#Archbishop of Gniezno
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	trait = education_learning_2
 	950.1.2 = {
@@ -6808,11 +6916,14 @@
 }
 302013 = {
 	name = "MichaL_"	#Fictional Archbishop of Gniezno
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	trait = education_learning_2
 	1006.1.2 = {
 		birth = yes
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1075.1.2 = {
 		death = yes
@@ -6820,7 +6931,7 @@
 }
 302015 = {
 	name = "ZdzisL_aw"	#Archbishop of Gniezno
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	trait = education_learning_2
 	1115.1.2 = {
@@ -6834,10 +6945,13 @@
 302016 = {
 	name = "PaweL_"	#Lords of Poznan
 	dynasty = 21005	#Ciolek
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	1012.6.9 = {
 		birth = yes
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1063.4.9 = {
 		death = yes
@@ -6846,11 +6960,14 @@
 302017 = {
 	name = "Jan"	#Lords of Poznan
 	dynasty = 21005
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302016
 	1035.12.22 = {
 		birth = yes
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1103.11.18 = {
 		death = yes
@@ -6859,11 +6976,14 @@
 302018 = {
 	name = "Sieciech"	#Lords of Poznan
 	dynasty = 21005
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302016
 	1037.9.6 = {
 		birth = yes
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1096.2.23 = {
 		death = yes
@@ -6872,7 +6992,7 @@
 302019 = {
 	name = "PaweL_"	#Lords of Poznan
 	dynasty = 21005
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302017
 	1065.1.30 = {
@@ -6886,7 +7006,7 @@
 	name = "Zofia"	#Lords of Poznan
 	female = yes
 	dynasty = 21005
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302017
 	1066.7.13 = {
@@ -6899,7 +7019,7 @@
 302021 = {
 	name = "JarosL_aw"	#Lords of Poznan
 	dynasty = 21005
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302019
 	1098.9.18 = {
@@ -6912,7 +7032,7 @@
 302022 = {
 	name = "Jan"	#Lords of Poznan
 	dynasty = 21005
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302019
 	1124.5.5 = {
@@ -6926,7 +7046,7 @@
 	name = "Krystyna"	#Lords of Poznan
 	female = yes
 	dynasty = 21005
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302019
 	1152.9.10 = {
@@ -6939,7 +7059,7 @@
 302025 = {
 	name = "JarosL_aw"	#Lords of Poznan
 	dynasty = 21005
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302019
 	1154.5.21 = {
@@ -6953,10 +7073,13 @@
 302026 = {
 	name = "Zygmunt"	#Lords of Plock
 	dynasty = 2001001	#Ossowski
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	1034.11.3 = {
 		birth = yes
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1101.2.9 = {
 		death = yes
@@ -6965,7 +7088,7 @@
 302027 = {
 	name = "Marcin"		#Lords of Plock
 	dynasty = 2001001	#Ossowski
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302026
 	1060.12.17 = {
@@ -6978,7 +7101,7 @@
 302028 = {
 	name = "Maciej"		#Lords of Plock
 	dynasty = 2001001	#Ossowski
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302026
 	1063.6.29 = {
@@ -6992,7 +7115,7 @@
 	name = "Anastazja"	#Lords of Plock
 	female = yes
 	dynasty = 2001001	#Ossowski
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302026
 	1066.1.12 = {
@@ -7005,7 +7128,7 @@
 302030 = {
 	name = "Zygmunt"		#Lords of Plock
 	dynasty = 2001001	#Ossowski
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302027
 	1087.8.7 = {
@@ -7018,7 +7141,7 @@
 302031 = {
 	name = "Andrzej"	#Lords of Plock
 	dynasty = 2001001	#Ossowski
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302030
 	1130.12.30 = {
@@ -7032,7 +7155,7 @@
 	name = MaL_gorzata	#Lords of Plock
 	female = yes
 	dynasty = 2001001	#Ossowski
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302031
 	1163.2.4 = {
@@ -7045,7 +7168,7 @@
 302033 = {
 	name = Mateusz		#Lords of Plock
 	dynasty = 2001001	#Ossowski
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302031
 	1166.5.19 = {
@@ -7058,7 +7181,7 @@
 302034 = {
 	name = Marcin		#Lords of Plock
 	dynasty = 2001001	#Ossowski
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302031
 	1168.12.12 = {
@@ -7071,7 +7194,7 @@
 302035 = {
 	name = Maciej		#Lords of Plock
 	dynasty = 2001001	#Ossowski
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302031
 	1170.4.23 = {
@@ -7085,10 +7208,13 @@
 302036 = {
 	name = WacL_aw		#Lords of Czersk
 	dynasty = 21016		#Lis
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	1028.7.1 = {
 		birth = yes
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1092.4.26 = {
 		death = yes
@@ -7097,7 +7223,7 @@
 302037 = {
 	name = Wincenty		#Lords of Czersk
 	dynasty = 21016		#Lis
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302036
 	1059.8.28 = {
@@ -7110,7 +7236,7 @@
 302038 = {
 	name = Olga			#Lords of Czersk
 	dynasty = 21016		#Lis
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302036
 	female = yes
@@ -7124,7 +7250,7 @@
 302039 = {
 	name = WacL_aw		#Lords of Czersk
 	dynasty = 21016		#Lis
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302037
 	1095.11.14 = {
@@ -7137,7 +7263,7 @@
 302040 = {
 	name = BogumiL_		#Lords of Czersk
 	dynasty = 21016		#Lis
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302039
 	1127.10.22 = {
@@ -7150,7 +7276,7 @@
 302041 = {
 	name = Lech		#Lords of Czersk
 	dynasty = 21016		#Lis
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302040
 	1159.4.12 = {
@@ -7163,7 +7289,7 @@
 302042 = {
 	name = Kazimierz	#Lords of Czersk
 	dynasty = 21016		#Lis
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302040
 	1159.4.12 = {
@@ -7177,7 +7303,7 @@
 	name = Beata		#Lords of Czersk
 	female = yes
 	dynasty = 21016		#Lis
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302040
 	1163.2.16 = {
@@ -7191,10 +7317,13 @@
 302044 = {
 	name = Marian	#Lords of Lublin
 	dynasty = 2001000	#Kurowie
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	1041.3.24 = {
 		birth = yes
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1100.12.30 = {
 		death = yes
@@ -7203,7 +7332,7 @@
 302045 = {
 	name = StanisL_aw	#Lords of Lublin
 	dynasty = 2001000	#Kurowie
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302044
 	1074.3.24 = {
@@ -7216,7 +7345,7 @@
 302046 = {
 	name = Henryk		#Lords of Lublin
 	dynasty = 2001000	#Kurowie
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302045
 	1100.5.15 = {
@@ -7229,7 +7358,7 @@
 302047 = {
 	name = Piotr		#Lords of Lublin
 	dynasty = 2001000	#Kurowie
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302046
 	1129.3.22 = {
@@ -7242,7 +7371,7 @@
 302048 = {
 	name = Konrad		#Lords of Lublin
 	dynasty = 2001000	#Kurowie
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302047
 	1154.9.12 = {
@@ -7256,7 +7385,7 @@
 	name = Jolanta		#Lords of Lublin
 	female = yes
 	dynasty = 2001000	#Kurowie
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302047
 	1157.5.24 = {
@@ -7270,7 +7399,7 @@
 	name = Helena		#Lords of Lublin
 	female = yes
 	dynasty = 2001000	#Kurowie
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302047
 	1160.10.14 = {
@@ -7284,10 +7413,13 @@
 302051 = {
 	name = DobiesL_aw
 	dynasty = 2001002	#Licicawski
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	1002.10.9 = {
 		birth = 1002.10.9
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1064.9.12 = {
 		death = 1064.9.12
@@ -7296,11 +7428,14 @@
 302052 = {
 	name = Gaudenty
 	dynasty = 2001002	#Licicawski
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302051
 	1038.6.17 = {
 		birth = 1038.6.17
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1099.4.25 = {
 		death = 1099.4.25
@@ -7309,11 +7444,14 @@
 302053 = {
 	name = Henryk
 	dynasty = 2001002	#Licicawski
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302051
 	1044.5.19 = {
 		birth = 1044.5.19
+	}
+	1054.7.16 = {
+		rite = roman_rite
 	}
 	1102.3.18 = {
 		death = 1102.3.18
@@ -7322,7 +7460,7 @@
 302054 = {
 	name = Jakub
 	dynasty = 2001002	#Licicawski
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	father = 302052
 	1069.8.21 = {
@@ -7339,7 +7477,7 @@
 82273 = {
 	name = "Krakus"		#Legendary 1st ruler of Krakow
 	dynasty = 9124
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	686.1.1 = {
 		birth = "686.1.1"
@@ -7353,7 +7491,7 @@
 	female = yes
 	dynasty = 9124
 	father = 82273
-	religion = "slavic_pagan"
+	rite = "slavic_pagan"
 	culture = "polish"
 	708.1.1 = {
 		birth = "708.1.1"
@@ -7365,7 +7503,7 @@
 302066 = {
 	name = Lech
 	dynasty = 9124
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = polish
 	mother = 82274
 	735.1.1 = {
@@ -7379,7 +7517,7 @@
 	name = Wanda
 	female = yes
 	dynasty = 9124
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = polish
 	father = 302066
 	765.1.1 = {
@@ -7392,7 +7530,7 @@
 302055 = {
 	name = "Krak"
 	dynasty = 2001003	#z Wiślanie
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = polish
 	mother = 302067
 	793.7.15 = {
@@ -7406,7 +7544,7 @@
 	name = "Wanda"
 	female = yes
 	dynasty = 2001003	#z Wiślanie
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = polish
 	father = 302055
 	845.6.22 = {
@@ -7419,7 +7557,7 @@
 302056 = {
 	name = "Krak"
 	dynasty = 2001003	#z Wiślanie
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = polish
 	father = 302055
 	819.3.15 = {
@@ -7432,7 +7570,7 @@
 302057 = {
 	name = Lech
 	dynasty = 2001003	#z Wiślanie
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = polish
 	father = 302055
 	822.12.25 = {
@@ -7447,7 +7585,7 @@
 302058 = {
 	name = "Krak"
 	dynasty = 2001003	#z Wiślanie
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = polish
 	father = 302056
 	842.8.23 = {
@@ -7464,7 +7602,7 @@
 302060 = {
 	name = Lech
 	dynasty = 2001003	#z Wiślanie
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = polish
 	father = 302057
 	845.2.13 = {
@@ -7479,7 +7617,7 @@
 302061 = {
 	name = Aleksander
 	dynasty = 2001004	#z Lędzianie
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = polish
 	836.10.23 = {
 		birth = 836.10.23
@@ -7493,7 +7631,7 @@
 302062 = {
 	name = Maciej
 	dynasty = 2001005	#z Mazurie
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = polish
 	845.9.19 = {
 		birth = 845.9.19
@@ -7507,7 +7645,7 @@
 302063 = {
 	name = BorzysL_aw
 	dynasty = 2001006	#z Mazowszanie
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = polish
 	849.6.6 = {
 		birth = 849.6.6
@@ -7521,7 +7659,7 @@
 302064 = {
 	name = Stefan
 	dynasty = 2001007	#z Goplanie
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = polish
 	844.5.3 = {
 		birth = 844.5.3
@@ -7535,7 +7673,7 @@
 302065 = {
 	name = WacL_aw
 	dynasty = 2001008	#z Łęczycanie
-	religion = slavic_pagan
+	rite = slavic_pagan
 	culture = polish
 	848.1.21 = {
 		birth = 848.1.21
@@ -7548,7 +7686,7 @@
 gryfita_1 = {
 	name = "Mikolaj"
 	dynasty = polish_gryfita
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	1149.1.1 = {
 		birth = yes
@@ -7561,12 +7699,58 @@ gryfita_1 = {
 pala_1 = {
 	name = "Janusz"
 	dynasty = polish_pala
-	religion = catholic
+	rite = roman_rite
 	culture = polish
 	1149.1.1 = {
 		birth = yes
 	}
 	1202.1.1 = {
+		death = yes
+	}
+}
+
+#Bogumilus, archbishop of Gniezno and Camaldolese hermit
+camaldolese_2 = {
+	name = "BogumiL_"
+	dynasty = dynn_dobrowa
+	rite = roman_rite
+	culture = polish
+	trait = devoted
+	trait = education_learning_3
+	1135.1.1 = {
+		birth = yes
+	}
+	1204.1.1 = {
+		death = yes
+	}
+}
+
+#Fictional abbot
+eastern_cluniac_1 = {
+	name = "Mieszko"
+	rite = roman_rite
+	culture = polish
+	trait = devoted
+	trait = education_stewardship_2
+	1014.1.1 = {
+		birth = yes
+	}
+	1078.1.1 = {
+		death = yes
+	}
+}
+
+#Fictional abbot
+eastern_cluniac_2 = {
+	name = "Bernard"
+	rite = roman_rite
+	culture = polish
+	trait = devoted
+	trait = education_learning_2
+	1134.1.1 = {
+		birth = yes
+	}
+	1208.1.1 = {
 		death = yes
 	}
 }

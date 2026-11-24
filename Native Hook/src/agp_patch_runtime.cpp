@@ -5,8 +5,77 @@
 
 #include <cstdio>
 #include <cstring>
+#include <algorithm>
 
 namespace agp {
+namespace {
+struct PendingWrite {
+    std::uint8_t* address;
+    std::vector<std::uint8_t> before, after;
+};
+bool staging = false;
+std::vector<PendingWrite> pending;
+std::vector<void*> allocations;
+
+bool WriteDirect(std::uint8_t* address, const std::uint8_t* bytes, std::size_t count) {
+    DWORD old_protection = 0;
+    if (!VirtualProtect(address, count, PAGE_EXECUTE_READWRITE, &old_protection)) return false;
+    std::memcpy(address, bytes, count);
+    const bool copied = !std::memcmp(address, bytes, count);
+    const bool flushed = FlushInstructionCache(GetCurrentProcess(), address, count) != FALSE;
+    DWORD ignored = 0;
+    const bool restored = VirtualProtect(address, count, old_protection, &ignored) != FALSE;
+    return copied && flushed && restored;
+}
+}
+
+void BeginPatchTransaction() {
+    AbortPatchTransaction();
+    staging = true;
+}
+void AbortPatchTransaction() {
+    staging = false;
+    pending.clear();
+    for (auto* allocation : allocations) VirtualFree(allocation, 0, MEM_RELEASE);
+    allocations.clear();
+}
+bool CommitPatchTransaction(std::size_t fault_after) {
+    if (!staging) return false;
+    staging = false;
+    std::size_t attempted = 0;
+    bool ok = true;
+    for (const auto& write : pending) {
+        if (attempted == fault_after) { ok = false; break; }
+        ++attempted;
+        if (!WriteDirect(write.address, write.after.data(), write.after.size())) { ok = false; break; }
+    }
+    if (!ok) {
+        bool restored = true;
+        while (attempted) {
+            const auto& write = pending[--attempted];
+            restored = WriteDirect(write.address, write.before.data(), write.before.size()) && restored;
+        }
+        Log(restored ? "AGP: patch transaction rolled back and verified. Exit without saving." :
+            "AGP: PATCH ROLLBACK FAILED. Exit CK3 immediately without saving.");
+        // A thread might have entered a relay before rollback; keep allocations
+        // resident until process exit even when the original bytes were restored.
+        allocations.clear();
+        pending.clear();
+        return false;
+    }
+    allocations.clear();
+    pending.clear();
+    return true;
+}
+
+bool StageDetour(std::uint8_t* site, std::uint8_t* target, std::size_t overwrite) {
+    if (overwrite < 5 || !IsRel32Reachable(site + 5, target)) return false;
+    std::vector<std::uint8_t> bytes(overwrite, 0x90);
+    bytes[0] = 0xE9;
+    const auto delta = static_cast<std::int32_t>(target - (site + 5));
+    std::memcpy(bytes.data() + 1, &delta, sizeof(delta));
+    return WriteBytes(site, bytes.data(), bytes.size());
+}
 
 void Log(const char* message) {
 	char module_path[MAX_PATH]{};
@@ -29,15 +98,11 @@ void Log(const char* message) {
 }
 
 bool WriteBytes(std::uint8_t* address, const std::uint8_t* bytes, std::size_t count) {
-	DWORD old_protection = 0;
-	if (!VirtualProtect(address, count, PAGE_EXECUTE_READWRITE, &old_protection)) {
-		return false;
-	}
-	std::memcpy(address, bytes, count);
-	FlushInstructionCache(GetCurrentProcess(), address, count);
-	DWORD ignored = 0;
-	VirtualProtect(address, count, old_protection, &ignored);
-	return true;
+    if (staging) {
+        pending.push_back({address, {address, address + count}, {bytes, bytes + count}});
+        return true;
+    }
+    return WriteDirect(address, bytes, count);
 }
 
 bool GetTextSection(TextSection* result) {
@@ -92,7 +157,7 @@ bool IsRel32Reachable(const void* source_after_immediate, const void* target) {
 void WriteRel32(std::uint8_t* immediate, const void* target) {
 	const auto delta = reinterpret_cast<const std::uint8_t*>(target) - (immediate + 4);
 	const auto value = static_cast<std::int32_t>(delta);
-	std::memcpy(immediate, &value, sizeof(value));
+    WriteBytes(immediate, reinterpret_cast<const std::uint8_t*>(&value), sizeof(value));
 }
 
 std::uint8_t* AllocateNear(const void* target, std::size_t size) {
@@ -115,6 +180,7 @@ std::uint8_t* AllocateNear(const void* target, std::size_t size) {
 			if (candidate >= minimum && candidate < maximum && region_end >= candidate + size) {
 				if (auto* allocation = static_cast<std::uint8_t*>(VirtualAlloc(reinterpret_cast<void*>(candidate), size, MEM_RESERVE | MEM_COMMIT, PAGE_EXECUTE_READWRITE))) {
 					if (IsRel32Reachable(allocation, target)) {
+                        if (staging) allocations.push_back(allocation);
 						return allocation;
 					}
 					VirtualFree(allocation, 0, MEM_RELEASE);

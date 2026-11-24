@@ -1,0 +1,39 @@
+Manual exit-autosave reproduction: AGP enabled
+gog-ck3-1.21.0.3
+859f0d380098adcb130eb9d453458222749fcdf6d46126ad0ed99d78f9a0aa28
+Observed UTC: 2026-11-24T04:05:07.292102+00:00
+User action: unpaused, selected autosave, exited to desktop.
+Result: no completed autosave_exit.ck3; autosave_exit.ck3.tmp is zero bytes.
+
+AGP v1.1.0: starting executable/profile preflight.
+859f0d380098adcb130eb9d453458222749fcdf6d46126ad0ed99d78f9a0aa28
+gog-ck3-1.21.0.3
+gog
+female_effect_parent
+female_effect_real_parent
+male_effect_parent
+male_effect_real_parent
+female_pregnancy_a
+female_pregnancy_b
+male_carrier_a
+male_carrier_b
+female_native_parent
+male_native_parent
+female_native_override
+male_native_override
+create_mother
+create_father
+create_real_father
+history_parent
+father_persistence
+mother_persistence
+parent_reconstruction
+close_family
+reconstruction_resume
+family_role_writer
+family_role_reader
+family_role_reader_handled
+AGP v1.1.0: native patches committed. Gameplay acceptance is separate from patch preflight.
+
+[00:03:37][D][application.cpp:1259]: Quit: Quit from inside game
+[00:03:38][E][savegamemanagerbase.cpp:176]: Failed to write to disk: Exception in: C:\mnt\gsg\ck3\titus\cw\clausewitz\pdx_core\virtualfilesystem.cpp, line: 745. Description: Failed writing file

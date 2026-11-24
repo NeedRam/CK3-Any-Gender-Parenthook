@@ -1,0 +1,40 @@
+User-run compressed binary autosave reload; 2026-11-24
+Save SHA-256: ffd8e27f6acdc24dfd0f737f19de65465f63074f5c4664e090a574789f719b59
+Gamestate header: 5531010003008f0501000c0013000000ee000100
+
+AGP v1.1.0: starting executable/profile preflight.
+859f0d380098adcb130eb9d453458222749fcdf6d46126ad0ed99d78f9a0aa28
+gog-ck3-1.21.0.3
+gog
+female_effect_parent
+female_effect_real_parent
+male_effect_parent
+male_effect_real_parent
+female_pregnancy_a
+female_pregnancy_b
+male_carrier_a
+male_carrier_b
+female_native_parent
+male_native_parent
+female_native_override
+male_native_override
+create_mother
+create_father
+create_real_father
+history_parent
+father_persistence
+mother_persistence
+parent_reconstruction
+close_family
+reconstruction_resume
+family_role_writer
+family_role_reader
+family_role_reader_handled
+AGP v1.1.0: native patches committed. Gameplay acceptance is separate from patch preflight.
+
+[00:26:17][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 4 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_BEGIN agp_reload_121_distinct_roles
+[00:26:17][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 16 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_PASS agp_reload_121_distinct_roles
+[00:26:17][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 18 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_BEGIN agp_reload_121_history_roles
+[00:26:17][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 32 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_PASS agp_reload_121_history_roles
+[00:26:17][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 34 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_BEGIN agp_reload_121_ordinary_controls
+[00:26:17][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 77 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_PASS agp_reload_121_ordinary_controls

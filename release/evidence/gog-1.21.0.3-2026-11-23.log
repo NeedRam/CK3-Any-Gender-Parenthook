@@ -1,0 +1,77 @@
+AGP 1.1.0 local acceptance evidence; local date 2026-11-23
+gog-ck3-1.21.0.3
+859f0d380098adcb130eb9d453458222749fcdf6d46126ad0ed99d78f9a0aa28
+payload_sha256=093076fc5d60c5c5e16a8fba2b294f7b8cc73a644a5c9fb081e33d79eb9e0536
+
+Native runtime preflight and commit:
+AGP v1.1.0: starting executable/profile preflight.
+859f0d380098adcb130eb9d453458222749fcdf6d46126ad0ed99d78f9a0aa28
+gog-ck3-1.21.0.3
+gog
+female_effect_parent
+female_effect_real_parent
+male_effect_parent
+male_effect_real_parent
+female_pregnancy_a
+female_pregnancy_b
+male_carrier_a
+male_carrier_b
+female_native_parent
+male_native_parent
+female_native_override
+male_native_override
+create_mother
+create_father
+create_real_father
+history_parent
+father_persistence
+mother_persistence
+parent_reconstruction
+close_family
+reconstruction_resume
+family_role_writer
+family_role_reader
+family_role_reader_handled
+AGP v1.1.0: native patches committed. Gameplay acceptance is separate from patch preflight.
+
+serialized-startup:
+[20:49:07][D][jomini_effect_impl.cpp:444]: file: common/on_action/agp_acceptance.txt line: 4 (agp_acceptance_startup): AGP_ACCEPTANCE_BEGIN agp_native_121_setters_and_reassignment
+[20:49:07][D][jomini_effect_impl.cpp:444]: file: common/on_action/agp_acceptance.txt line: 35 (agp_acceptance_startup): AGP_ACCEPTANCE_PASS agp_native_121_setters_and_reassignment
+[20:49:07][D][jomini_effect_impl.cpp:444]: file: common/on_action/agp_acceptance.txt line: 37 (agp_acceptance_startup): AGP_ACCEPTANCE_BEGIN agp_native_121_create_and_family
+[20:49:07][D][jomini_effect_impl.cpp:444]: file: common/on_action/agp_acceptance.txt line: 55 (agp_acceptance_startup): AGP_ACCEPTANCE_PASS agp_native_121_create_and_family
+[20:49:07][D][jomini_effect_impl.cpp:444]: file: common/on_action/agp_acceptance.txt line: 57 (agp_acceptance_startup): AGP_ACCEPTANCE_BEGIN agp_native_121_pregnancy_carriers
+[20:49:07][D][jomini_effect_impl.cpp:444]: file: common/on_action/agp_acceptance.txt line: 75 (agp_acceptance_startup): AGP_ACCEPTANCE_PASS agp_native_121_pregnancy_carriers
+
+birth-and-history:
+[20:51:59][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 4 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_BEGIN agp_reload_121_distinct_roles
+[20:51:59][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 16 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_PASS agp_reload_121_distinct_roles
+[20:54:13][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 4 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_BEGIN agp_birth_setup_121_matrix
+[20:54:13][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 81 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_PASS agp_birth_setup_121_matrix
+[20:55:01][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 4 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_BEGIN agp_birth_check_121_matrix
+[20:55:01][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 79 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_PASS agp_birth_check_121_matrix
+[20:56:16][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 4 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_BEGIN agp_reload_121_distinct_roles
+[20:56:16][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 16 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_PASS agp_reload_121_distinct_roles
+[20:56:16][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 18 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_BEGIN agp_reload_121_history_roles
+[20:56:16][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 32 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_PASS agp_reload_121_history_roles
+[20:56:16][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 34 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_BEGIN agp_reload_121_ordinary_controls
+[20:56:16][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 61 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_PASS agp_reload_121_ordinary_controls
+
+final-session:
+[20:59:29][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 4 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_BEGIN agp_birth_check_121_matrix
+[20:59:29][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 79 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_PASS agp_birth_check_121_matrix
+[20:59:38][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 4 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_BEGIN agp_reload_121_distinct_roles
+[20:59:38][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 16 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_PASS agp_reload_121_distinct_roles
+[20:59:38][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 18 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_BEGIN agp_reload_121_history_roles
+[20:59:38][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 32 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_PASS agp_reload_121_history_roles
+[20:59:38][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 34 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_BEGIN agp_reload_121_ordinary_controls
+[20:59:38][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 77 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_PASS agp_reload_121_ordinary_controls
+[21:01:11][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 4 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_BEGIN agp_no_checks_setup_121_matrix
+[21:01:11][D][jomini_effect_impl.cpp:444]: file: events/agp_acceptance.txt line: 50 (agp_acceptance_run.1:immediate): AGP_ACCEPTANCE_PASS agp_no_checks_setup_121_matrix
+
+Known limitations:
+Birth tests used instant_birth; full-duration gestation was not tested.
+No make_pregnant_no_checks birth-result assertion was observed.
+Character-interaction visibility/acceptance and every Dynastic Priority rule remain untested.
+Only the locally installed GOG-marked executable was available.
+An exit-autosave write error was observed and remains unexplained:
+[22:35:21][E][savegamemanagerbase.cpp:176]: Failed to write to disk: Exception in: C:\mnt\gsg\ck3\titus\cw\clausewitz\pdx_core\virtualfilesystem.cpp, line: 745. Description: Failed writing file

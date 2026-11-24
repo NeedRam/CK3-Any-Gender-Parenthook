@@ -6,9 +6,9 @@ release ZIPs.
 
 The release builder creates three end-user downloads:
 
-- `AGP v1.0.2 Base Files (Manual Install).zip`
-- `AGP v1.0.2 Batch File Installer.zip`
-- `AGP v1.0.2 EXE Installer.zip`
+- `AGP v1.1.0 Base Files (Manual Install).zip`
+- `AGP v1.1.0 Batch File Installer.zip`
+- `AGP v1.1.0 EXE Installer.zip`
 
 Each archive contains only its selected installation method, the shared native
 payload, a focused README, the MIT license, and internal checksums.

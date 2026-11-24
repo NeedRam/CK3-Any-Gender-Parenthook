@@ -1,0 +1,42 @@
+{
+  "$schema": "../spec/compatibility-evidence.schema.json",
+  "schema_version": 1,
+  "kind": "agp_compatibility_evidence",
+  "observed_utc": "2026-11-24T00:50:00Z",
+  "observations": [
+    {
+      "source": "repository",
+      "root_kind": "agp_1_1_0_repository",
+      "relative_path": "Native Hook/build/dxcompiler.dll",
+      "role": "agp_proxy_artifact",
+      "sha256": "d66973d1fe9896f875d4b5311c8375d0efa5d227896058d50678ec30e657cc2e",
+      "size_bytes": 109568
+    },
+    {
+      "source": "repository",
+      "root_kind": "agp_1_1_0_repository",
+      "relative_path": "Native Hook/build/AGP Native Hook/agp_parenthook.dll",
+      "role": "agp_payload_artifact",
+      "sha256": "093076fc5d60c5c5e16a8fba2b294f7b8cc73a644a5c9fb081e33d79eb9e0536",
+      "size_bytes": 173056
+    },
+    {
+      "source": "installed_ck3",
+      "root_kind": "gog_ck3_1_21_0_3_binaries",
+      "relative_path": "ck3.exe",
+      "role": "supported_gog_executable",
+      "sha256": "859f0d380098adcb130eb9d453458222749fcdf6d46126ad0ed99d78f9a0aa28",
+      "size_bytes": 114758264
+    },
+    {
+      "source": "installed_ck3",
+      "root_kind": "gog_ck3_1_21_0_3_binaries",
+      "relative_path": "dxcompiler_original.dll",
+      "role": "original_game_compiler",
+      "sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+      "size_bytes": 20291584
+    }
+  ],
+  "absence_checks": [],
+  "presence_checks": []
+}

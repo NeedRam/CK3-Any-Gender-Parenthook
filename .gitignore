@@ -4,12 +4,15 @@
 !Native Hook/
 !Native Hook/**
 Native Hook/build/
+Native Hook/**/__pycache__/
+Native Hook/**/*.pyc
 
 !AGP Dynastic Priority/
 !AGP Dynastic Priority/**
+!AGP Dynastic Priority.mod
 
-!script_docs 1.19.0.6/
-!script_docs 1.19.0.6/**
+!script_docs 1.21.0.3/
+!script_docs 1.21.0.3/**
 
 !.vscode/
 !.vscode/**
@@ -29,6 +32,7 @@ Installer/python/**/*.pyc
 !release/
 !release/**
 release/out/
+release/__pycache__/
 
 !.github/
 !.github/**

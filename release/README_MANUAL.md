@@ -1,9 +1,11 @@
-# AGP v1.0.2 Base Files (Manual Install)
+> CK3 1.21.0.3 only. Compatibility uses exact verified game-file hashes, regardless of launcher storefront metadata. The optional Dynastic Priority add-on is not included.
+
+# AGP v1.1.0 Base Files (Manual Install)
 
 This package contains only the Any-Gender Parenthook native files for a manual
-installation on Windows x64 with Steam Crusader Kings III `1.19.0.6`.
+installation on Windows x64 with Crusader Kings III `1.21.0.3`.
 
-Use these steps only when the game's `binaries` folder contains Steam's
+Use these steps only when the game's `binaries` folder contains the game's
 original `dxcompiler.dll` and does not contain `dxcompiler_original.dll`. For
 an upgrade, an existing proxy, or an AGP/UFG installation, use the EXE or batch
 installer package instead.
@@ -13,7 +15,7 @@ installer package instead.
 1. Close Crusader Kings III.
 2. Open the game's `binaries` folder. The standard location is
    `C:\Program Files (x86)\Steam\steamapps\common\Crusader Kings III\binaries`.
-3. Rename Steam's existing `dxcompiler.dll` to `dxcompiler_original.dll`.
+3. Rename the game's existing `dxcompiler.dll` to `dxcompiler_original.dll`.
    Never overwrite or delete an existing `dxcompiler_original.dll`.
 4. Copy this package's `dxcompiler.dll` into `binaries`.
 5. Copy the entire `AGP Native Hook` folder into `binaries`. The final payload

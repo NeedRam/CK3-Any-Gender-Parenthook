@@ -1,0 +1,41 @@
+Manual normal-mode exit-autosave: AGP enabled
+{
+  "agp_enabled": true,
+  "debug_mode": false,
+  "run_as_administrator_compatibility_setting": "user reports enabling it; elevation of completed process not measured",
+  "result": "save_written",
+  "save_size_bytes": 13099068,
+  "save_sha256": "ffd8e27f6acdc24dfd0f737f19de65465f63074f5c4664e090a574789f719b59",
+  "archive_crc_verified": true
+}
+AGP v1.1.0: starting executable/profile preflight.
+859f0d380098adcb130eb9d453458222749fcdf6d46126ad0ed99d78f9a0aa28
+gog-ck3-1.21.0.3
+gog
+female_effect_parent
+female_effect_real_parent
+male_effect_parent
+male_effect_real_parent
+female_pregnancy_a
+female_pregnancy_b
+male_carrier_a
+male_carrier_b
+female_native_parent
+male_native_parent
+female_native_override
+male_native_override
+create_mother
+create_father
+create_real_father
+history_parent
+father_persistence
+mother_persistence
+parent_reconstruction
+close_family
+reconstruction_resume
+family_role_writer
+family_role_reader
+family_role_reader_handled
+AGP v1.1.0: native patches committed. Gameplay acceptance is separate from patch preflight.
+
+[00:13:16][D][application.cpp:1259]: Quit: Quit from inside game

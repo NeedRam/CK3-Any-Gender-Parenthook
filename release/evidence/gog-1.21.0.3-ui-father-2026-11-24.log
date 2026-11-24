@@ -1,0 +1,5 @@
+User-run female-father interaction test; 2026-11-24
+User reported Father Scope Test and Close Family Test visible; Mother Scope Test and Real Father Scope Test absent on Wulfwynn Perry.
+User found and pressed the small confirmation window, then advanced time.
+Acceptance callback and result flag executed. Earlier missing confirmation means the original on_accept callback was not proven faulty.
+[01:19:54][D][jomini_effect_impl.cpp:444]: file: common/character_interactions/agp_native_father_test_interactions.txt line: 103 (agp_native_father_test_father_scope_interaction:on_auto_accept): AGP_UI_ACCEPTED father_scope

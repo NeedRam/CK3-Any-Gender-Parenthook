@@ -1,8 +1,9 @@
 [CmdletBinding()]
 param(
-	[string]$Version = '1.0.2',
+	[string]$Version = '1.1.0',
 	[string]$OutputDirectory,
 	[switch]$SkipNativeBuild,
+	[switch]$AllowIncompleteValidation,
 	[switch]$RequireCanonicalCi
 )
 
@@ -11,6 +12,13 @@ $ErrorActionPreference = 'Stop'
 $releaseRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $repositoryRoot = Split-Path -Parent $releaseRoot
 $isCanonicalCi = $env:GITHUB_ACTIONS -eq 'true'
+if ($AllowIncompleteValidation -and $isCanonicalCi) {
+    throw 'Canonical releases require completed acceptance; incomplete candidates are local-only.'
+}
+$validationArguments = @((Join-Path $releaseRoot 'check-release.py'))
+if ($AllowIncompleteValidation) { $validationArguments += '--allow-incomplete' }
+& python @validationArguments
+if ($LASTEXITCODE -ne 0) { throw 'Release acceptance/profile validation failed.' }
 if ($RequireCanonicalCi -and -not $isCanonicalCi) {
 	throw 'Canonical release assembly is restricted to GitHub Actions.'
 }
@@ -106,7 +114,7 @@ foreach ($legacyName in $legacyOutputs) {
 }
 $nativeProxy = Join-Path $repositoryRoot 'Native Hook\build\dxcompiler.dll'
 $nativePayload = Join-Path $repositoryRoot 'Native Hook\build\AGP Native Hook\agp_parenthook.dll'
-$forbiddenNames = @('native_test_mod', 'AGP Dynastic Priority', 'Lunacy', '.git', '.venv', 'venv', 'script_docs 1.19.0.6')
+$forbiddenNames = @('native_test_mod', 'AGP Dynastic Priority', 'Lunacy', '.git', '.venv', 'venv', 'reference_files', 'profiles')
 $commit = 'unavailable'
 try {
 	$commit = (& git -C $repositoryRoot rev-parse HEAD 2>$null | Select-Object -First 1).Trim()
@@ -166,6 +174,14 @@ foreach ($definition in $packageDefinitions) {
 	$checksumPath = "$zipPath.sha256"
 	$provenancePath = Join-Path $OutputDirectory "$($definition.Name)-provenance.json"
 
+    $outputPrefix = $OutputDirectory.TrimEnd('\') + '\'
+    foreach ($candidatePath in @($stagingRoot, $zipPath, $checksumPath, $provenancePath)) {
+        $resolvedOutput = [IO.Path]::GetFullPath($candidatePath)
+        if (-not $resolvedOutput.StartsWith($outputPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+            throw "Release output escaped the selected output directory: $resolvedOutput"
+        }
+    }
+
 	if (Test-Path -LiteralPath $stagingRoot) { Remove-Item -LiteralPath $stagingRoot -Recurse -Force }
 	foreach ($outputPath in @($zipPath, $checksumPath, $provenancePath)) {
 		if (Test-Path -LiteralPath $outputPath) { Remove-Item -LiteralPath $outputPath -Force }
@@ -175,6 +191,11 @@ foreach ($definition in $packageDefinitions) {
 	Copy-PackageFile $nativeProxy (Join-Path $packageRoot 'dxcompiler.dll') -Required | Out-Null
 	Copy-PackageFile $nativePayload (Join-Path $packageRoot 'AGP Native Hook\agp_parenthook.dll') -Required | Out-Null
 	Copy-PackageFile (Join-Path $repositoryRoot $definition.Readme) (Join-Path $packageRoot 'README.md') -Required | Out-Null
+    if ($AllowIncompleteValidation) {
+        $candidateReadme = Join-Path $packageRoot 'README.md'
+        $existingReadme = [IO.File]::ReadAllText($candidateReadme)
+        [IO.File]::WriteAllText($candidateReadme, "# Development candidate - acceptance incomplete`r`n`r`nThis local package is not a verified public release. See the source release/validation.json for remaining tests.`r`n`r`n" + $existingReadme, [Text.UTF8Encoding]::new($false))
+    }
 	Copy-PackageFile (Join-Path $repositoryRoot 'LICENSE') (Join-Path $packageRoot 'LICENSE') -Required | Out-Null
 	foreach ($mapping in $definition.Files) {
 		Copy-PackageFile (Join-Path $repositoryRoot $mapping.Source) (Join-Path $packageRoot $mapping.Destination) -Required | Out-Null
@@ -216,7 +237,7 @@ foreach ($definition in $packageDefinitions) {
 		[System.IO.File]::WriteAllText($packagedManifestPath, ($packageManifest | ConvertTo-Json -Depth 20) + "`n", [System.Text.UTF8Encoding]::new($false))
 	}
 
-	$forbiddenFound = Get-ChildItem -LiteralPath $packageRoot -Recurse -Force | Where-Object { $forbiddenNames -contains $_.Name }
+	$forbiddenFound = Get-ChildItem -LiteralPath $packageRoot -Recurse -Force | Where-Object { $forbiddenNames -contains $_.Name -or $_.Name -like 'script_docs*' -or $_.Name -eq 'ck3.exe' }
 	if ($forbiddenFound) { throw "Forbidden development content entered $($definition.Name): $($forbiddenFound.Name -join ', ')" }
 	foreach ($relative in $definition.RequiredRootFiles) {
 		if (-not (Test-Path -LiteralPath (Join-Path $packageRoot $relative))) { throw "$($definition.Name) is missing: $relative" }
@@ -245,6 +266,7 @@ foreach ($definition in $packageDefinitions) {
 		'schema_version' = 1
 		'kind' = 'agp_release_provenance'
 		'release' = [ordered]@{ 'id' = $manifest.release.id; 'version' = $Version; 'channel' = $manifest.release.channel; 'unsigned' = $true; 'signing' = 'not_performed' }
+		'validation' = [ordered]@{ acceptance_complete = (-not $AllowIncompleteValidation); status = $(if ($AllowIncompleteValidation) { 'incomplete_local_candidate' } else { 'accepted' }) }
 		'source' = [ordered]@{ repository = $manifest.release.source_repo; commit = $commit; workflow = 'release/build-release.ps1' }
 		'build' = [ordered]@{ authority = $(if ($isCanonicalCi) { 'canonical_github_actions' } else { 'local_smoke_test' }); canonical_release_artifact = $isCanonicalCi; github_actions_runner = $toolchain.github_actions_runner; vc_tools_version = $toolchain.vc_tools_version; windows_sdk_version = $toolchain.windows_sdk_version; host_architecture = $toolchain.host_architecture; target_architecture = $toolchain.target_architecture; toolchain_contract = 'Native Hook/toolchain.json' }
 		'artifact' = [ordered]@{ file = (Split-Path -Leaf $zipPath); sha256 = $zipHash; package_id = "$($manifest.package.id)-$($definition.Id)"; package_kind = $definition.Id; file_count = $fileCount }

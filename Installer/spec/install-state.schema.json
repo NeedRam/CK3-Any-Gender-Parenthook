@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://any-gender-parenthook.invalid/schema/install-state-v1.json",
-  "title": "Any-Gender Parenthook persistent install state (schema v1)",
+  "$id": "https://any-gender-parenthook.invalid/schema/install-state-v2.json",
+  "title": "Any-Gender Parenthook persistent install state (schema v2)",
   "description": "The committed record that permits either installer engine to verify ownership and restore the original DXCompiler.",
   "type": "object",
   "additionalProperties": false,
@@ -23,11 +23,11 @@
   "properties": {
     "$schema": {
       "type": "string",
-      "const": "https://any-gender-parenthook.invalid/schema/install-state-v1.json"
+      "const": "https://any-gender-parenthook.invalid/schema/install-state-v2.json"
     },
     "schema_version": {
       "type": "integer",
-      "const": 1
+      "const": 2
     },
     "kind": {
       "type": "string",
@@ -69,7 +69,9 @@
         "build_id",
         "binaries_relative_path",
         "executable_relative_path",
-        "target_root_kind"
+        "target_root_kind",
+        "profile_id",
+        "distribution"
       ],
       "properties": {
         "game_id": {
@@ -90,7 +92,18 @@
         },
         "target_root_kind": {
           "type": "string",
-          "const": "steam_game_binaries"
+          "const": "ck3_game_binaries"
+        },
+        "profile_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+        },
+        "distribution": {
+          "type": "string",
+          "enum": [
+            "steam",
+            "gog"
+          ]
         }
       }
     },
@@ -115,7 +128,8 @@
       "minItems": 2,
       "items": {
         "$ref": "#/$defs/managedFile"
-      }
+      },
+      "maxItems": 2
     },
     "quarantined_files": {
       "type": "array",
@@ -176,7 +190,7 @@
         },
         "ownership": {
           "type": "string",
-          "const": "steam"
+          "const": "game"
         }
       }
     },

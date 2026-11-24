@@ -1,11 +1,11 @@
 {
   "$schema": "./spec/release-manifest.schema.json",
-  "schema_version": 1,
+  "schema_version": 2,
   "kind": "agp_release_manifest",
   "release": {
     "id": "agp",
-    "version": "1.0.2",
-    "channel": "stable",
+    "version": "1.1.0",
+    "channel": "draft",
     "unsigned": true,
     "source_repo": "https://github.com/NeedRam/CK3-Any-Gender-Parenthook",
     "license": "MIT"
@@ -17,10 +17,12 @@
     "game_id": "crusader_kings_iii",
     "supported_builds": [
       {
-        "id": "1.19.0.6",
-        "executable_sha256": "2d00ff3101ef70b566f2fcbae292f09263199c80e9dc8f139b82d7d96f83db86",
+        "id": "1.21.0.3",
+        "profile_id": "gog-ck3-1.21.0.3",
+        "distribution": "gog",
+        "executable_sha256": "859f0d380098adcb130eb9d453458222749fcdf6d46126ad0ed99d78f9a0aa28",
         "original_dxcompiler_sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
-        "notes": "The native payload currently targets this CK3 executable build; the executable hash is a compatibility gate, not a download instruction."
+        "notes": "Installed executable; launcher identifies GOG. Development candidate, gameplay acceptance pending. Steam profile must be added from independently verified files."
       }
     ],
     "binaries_relative_path": "binaries",
@@ -54,7 +56,7 @@
     ]
   },
   "package": {
-    "id": "agp-v1.0.2-win-x64",
+    "id": "agp-v1.1.0-win-x64",
     "manifest_relative_path": "Installer/release-manifest.json",
     "managed_files": [
       {
@@ -75,7 +77,7 @@
     "preserved_files": [
       {
         "relative_path": "dxcompiler_original.dll",
-        "owner": "steam",
+        "owner": "game",
         "install_policy": "rename_active_to_original_if_absent",
         "uninstall_policy": "restore_to_active_name_after_hash_check"
       }
@@ -91,7 +93,10 @@
       "Native Hook/tools",
       "script_docs 1.19.0.6",
       ".git",
-      "Lunacy"
+      "Lunacy",
+      "script_docs 1.21.0.3",
+      "reference_files",
+      "Native Hook/profiles"
     ],
     "entrypoints": [
       {
@@ -143,7 +148,7 @@
       "id": "agp-proxy",
       "relative_path": "dxcompiler.dll",
       "role": "agp_proxy",
-      "sha256": "4605b91a033668375cfd47ff1f64b005816bc40bc1438d72721d379011821cfa",
+      "sha256": "d66973d1fe9896f875d4b5311c8375d0efa5d227896058d50678ec30e657cc2e",
       "size_bytes": 109568,
       "size_is_informational": true,
       "source_relative_path": "Native Hook/build/dxcompiler.dll"
@@ -152,8 +157,8 @@
       "id": "agp-payload",
       "relative_path": "AGP Native Hook/agp_parenthook.dll",
       "role": "agp_payload",
-      "sha256": "3fb1a1a113bd2ae6780de30983046659ca8cca41ca1bc1a88c0c7856994f9f38",
-      "size_bytes": 135680,
+      "sha256": "093076fc5d60c5c5e16a8fba2b294f7b8cc73a644a5c9fb081e33d79eb9e0536",
+      "size_bytes": 173056,
       "size_is_informational": true,
       "source_relative_path": "Native Hook/build/AGP Native Hook/agp_parenthook.dll"
     }
@@ -162,7 +167,7 @@
     "seed_schema_version": 1,
     "seeds": [
       {
-        "id": "steam-ck3-1.19.0.6-clean",
+        "id": "gog-ck3-1.21.0.3-clean",
         "state": "known_clean",
         "confidence": "exact_hash",
         "match": {
@@ -171,8 +176,8 @@
             {
               "relative_path": "ck3.exe",
               "kind": "file",
-              "sha256": "2d00ff3101ef70b566f2fcbae292f09263199c80e9dc8f139b82d7d96f83db86",
-              "size_bytes": 95206008
+              "sha256": "859f0d380098adcb130eb9d453458222749fcdf6d46126ad0ed99d78f9a0aa28",
+              "size_bytes": 114758264
             },
             {
               "relative_path": "dxcompiler.dll",
@@ -187,7 +192,7 @@
             "AGP Native Hook/agp-install-state.json"
           ]
         },
-        "description": "Steam CK3 1.19.0.6 clean binaries observed on the maintainer machine."
+        "description": "Exact installed GOG-marked CK3 1.21.0.3 executable and original compiler."
       },
       {
         "id": "agp-legacy-repo-build-2026-08-09",
@@ -221,6 +226,39 @@
           ]
         },
         "description": "AGP build output in the repository when copied manually without a schema-v1 state file."
+      },
+      {
+        "id": "agp-v1.1.0-manual-layout",
+        "state": "legacy_agp",
+        "confidence": "exact_hash",
+        "match": {
+          "state_file": "absent",
+          "required_files": [
+            {
+              "relative_path": "dxcompiler.dll",
+              "kind": "file",
+              "sha256": "d66973d1fe9896f875d4b5311c8375d0efa5d227896058d50678ec30e657cc2e",
+              "size_bytes": 109568
+            },
+            {
+              "relative_path": "dxcompiler_original.dll",
+              "kind": "file",
+              "sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+              "size_bytes": 20291584
+            },
+            {
+              "relative_path": "AGP Native Hook/agp_parenthook.dll",
+              "kind": "file",
+              "sha256": "093076fc5d60c5c5e16a8fba2b294f7b8cc73a644a5c9fb081e33d79eb9e0536",
+              "size_bytes": 173056
+            }
+          ],
+          "required_paths": [],
+          "absent_paths": [
+            "AGP Native Hook/agp-install-state.json"
+          ]
+        },
+        "description": "AGP v1.1.0 manual-layout template; release assembly regenerates artifact hashes."
       },
       {
         "id": "agp-v1.0.0-manual-layout",
@@ -478,7 +516,7 @@
       },
       {
         "id": "steam-updated-managed-state-v1",
-        "state": "steam_updated",
+        "state": "game_updated",
         "confidence": "exact_hash",
         "match": {
           "state_file": "present_but_drifted",

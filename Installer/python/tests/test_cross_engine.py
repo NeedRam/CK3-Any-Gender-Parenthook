@@ -56,7 +56,7 @@ class CrossEngineTests(unittest.TestCase):
                     item.update({"sha256": digest(payload.read_bytes()), "size_bytes": payload.stat().st_size})
                 elif relative == "AWOW Universal Female Generation/awow_ufg.dll":
                     item.update({"sha256": digest(self.ufg_payload), "size_bytes": len(self.ufg_payload)})
-                elif relative == "dxcompiler.dll" and seed["state"] in ("known_clean", "steam_updated"):
+                elif relative == "dxcompiler.dll" and seed["state"] in ("known_clean", "game_updated"):
                     item.update({"sha256": digest(self.steam), "size_bytes": len(self.steam)})
                 elif relative == "dxcompiler.dll" and seed["state"] == "recognized_ufg":
                     item.update({"sha256": digest(self.ufg_proxy), "size_bytes": len(self.ufg_proxy)})
@@ -107,7 +107,7 @@ class CrossEngineTests(unittest.TestCase):
         manifest = json.loads(path.read_text(encoding="utf-8"))
         manifest["target"]["supported_builds"][0]["original_dxcompiler_sha256"] = digest(steam)
         for seed in manifest["compatibility"]["seeds"]:
-            if seed["state"] not in ("known_clean", "steam_updated"):
+            if seed["state"] not in ("known_clean", "game_updated"):
                 continue
             for item in seed["match"].get("required_files", []):
                 if item["relative_path"] == "dxcompiler.dll":
@@ -351,16 +351,16 @@ class CrossEngineTests(unittest.TestCase):
                 (target / "dxcompiler.dll").write_bytes(updated)
                 self.set_supported_steam(package, updated)
                 engine = Installer(package_root=package, process_checker=lambda: False)
-                self.assertEqual(engine.classify(target).state, "steam_updated")
+                self.assertEqual(engine.classify(target).state, "game_updated")
                 if frontend == "python":
                     refused = engine.install(target)
                     self.assertEqual(refused.decision, "abort")
-                    accepted = engine.install(target, "ACCEPT_STEAM_UPDATE")
+                    accepted = engine.install(target, "ACCEPT_GAME_UPDATE")
                     self.assertEqual(accepted.decision, "proceed", accepted.message)
                 else:
                     code, refused = self.run_ps("install", target, package)
                     self.assertEqual((code, refused["decision"]), (2, "abort"), refused)
-                    code, accepted = self.run_ps("install", target, package, "ACCEPT_STEAM_UPDATE")
+                    code, accepted = self.run_ps("install", target, package, "ACCEPT_GAME_UPDATE")
                     self.assertEqual((code, accepted["decision"]), (0, "proceed"), accepted)
                 self.assertEqual(engine.uninstall(target).decision, "proceed")
                 self.assertEqual((target / "dxcompiler.dll").read_bytes(), updated)
