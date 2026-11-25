@@ -1,4 +1,6 @@
-# AGP v1.1.0
+# AGP v1.1.1
+
+This compatibility patch keeps the published AGP v1.1.0 native DLL bytes and updates only installer/package state to 1.1.1.
 
 This release migrates the Windows x64 native hook to CK3 **1.21.0.3 only**.
 AGP v1.0.2 remains the separate release for CK3 1.19.0.6.

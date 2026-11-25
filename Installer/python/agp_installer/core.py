@@ -111,6 +111,25 @@ def _required(value: dict[str, Any], *keys: str) -> bool:
     return all(key in value for key in keys)
 
 
+def _is_sha(value: object) -> bool:
+    return isinstance(value, str) and re.fullmatch(r"[0-9a-fA-F]{64}", value) is not None
+
+
+def _is_uuid(value: object) -> bool:
+    return isinstance(value, str) and re.fullmatch(r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}", value) is not None
+
+
+def _valid_baseline(item: object, relative: str, owner: str) -> bool:
+    return (
+        isinstance(item, dict)
+        and item.get("relative_path") == relative
+        and _is_sha(item.get("sha256"))
+        and isinstance(item.get("size_bytes"), int)
+        and item["size_bytes"] >= 0
+        and item.get("ownership") == owner
+    )
+
+
 def _is_valid_state(data: dict[str, Any]) -> bool:
     try:
         if data.get("schema_version") not in (1, 2) or data.get("kind") != "agp_install_state" or data.get("status") != "managed_agp":
@@ -144,6 +163,62 @@ def _is_valid_state(data: dict[str, Any]) -> bool:
         if cleanup["kind"] not in ("none","recognized_awow_ufg"): return False
         return True
     except (KeyError, TypeError, ValueError, AttributeError):
+        return False
+
+
+def _is_valid_ufg_state(data: object) -> bool:
+    """Validate UFG's v2 state without trusting it for ownership."""
+
+    try:
+        if not isinstance(data, dict) or data.get("schema_version") != 2 or data.get("kind") != "ufg_install_state":
+            return False
+        if data.get("status") not in {"managed_ufg", "ufg_proxy_only"} or not _is_uuid(data.get("transaction_id")):
+            return False
+        release = data["release"]
+        if release.get("id") != "awow-ufg" or release.get("version") not in {"1.1.0", "1.1.1"} or not _is_sha(release.get("manifest_sha256")):
+            return False
+        target = data["target"]
+        if target.get("game_id") != "crusader_kings_iii" or target.get("build_id") != "1.21.0.3" or target.get("binaries_relative_path") != "binaries" or target.get("executable_relative_path") != "ck3.exe" or target.get("target_root_kind") != "ck3_game_binaries":
+            return False
+        if target.get("profile_id") != "ck3-1.21.0.3-x64":
+            return False
+        baseline = data["baseline"]
+        if not _valid_baseline(baseline.get("original_dxcompiler"), "dxcompiler_original.dll", "game") or not _valid_baseline(baseline.get("executable"), "ck3.exe", "game"):
+            return False
+        dependency = data["agp_dependency"]
+        dependency_build = dependency.get("build_id")
+        dependency_version = dependency.get("version")
+        if dependency_build not in {"agp-v1.1.0", "agp-v1.1.1"} or dependency_version != dependency_build.removeprefix("agp-v"):
+            return False
+        if dependency.get("proxy_relative_path") != "dxcompiler.dll" or dependency.get("payload_relative_path") != "AGP Native Hook/agp_parenthook.dll" or dependency.get("state_relative_path") != "AGP Native Hook/agp-install-state.json":
+            return False
+        if not all(_is_sha(dependency.get(key)) for key in ("proxy_sha256", "payload_sha256", "original_dxcompiler_sha256")):
+            return False
+        state_sha = dependency.get("state_sha256")
+        if state_sha != "absent" and not _is_sha(state_sha):
+            return False
+        managed = data["managed_files"]
+        if not isinstance(managed, list) or len(managed) != 2:
+            return False
+        by_path = {item.get("relative_path"): item for item in managed if isinstance(item, dict)}
+        if set(by_path) != {"dxcompiler.dll", "AWOW Universal Female Generation/awow_ufg.dll"}:
+            return False
+        proxy, payload = by_path["dxcompiler.dll"], by_path["AWOW Universal Female Generation/awow_ufg.dll"]
+        if proxy.get("role") != "ufg_proxy" or payload.get("role") != "ufg_payload":
+            return False
+        for item, restore in ((proxy, "leave_managed_file"), (payload, "remove_managed_file")):
+            if item.get("ownership") != "managed" or not _is_sha(item.get("installed_sha256")) or not isinstance(item.get("installed_size_bytes"), int) or item["installed_size_bytes"] < 0 or not isinstance(item.get("present"), bool) or item.get("restore", {}).get("action") != restore:
+                return False
+        if not proxy["present"] or payload["present"] != (data["status"] == "managed_ufg"):
+            return False
+        foreign = data["foreign_cleanup"]
+        if foreign.get("kind") != "none" or foreign.get("removed_paths") != [] or foreign.get("uninstall_policy") != "none":
+            return False
+        validate_relative(foreign["quarantine_relative_path"])
+        if not isinstance(data.get("quarantined_files"), list) or not isinstance(data.get("created_utc"), str) or not isinstance(data.get("updated_utc"), str):
+            return False
+        return True
+    except (KeyError, TypeError, ValueError, AttributeError, PathSafetyError):
         return False
 
 
@@ -181,6 +256,7 @@ class _Transaction:
         self.backup_dir = self.journal_dir / "before"
         self.stage_dir = self.journal_dir / "stage"
         self.snapshots: dict[str, bool] = {}
+        self.snapshot_observations: dict[str, dict[str, Any]] = {}
         self.entries: list[dict[str, Any]] = []
         self.foreign_cleanup = {"kind": "none", "allowed": False, "quarantine_relative_path": "AGP Native Hook/.agp-quarantine", "remove_after_commit": False, "uninstall_policy": "none"}
         self.phase = "validate"
@@ -193,8 +269,10 @@ class _Transaction:
         if relative in self.snapshots:
             return
         source = self._path(relative)
-        exists = source.exists() or source.is_symlink()
+        observation = _observation(source)
+        exists = observation["exists"]
         self.snapshots[relative] = exists
+        self.snapshot_observations[relative] = observation
         if exists:
             destination = self.backup_dir / Path(relative)
             destination.parent.mkdir(parents=True, exist_ok=True)
@@ -202,6 +280,31 @@ class _Transaction:
                 shutil.copytree(source, destination)
             else:
                 shutil.copy2(source, destination)
+
+    def snapshots_unchanged(self) -> bool:
+        """Return false when any snapshotted target changed after planning.
+
+        This guard is intentionally checked after confirmation and again after
+        the journal is written, before the first target mutation. A changed
+        target is rejected without rollback so a newly written foreign file is
+        never replaced by an older snapshot.
+        """
+
+        try:
+            return all(_observation(self._path(relative)) == expected for relative, expected in self.snapshot_observations.items())
+        except (InstallError, OSError):
+            return False
+
+    def discard_without_mutation(self) -> None:
+        """Discard staged snapshots/journal metadata without touching target files."""
+
+        if self.journal_path.exists():
+            self.journal_path.unlink()
+        if self.journal_dir.exists():
+            shutil.rmtree(self.journal_dir)
+        parent = self.journal_dir.parent
+        if parent.exists() and not any(parent.iterdir()):
+            parent.rmdir()
 
     def entry(self, relative: str, operation: str, ownership: str | None = None, staged: str | None = None) -> None:
         path = self._path(relative)
@@ -307,6 +410,26 @@ class Installer:
     def state_rel(self) -> str:
         return self.target_manifest["state_relative_path"]
 
+    @property
+    def ufg_state_rel(self) -> str:
+        return "AWOW Universal Female Generation/ufg-install-state.json"
+
+    @property
+    def ufg_payload_rel(self) -> str:
+        return "AWOW Universal Female Generation/awow_ufg.dll"
+
+    @property
+    def ufg_journal_rel(self) -> str:
+        return "AWOW Universal Female Generation/.ufg-journal"
+
+    @property
+    def ufg_quarantine_rel(self) -> str:
+        return "AWOW Universal Female Generation/.ufg-quarantine"
+
+    @property
+    def ufg_log_rels(self) -> tuple[str, str]:
+        return ("awow_ufg.log", "awow_ufg_dxcompiler_loader.log")
+
     def _target_preflight(self, target: Path) -> None:
         target = target.absolute()
         if not target.is_dir() or is_reparse(target):
@@ -317,6 +440,8 @@ class Installer:
             contained(target, self.active_rel)
             contained(target, self.original_rel)
             contained(target, self.state_rel)
+            for relative in (self.ufg_state_rel, self.ufg_payload_rel, self.ufg_journal_rel, self.ufg_quarantine_rel, *self.ufg_log_rels, "AGP Native Hook/agp-install-state.json"):
+                contained(target, relative)
         except PathSafetyError as exc:
             raise InstallError(str(exc)) from exc
         executable = contained(target, "ck3.exe")
@@ -335,7 +460,19 @@ class Installer:
             except InstallError as exc:
                 raise InstallError("install state is unreadable; manual recovery is required") from exc
             if not _is_valid_state(state_data):
-                raise InstallError("install state is not schema-v1; manual recovery is required")
+                raise InstallError("install state is invalid; manual recovery is required")
+        for relative, label in ((self.ufg_state_rel, "UFG install state"), (self.ufg_journal_rel, "UFG transaction journal"), (self.ufg_quarantine_rel, "UFG recovery quarantine")):
+            path = contained(target, relative)
+            if relative == self.ufg_state_rel:
+                if path.exists():
+                    try:
+                        ufg_state = _read_json(path)
+                    except InstallError as exc:
+                        raise InstallError("UFG install state is unreadable; manual recovery is required") from exc
+                    if not _is_valid_ufg_state(ufg_state):
+                        raise InstallError("UFG install state is invalid; manual recovery is required")
+            elif path.exists() and (not path.is_dir() or any(path.iterdir())):
+                raise InstallError(f"{label} is unfinished; manual recovery is required")
         journal_root = contained(target, "AGP Native Hook/.agp-journal")
         if journal_root.exists():
             # A journal is an incomplete transaction. It is intentionally not
@@ -354,6 +491,127 @@ class Installer:
         except InstallError:
             return None, False
         return data, _is_valid_state(data)
+
+    def _ufg_state(self, target: Path) -> tuple[dict[str, Any] | None, bool]:
+        path = contained(target, self.ufg_state_rel)
+        if not path.exists():
+            return None, True
+        try:
+            data = _read_json(path)
+        except InstallError:
+            return None, False
+        return data, _is_valid_ufg_state(data)
+
+    def _ufg_pairs(self) -> list[dict[str, str]]:
+        """Return known UFG/AGP native pair identities from the manifest."""
+
+        pairs: list[dict[str, str]] = []
+        for seed in self.manifest.get("compatibility", {}).get("seeds", []):
+            if seed.get("state") != "recognized_ufg":
+                continue
+            files = {item.get("relative_path"): item for item in seed.get("match", {}).get("required_files", [])}
+            try:
+                pair = {
+                    "proxy": files["dxcompiler.dll"]["sha256"].lower(),
+                    "original": files["dxcompiler_original.dll"]["sha256"].lower(),
+                    "payload": files[self.ufg_payload_rel]["sha256"].lower(),
+                    "agp_payload": files["AGP Native Hook/agp_parenthook.dll"]["sha256"].lower(),
+                    "agp_proxy": self.artifacts["agp-proxy"]["sha256"].lower(),
+                }
+            except (KeyError, TypeError, AttributeError):
+                continue
+            if pair not in pairs:
+                pairs.append(pair)
+        canonical = {
+            "proxy": "6406c83ce1d31415e6e2c013e222d9098219ea912fa541ce4ece8f7b23f07c44",
+            "original": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+            "payload": "796afce9e724b3ec48cfa31e08469335b895b8dc661de7974660676e776d276e",
+            "agp_payload": "e6bb03805e7caa4392210fa45e3253de769d082ccd59087475a50c24b420071c",
+            "agp_proxy": "e8365d61ffd80b4d8fcaf4d6d79ac00c8373831a0a86e66647a4fc1e4cef2e58",
+        }
+        if canonical not in pairs:
+            pairs.append(canonical)
+        return pairs
+
+    def _ufg_pair_matches(self, target: Path, pair: dict[str, str], *, require_payload: bool) -> bool:
+        if not _same_file(contained(target, self.active_rel), pair["proxy"]):
+            return False
+        if not _same_file(contained(target, self.original_rel), pair["original"]):
+            return False
+        if not _same_file(contained(target, "AGP Native Hook/agp_parenthook.dll"), pair["agp_payload"]):
+            return False
+        payload = contained(target, self.ufg_payload_rel)
+        return _same_file(payload, pair["payload"]) if require_payload else not payload.exists()
+
+    def _ufg_runtime_classification(self, target: Path) -> Classification | None:
+        """Recognize only exact UFG layouts; drift remains a hard refusal."""
+
+        data, valid = self._ufg_state(target)
+        pairs = self._ufg_pairs()
+        if data is not None:
+            if not valid:
+                return Classification("unknown_conflicting", "UFG state is malformed; manual recovery is required", data, False)
+            dependency = data["agp_dependency"]
+            status = data["status"]
+            for pair in pairs:
+                if dependency["proxy_sha256"].lower() != pair["agp_proxy"] or dependency["payload_sha256"].lower() != pair["agp_payload"] or dependency["original_dxcompiler_sha256"].lower() != pair["original"]:
+                    continue
+                if not _same_file(contained(target, "ck3.exe"), data["baseline"]["executable"]["sha256"], data["baseline"]["executable"]["size_bytes"]):
+                    continue
+                if not _same_file(contained(target, self.original_rel), data["baseline"]["original_dxcompiler"]["sha256"], data["baseline"]["original_dxcompiler"]["size_bytes"]):
+                    continue
+                if not self._ufg_pair_matches(target, pair, require_payload=status == "managed_ufg"):
+                    continue
+                proxy_item = next((item for item in data["managed_files"] if item.get("relative_path") == self.active_rel), None)
+                payload_item = next((item for item in data["managed_files"] if item.get("relative_path") == self.ufg_payload_rel), None)
+                if proxy_item is None or proxy_item["installed_sha256"].lower() != pair["proxy"] or not _same_file(contained(target, self.active_rel), proxy_item["installed_sha256"], proxy_item["installed_size_bytes"]):
+                    continue
+                if payload_item is None or payload_item["installed_sha256"].lower() != pair["payload"] or payload_item["present"] != (status == "managed_ufg"):
+                    continue
+                actual_agp_state = contained(target, self.state_rel)
+                actual_state_sha = "absent" if not actual_agp_state.exists() else _sha256(actual_agp_state)
+                if dependency["state_sha256"].lower() != actual_state_sha.lower():
+                    continue
+                if actual_agp_state.exists():
+                    agp_state, agp_valid = self._state(target)
+                    if not agp_valid or agp_state is None:
+                        continue
+                    agp_release = agp_state.get("release", {})
+                    agp_target = agp_state.get("target", {})
+                    # The dependency hashes identify the native bytes, but
+                    # the embedded AGP state identity must also describe this
+                    # exact supported build/profile. A well-shaped state from
+                    # another package/profile is not an owned dependency.
+                    if (
+                        agp_release.get("id") != "agp"
+                        or agp_release.get("version") not in {"1.1.0", "1.1.1"}
+                        or agp_target.get("game_id") != "crusader_kings_iii"
+                        or agp_target.get("build_id") != self.build_id
+                        or agp_target.get("profile_id") != self.supported.get("profile_id")
+                        or agp_target.get("distribution") != self.supported.get("distribution")
+                    ):
+                        continue
+                    if agp_state.get("baseline", {}).get("original_dxcompiler", {}).get("sha256", "").lower() != pair["original"]:
+                        continue
+                    agp_payload = next((item for item in agp_state.get("managed_files", []) if item.get("role") == "agp_payload"), None)
+                    if agp_payload is None or agp_payload.get("installed_sha256", "").lower() != pair["agp_payload"] or not _same_file(contained(target, agp_payload["relative_path"]), agp_payload["installed_sha256"], agp_payload.get("installed_size_bytes")):
+                        continue
+                return Classification("recognized_ufg", f"valid UFG v2 {status} layout; UFG is {'active' if status == 'managed_ufg' else 'disabled'}", data, True)
+            return Classification("unknown_conflicting", "UFG state or its native dependency drifted; manual recovery is required", data, True)
+        if not valid:
+            return Classification("unknown_conflicting", "UFG state is unreadable; manual recovery is required", None, False)
+        for pair in pairs:
+            if self._ufg_pair_matches(target, pair, require_payload=True):
+                return Classification("recognized_ufg", "exact manual UFG active layout without UFG state", None, True)
+            if self._ufg_pair_matches(target, pair, require_payload=False) and _same_file(contained(target, self.active_rel), pair["proxy"]):
+                return Classification("recognized_ufg", "exact manual UFG disabled proxy without UFG state", None, True)
+        # A recognizable UFG path with the wrong bytes is not eligible for the
+        # generic unknown-conflict override; replacing it could discard a mod.
+        active = contained(target, self.active_rel)
+        payload = contained(target, self.ufg_payload_rel)
+        if payload.exists() or any(_same_file(active, pair["proxy"]) for pair in pairs):
+            return Classification("unknown_conflicting", "UFG files are present but do not match a canonical native pair; manual recovery is required", None, False)
+        return None
 
     def _match_seed(self, target: Path, seed: dict[str, Any]) -> bool:
         match = seed["match"]
@@ -411,6 +669,9 @@ class Installer:
                     and _same_file(contained(root, original["relative_path"]), original["sha256"], original.get("size_bytes"))
                     and _same_file(contained(root, payloads[0]["relative_path"]), payloads[0]["installed_sha256"], payloads[0].get("installed_size_bytes"))):
                 return Classification("game_updated", "supported original replaced the proxy; old payload and backup verified", data, True)
+        ufg_classification = self._ufg_runtime_classification(root)
+        if ufg_classification is not None:
+            return ufg_classification
         if (data is None and valid and not contained(root, self.original_rel).exists()
                 and not contained(root, "AGP Native Hook/agp_parenthook.dll").exists()
                 and _same_file(contained(root, self.active_rel), self.supported["original_dxcompiler_sha256"])):
@@ -430,9 +691,42 @@ class Installer:
             return Classification("unknown_conflicting", "state is absent from a recognized complete layout or has drifted", data, valid)
         return Classification("unknown_conflicting", "no supported compatibility seed matched", None, valid)
 
+    def _layout_signature(self, target: Path) -> dict[str, dict[str, Any]]:
+        """Capture every path the transition can recognize or mutate."""
+
+        relatives = (
+            "ck3.exe",
+            self.active_rel,
+            self.original_rel,
+            self.state_rel,
+            "AGP Native Hook/agp_parenthook.dll",
+            self.ufg_payload_rel,
+            self.ufg_state_rel,
+            *self.ufg_log_rels,
+            "agp_dxcompiler_loader.log",
+            "agp_parenthook.log",
+        )
+        return {relative: _observation(contained(target, relative)) for relative in dict.fromkeys(relatives)}
+
+    def _stable_after_confirmation(self, target: Path, expected: Classification, before: dict[str, dict[str, Any]]) -> bool:
+        """Reclassify and compare observations immediately before staging."""
+
+        try:
+            current = self.classify(target)
+            return current.state == expected.state and self._layout_signature(target) == before
+        except (InstallError, OSError):
+            return False
+
     def _artifact_source(self, artifact_id: str) -> Path:
         artifact = self.artifacts[artifact_id]
-        candidates = [self.package_root / artifact["source_relative_path"], self.package_root / artifact["relative_path"]]
+        candidates = [
+            self.package_root / artifact["source_relative_path"],
+            self.package_root / artifact["relative_path"],
+            # Development checkouts retain the pre-1.1.1 build output.  The
+            # manifest hash still gates this compatibility fallback; release
+            # assembly uses the pinned published-v1.1.0 cache instead.
+            self.package_root / "Native Hook" / "build" / artifact["relative_path"],
+        ]
         for path in candidates:
             if path.is_file():
                 return path
@@ -508,6 +802,9 @@ class Installer:
     def install(self, target: str | os.PathLike[str], confirmation: str | None = None) -> Result:
         root = Path(target).absolute()
         classification = self.classify(root)
+        layout_before_confirmation = self._layout_signature(root)
+        if classification.state == "unknown_conflicting" and "UFG" in classification.reason and "manual recovery" in classification.reason:
+            return Result("install", "reject", classification.state, classification.state, message=classification.reason)
         if classification.state == "managed_agp":
             required = "UPGRADE_AGP_IN_PLACE"
         elif classification.state == "legacy_agp":
@@ -524,6 +821,8 @@ class Installer:
             raise InstallError(f"cannot install from {classification.state}")
         if required != "" and classification.state != "known_clean" and not self._confirmation(required, confirmation):
             return Result("install", "abort", classification.state, classification.state, message="confirmation was cancelled or not supplied")
+        if not self._stable_after_confirmation(root, classification, layout_before_confirmation):
+            return Result("install", "reject", classification.state, classification.state, message="target changed after recognition or confirmation; no files were changed")
         tx = self._prepare_transaction(root, classification, "install")
         active = self.active_rel
         original = self.original_rel
@@ -531,7 +830,7 @@ class Installer:
         state_rel = self.state_rel
         try:
             # Snapshot all possible mutation targets before creating the journal.
-            for relative in (active, original, payload, state_rel, "agp_dxcompiler_loader.log", "agp_parenthook.log"):
+            for relative in (active, original, payload, state_rel, self.ufg_payload_rel, self.ufg_state_rel, *self.ufg_log_rels, "agp_dxcompiler_loader.log", "agp_parenthook.log"):
                 tx.snapshot(relative)
             source_state = classification.state
             # Record the complete intended mutation set before any rename or
@@ -541,11 +840,11 @@ class Installer:
                     if tx._path(relative).exists():
                         tx.entry(relative, "quarantine", "unknown_displaced", f"AGP Native Hook/.agp-quarantine/{tx.id}/{relative.replace('/', '__')}")
             elif source_state == "recognized_ufg":
-                for relative in (active, "AWOW Universal Female Generation", "awow_ufg_dxcompiler_loader.log", "awow_ufg.log"):
+                for relative in (active, self.ufg_payload_rel, self.ufg_state_rel, *self.ufg_log_rels, payload):
                     if tx._path(relative).exists():
                         tx.entry(relative, "quarantine", "recognized_awow_ufg", f"AGP Native Hook/.agp-quarantine/{tx.id}/{relative.replace('/', '__')}")
                 tx.foreign_cleanup = {"kind": "recognized_awow_ufg", "allowed": True, "quarantine_relative_path": f"AGP Native Hook/.agp-quarantine/{tx.id}", "remove_after_commit": True, "uninstall_policy": "do_not_restore_awow_ufg"}
-                tx.foreign_cleanup_state = {"kind": "recognized_awow_ufg", "quarantine_relative_path": f"AGP Native Hook/.agp-quarantine/{tx.id}", "removed_paths": ["AWOW Universal Female Generation", "awow_ufg_dxcompiler_loader.log", "awow_ufg.log"], "uninstall_policy": "do_not_restore_awow_ufg"}
+                tx.foreign_cleanup_state = {"kind": "recognized_awow_ufg", "quarantine_relative_path": f"AGP Native Hook/.agp-quarantine/{tx.id}", "removed_paths": [self.ufg_payload_rel, self.ufg_state_rel, *self.ufg_log_rels], "uninstall_policy": "do_not_restore_awow_ufg"}
             elif source_state == "game_updated" and tx._path(original).exists():
                 tx.entry(original, "quarantine", "unknown_displaced", f"AGP Native Hook/.agp-quarantine/{tx.id}/{original.replace('/', '__')}")
             if source_state in ("known_clean", "game_updated"):
@@ -553,14 +852,20 @@ class Installer:
             tx.entry(active, "replace", "managed", f"AGP Native Hook/.agp-journal/{tx.id}/stage/dxcompiler.dll")
             tx.entry(payload, "replace", "managed", f"AGP Native Hook/.agp-journal/{tx.id}/stage/AGP Native Hook/agp_parenthook.dll")
             tx.entry(state_rel, "create" if not tx._path(state_rel).exists() else "replace", "managed")
+            if not tx.snapshots_unchanged():
+                tx.discard_without_mutation()
+                return Result("install", "reject", classification.state, classification.state, tx.id, "target changed during transaction planning; no files were changed")
             tx.write_journal()
+            if not tx.snapshots_unchanged():
+                tx.discard_without_mutation()
+                return Result("install", "reject", classification.state, classification.state, tx.id, "target changed after journaling; no files were changed")
             if source_state in ("legacy_agp", "unknown_conflicting"):
                 for relative in (active, payload):
                     if tx._path(relative).exists():
                         record = self._quarantine(tx, relative)
                         tx.quarantine_records.append(record)
             elif source_state == "recognized_ufg":
-                for relative in (active, "AWOW Universal Female Generation", "awow_ufg_dxcompiler_loader.log", "awow_ufg.log"):
+                for relative in (active, self.ufg_payload_rel, self.ufg_state_rel, *self.ufg_log_rels, payload):
                     if tx._path(relative).exists():
                         record = self._quarantine(tx, relative, "recognized_awow_ufg", "do_not_restore_after_awow_ufg_commit")
                         tx.quarantine_records.append(record)
@@ -605,6 +910,9 @@ class Installer:
                 qdir = tx._path(f"AGP Native Hook/.agp-quarantine/{tx.id}")
                 if qdir.exists():
                     shutil.rmtree(qdir)
+                ufg_dir = tx._path("AWOW Universal Female Generation")
+                if ufg_dir.is_dir() and not any(ufg_dir.iterdir()):
+                    ufg_dir.rmdir()
             tx.update_phase("commit")
             tx.commit_cleanup()
             return Result("install", "proceed", classification.state, "managed_agp", tx.id, "AGP installed", changed=[active, payload, state_rel])
@@ -619,12 +927,17 @@ class Installer:
     def uninstall(self, target: str | os.PathLike[str], confirmation: str | None = None) -> Result:
         root = Path(target).absolute()
         classification = self.classify(root)
+        layout_before_confirmation = self._layout_signature(root)
+        if classification.state == "unknown_conflicting" and "UFG" in classification.reason and "manual recovery" in classification.reason:
+            return Result("uninstall", "reject", classification.state, classification.state, message=classification.reason)
         if classification.state == "recognized_ufg":
             if not self._confirmation("REMOVE_AGP_AND_UFG", confirmation):
                 return Result("uninstall", "abort", classification.state, classification.state, message="confirmation was cancelled or not supplied")
         elif classification.state in ("unknown_conflicting", "legacy_agp", "game_updated"):
             if not self._confirmation("I_UNDERSTAND_UNKNOWN_CONFLICT", confirmation):
                 return Result("uninstall", "abort", classification.state, classification.state, message="confirmation was cancelled or not supplied")
+        if not self._stable_after_confirmation(root, classification, layout_before_confirmation):
+            return Result("uninstall", "reject", classification.state, classification.state, message="target changed after recognition or confirmation; no files were changed")
         if classification.state == "known_clean":
             return Result("uninstall", "no_op", classification.state, classification.state, message="AGP is not installed")
         state = classification.state == "managed_agp" and classification.state_data
@@ -633,7 +946,7 @@ class Installer:
             state = None
         tx = self._prepare_transaction(root, classification, "uninstall")
         active, original, payload, state_rel = self.active_rel, self.original_rel, "AGP Native Hook/agp_parenthook.dll", self.state_rel
-        ufg_paths = ["AWOW Universal Female Generation", "awow_ufg_dxcompiler_loader.log", "awow_ufg.log"]
+        ufg_paths = [self.ufg_payload_rel, self.ufg_state_rel, *self.ufg_log_rels]
         changed = [active, original, payload, state_rel, "agp_dxcompiler_loader.log", "agp_parenthook.log"]
         if classification.state == "recognized_ufg":
             changed.extend(ufg_paths)
@@ -653,7 +966,13 @@ class Installer:
             tx.entry(original, "remove", "game")
             tx.entry(payload, "remove", "managed")
             tx.entry(state_rel, "remove", "managed")
+            if not tx.snapshots_unchanged():
+                tx.discard_without_mutation()
+                return Result("uninstall", "reject", classification.state, classification.state, tx.id, "target changed during transaction planning; no files were changed")
             tx.write_journal()
+            if not tx.snapshots_unchanged():
+                tx.discard_without_mutation()
+                return Result("uninstall", "reject", classification.state, classification.state, tx.id, "target changed after journaling; no files were changed")
             # Preserve any path that is not demonstrably owned by this release.
             managed_paths = {item["relative_path"] for item in (state or {}).get("managed_files", [])}
             if classification.state == "managed_agp" and state:
@@ -708,6 +1027,9 @@ class Installer:
                 qdir = tx._path(f"AGP Native Hook/.agp-quarantine/{tx.id}")
                 if qdir.exists():
                     shutil.rmtree(qdir)
+                ufg_dir = tx._path("AWOW Universal Female Generation")
+                if ufg_dir.is_dir() and not any(ufg_dir.iterdir()):
+                    ufg_dir.rmdir()
             tx.update_phase("commit")
             tx.commit_cleanup()
             return Result("uninstall", "proceed", classification.state, "known_clean", tx.id, "AGP uninstalled", changed=[active, payload, state_rel])

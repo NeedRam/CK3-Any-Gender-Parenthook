@@ -1,6 +1,6 @@
 > CK3 1.21.0.3 only. Compatibility uses exact verified game-file hashes, regardless of launcher storefront metadata. The optional Dynastic Priority add-on is not included.
 
-# AGP v1.1.0 EXE Installer
+# AGP v1.1.1 EXE Installer
 
 This package contains the Any-Gender Parenthook graphical installer and
 uninstaller for Windows x64 with Crusader Kings III `1.21.0.3`.

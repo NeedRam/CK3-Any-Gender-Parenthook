@@ -4,12 +4,12 @@ VSVersionInfo(
     StringFileInfo([StringTable('040904B0', [
       StringStruct('CompanyName', 'NeedRam'),
       StringStruct('FileDescription', 'Any-Gender Parenthook Installer'),
-      StringStruct('FileVersion', '1.1.0.0'),
+      StringStruct('FileVersion', '1.1.1.0'),
       StringStruct('InternalName', 'AGPInstaller'),
       StringStruct('LegalCopyright', 'Copyright (c) 2026 NeedRam'),
       StringStruct('OriginalFilename', 'AGP-Installer.exe'),
       StringStruct('ProductName', 'Any-Gender Parenthook'),
-      StringStruct('ProductVersion', '1.1.0.0')
+      StringStruct('ProductVersion', '1.1.1.0')
     ])]),
     VarFileInfo([VarStruct('Translation', [1033, 1200])])
   ]

@@ -4,11 +4,19 @@
   "kind": "agp_release_manifest",
   "release": {
     "id": "agp",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "channel": "draft",
     "unsigned": true,
     "source_repo": "https://github.com/NeedRam/CK3-Any-Gender-Parenthook",
     "license": "MIT"
+  },
+  "native_release": {
+    "version": "1.1.0",
+    "repository": "https://github.com/NeedRam/CK3-Any-Gender-Parenthook",
+    "tag": "v1.1.0",
+    "source_commit": "0576adacd68073aa4462755c82cade14260f006c",
+    "archive_url": "https://github.com/NeedRam/CK3-Any-Gender-Parenthook/releases/download/v1.1.0/AGP.v1.1.0.Base.Files.Manual.Install.zip",
+    "archive_sha256": "75b0f2287a82ab7d04b3544c229e66d17fa8b716502c9b76626a4f37254e38df"
   },
   "target": {
     "platform": "windows",
@@ -56,7 +64,7 @@
     ]
   },
   "package": {
-    "id": "agp-v1.1.0-win-x64",
+    "id": "agp-v1.1.1-win-x64",
     "manifest_relative_path": "Installer/release-manifest.json",
     "managed_files": [
       {
@@ -148,19 +156,19 @@
       "id": "agp-proxy",
       "relative_path": "dxcompiler.dll",
       "role": "agp_proxy",
-      "sha256": "d66973d1fe9896f875d4b5311c8375d0efa5d227896058d50678ec30e657cc2e",
+      "sha256": "e8365d61ffd80b4d8fcaf4d6d79ac00c8373831a0a86e66647a4fc1e4cef2e58",
       "size_bytes": 109568,
       "size_is_informational": true,
-      "source_relative_path": "Native Hook/build/dxcompiler.dll"
+      "source_relative_path": "Native Hook/build/published-v1.1.0/dxcompiler.dll"
     },
     {
       "id": "agp-payload",
       "relative_path": "AGP Native Hook/agp_parenthook.dll",
       "role": "agp_payload",
-      "sha256": "093076fc5d60c5c5e16a8fba2b294f7b8cc73a644a5c9fb081e33d79eb9e0536",
+      "sha256": "e6bb03805e7caa4392210fa45e3253de769d082ccd59087475a50c24b420071c",
       "size_bytes": 173056,
       "size_is_informational": true,
-      "source_relative_path": "Native Hook/build/AGP Native Hook/agp_parenthook.dll"
+      "source_relative_path": "Native Hook/build/published-v1.1.0/AGP Native Hook/agp_parenthook.dll"
     }
   ],
   "compatibility": {
@@ -259,6 +267,76 @@
           ]
         },
         "description": "AGP v1.1.0 manual-layout template; release assembly regenerates artifact hashes."
+      },
+      {
+        "id": "agp-v1.1.0-published-layout",
+        "state": "legacy_agp",
+        "confidence": "exact_hash",
+        "match": {
+          "state_file": "absent",
+          "required_files": [
+            {
+              "relative_path": "dxcompiler.dll",
+              "kind": "file",
+              "sha256": "e8365d61ffd80b4d8fcaf4d6d79ac00c8373831a0a86e66647a4fc1e4cef2e58",
+              "size_bytes": 109568
+            },
+            {
+              "relative_path": "dxcompiler_original.dll",
+              "kind": "file",
+              "sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+              "size_bytes": 20291584
+            },
+            {
+              "relative_path": "AGP Native Hook/agp_parenthook.dll",
+              "kind": "file",
+              "sha256": "e6bb03805e7caa4392210fa45e3253de769d082ccd59087475a50c24b420071c",
+              "size_bytes": 173056
+            }
+          ],
+          "required_paths": [],
+          "absent_paths": [
+            "AGP Native Hook/agp-install-state.json",
+            "AWOW Universal Female Generation/ufg-install-state.json",
+            "AWOW Universal Female Generation/awow_ufg.dll"
+          ]
+        },
+        "description": "Published AGP v1.1.0 dependency pair with UFG disabled and no UFG state."
+      },
+      {
+        "id": "agp-v1.1.1-manual-layout",
+        "state": "legacy_agp",
+        "confidence": "exact_hash",
+        "match": {
+          "state_file": "absent",
+          "required_files": [
+            {
+              "relative_path": "dxcompiler.dll",
+              "kind": "file",
+              "sha256": "e8365d61ffd80b4d8fcaf4d6d79ac00c8373831a0a86e66647a4fc1e4cef2e58",
+              "size_bytes": 109568
+            },
+            {
+              "relative_path": "dxcompiler_original.dll",
+              "kind": "file",
+              "sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+              "size_bytes": 20291584
+            },
+            {
+              "relative_path": "AGP Native Hook/agp_parenthook.dll",
+              "kind": "file",
+              "sha256": "e6bb03805e7caa4392210fa45e3253de769d082ccd59087475a50c24b420071c",
+              "size_bytes": 173056
+            }
+          ],
+          "required_paths": [],
+          "absent_paths": [
+            "AGP Native Hook/agp-install-state.json",
+            "AWOW Universal Female Generation/ufg-install-state.json",
+            "AWOW Universal Female Generation/awow_ufg.dll"
+          ]
+        },
+        "description": "AGP v1.1.1 package-native pair with UFG disabled and no UFG state."
       },
       {
         "id": "agp-v1.0.0-manual-layout",
@@ -404,6 +482,50 @@
         "description": "The observed AWOW UFG chained loader: exact proxy, canonical original, AWOW payload folder/payload, and coexisting AGP payload."
       },
       {
+        "id": "awow-ufg-v1.1.0-manual-layout",
+        "state": "recognized_ufg",
+        "confidence": "exact_hash",
+        "match": {
+          "state_file": "absent",
+          "required_files": [
+            {
+              "relative_path": "dxcompiler.dll",
+              "kind": "file",
+              "sha256": "6406c83ce1d31415e6e2c013e222d9098219ea912fa541ce4ece8f7b23f07c44",
+              "size_bytes": 157696
+            },
+            {
+              "relative_path": "dxcompiler_original.dll",
+              "kind": "file",
+              "sha256": "40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65",
+              "size_bytes": 20291584
+            },
+            {
+              "relative_path": "AWOW Universal Female Generation/awow_ufg.dll",
+              "kind": "file",
+              "sha256": "796afce9e724b3ec48cfa31e08469335b895b8dc661de7974660676e776d276e",
+              "size_bytes": 195584
+            },
+            {
+              "relative_path": "AGP Native Hook/agp_parenthook.dll",
+              "kind": "file",
+              "sha256": "e6bb03805e7caa4392210fa45e3253de769d082ccd59087475a50c24b420071c",
+              "size_bytes": 173056
+            }
+          ],
+          "required_paths": [
+            {
+              "relative_path": "AWOW Universal Female Generation",
+              "kind": "directory"
+            }
+          ],
+          "absent_paths": [
+            "AWOW Universal Female Generation/ufg-install-state.json"
+          ]
+        },
+        "description": "Canonical UFG v1.1.0 active proxy and payload with the published AGP dependency pair, installed manually without UFG state."
+      },
+      {
         "id": "awow-ufg-v1.0.0-manual-layout",
         "state": "recognized_ufg",
         "confidence": "exact_hash",
@@ -490,6 +612,46 @@
         "description": "Published AWOW UFG v1.0.0 installed over a valid managed AGP v1 state."
       },
       {
+        "id": "awow-ufg-v2-managed-active",
+        "state": "recognized_ufg",
+        "confidence": "derived_from_state",
+        "match": {
+          "state_file": "not_applicable",
+          "required_files": [],
+          "required_paths": [
+            {
+              "relative_path": "AWOW Universal Female Generation/ufg-install-state.json",
+              "kind": "path_marker"
+            },
+            {
+              "relative_path": "AWOW Universal Female Generation/awow_ufg.dll",
+              "kind": "path_marker"
+            }
+          ],
+          "absent_paths": []
+        },
+        "description": "A valid UFG v2 managed state and exact canonical UFG/AGP native pair identify active UFG."
+      },
+      {
+        "id": "awow-ufg-v2-proxy-only",
+        "state": "recognized_ufg",
+        "confidence": "derived_from_state",
+        "match": {
+          "state_file": "not_applicable",
+          "required_files": [],
+          "required_paths": [
+            {
+              "relative_path": "AWOW Universal Female Generation/ufg-install-state.json",
+              "kind": "path_marker"
+            }
+          ],
+          "absent_paths": [
+            "AWOW Universal Female Generation/awow_ufg.dll"
+          ]
+        },
+        "description": "A valid UFG v2 proxy-only state identifies disabled UFG without deleting its active proxy."
+      },
+      {
         "id": "agp-managed-state-v1",
         "state": "managed_agp",
         "confidence": "derived_from_state",
@@ -567,7 +729,7 @@
         "awow_ufg.log",
         "awow_ufg_dxcompiler_loader.log"
       ],
-      "recognition": "recognized_awow_ufg_seed_only",
+      "recognition": "recognized_awow_ufg_seed_or_valid_state",
       "transaction": "quarantine_then_remove_after_agp_commit",
       "uninstall_policy": "remove_recognized_ufg_with_agp_after_confirmation"
     }

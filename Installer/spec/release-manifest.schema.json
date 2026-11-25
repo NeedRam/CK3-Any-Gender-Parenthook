@@ -10,6 +10,7 @@
     "schema_version",
     "kind",
     "release",
+    "native_release",
     "target",
     "package",
     "artifacts",
@@ -31,6 +32,9 @@
     },
     "release": {
       "$ref": "#/$defs/release"
+    },
+    "native_release": {
+      "$ref": "#/$defs/nativeRelease"
     },
     "target": {
       "$ref": "#/$defs/target"
@@ -106,6 +110,48 @@
           "const": "MIT"
         }
       }
+    },
+    "nativeRelease": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "repository",
+        "tag",
+        "source_commit",
+        "archive_url",
+        "archive_sha256"
+      ],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "repository": {
+          "type": "string",
+          "format": "uri-reference",
+          "minLength": 1
+        },
+        "tag": {
+          "type": "string",
+          "pattern": "^v[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "source_commit": {
+          "$ref": "#/$defs/sha1"
+        },
+        "archive_url": {
+          "type": "string",
+          "format": "uri-reference",
+          "minLength": 1
+        },
+        "archive_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "sha1": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
     },
     "supportedBuild": {
       "type": "object",
@@ -627,7 +673,7 @@
             },
             "recognition": {
               "type": "string",
-              "const": "recognized_awow_ufg_seed_only"
+              "const": "recognized_awow_ufg_seed_or_valid_state"
             },
             "transaction": {
               "type": "string",

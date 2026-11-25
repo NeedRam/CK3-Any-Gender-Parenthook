@@ -1,8 +1,8 @@
 > CK3 1.21.0.3 only. Compatibility uses exact verified game-file hashes, regardless of launcher storefront metadata. The optional Dynastic Priority add-on is not included.
 
-# AGP v1.1.0 Base Files (Manual Install)
+# AGP v1.1.1 Base Files (Manual Install)
 
-This package contains only the Any-Gender Parenthook native files for a manual
+This package contains the pinned AGP v1.1.0 native files in the Any-Gender Parenthook v1.1.1 package for a manual
 installation on Windows x64 with Crusader Kings III `1.21.0.3`.
 
 Use these steps only when the game's `binaries` folder contains the game's

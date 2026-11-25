@@ -6,7 +6,7 @@ on:
       version:
         description: Release version from Installer/release-manifest.json
         required: true
-        default: 1.1.0
+        default: 1.1.1
   push:
     tags:
       - v*.*.*
@@ -68,10 +68,6 @@ jobs:
             python -m pip install --disable-pip-version-check pyinstaller
           }
 
-      - name: Build native x64 payload
-        shell: powershell
-        run: "& '.\\Native Hook\\test.ps1'"
-
       - name: Run installer contract and transition tests
         shell: cmd
         run: python -m unittest discover -s Installer/python/tests -v
@@ -97,7 +93,7 @@ jobs:
             }
           }
 
-      - name: Assemble unsigned package
+      - name: Assemble unsigned package from pinned native release
         shell: pwsh
         run: .\release\build-release.ps1 -Version '${{ steps.release.outputs.version }}' -SkipNativeBuild -RequireCanonicalCi
 

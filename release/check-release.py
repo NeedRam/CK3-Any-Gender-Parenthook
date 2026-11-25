@@ -15,7 +15,10 @@ def check(root: Path = ROOT) -> dict:
     profiles = document["profiles"]
     hashes = [profile["executable_sha256"] for profile in profiles]
     if len(set(hashes)) != len(hashes): errors.append("native executable identities are ambiguous")
-    if manifest["release"]["version"] != document["release_version"]: errors.append("release versions disagree")
+    native_release = manifest.get("native_release", {})
+    if native_release.get("version") != document["release_version"]: errors.append("native release and profile versions disagree")
+    if manifest["release"]["version"] == document["release_version"]: errors.append("package release must be distinct from the pinned native release")
+    if native_release.get("source_commit") != "0576adacd68073aa4462755c82cade14260f006c": errors.append("native source commit is not the pinned published release")
     if manifest["schema_version"] != 2: errors.append("release manifest must be schema-v2")
     expected = {(p["profile_id"],p["version"],p["distribution"],p["executable_sha256"],p["original_dxcompiler_sha256"]) for p in profiles}
     actual = {(p["profile_id"],p["id"],p["distribution"],p["executable_sha256"],p["original_dxcompiler_sha256"]) for p in manifest["target"]["supported_builds"]}

@@ -1,6 +1,6 @@
 # Any-Gender Parenthook
 
-> **1.1.0:** targets CK3 1.21.0.3 only. Native gameplay acceptance passed for the executable hash recorded in `Native Hook/profiles/ck3-1.21.0.3.json`. Compatibility follows exact game-file hashes, regardless of launcher storefront metadata. The previous 1.0.2 release targets CK3 1.19.0.6. Local packages remain unpublished; the optional Dynastic Priority add-on is excluded and its full rule matrix is unverified.
+> **1.1.1 installer update:** targets CK3 1.21.0.3 only. Native gameplay acceptance passed for the executable hash recorded in `Native Hook/profiles/ck3-1.21.0.3.json`. Compatibility follows exact game-file hashes, regardless of launcher storefront metadata. The previous 1.0.2 release targets CK3 1.19.0.6. This package reuses the published 1.1.0 native DLLs and recognizes active or disabled UFG 1.1.x; the optional Dynastic Priority add-on is excluded and its full rule matrix is unverified.
 
 Any-Gender Parenthook (AGP) is a Windows x64 native hook for Crusader Kings III. It supplies parent-role handling used by compatible CK3 mods without shipping the development test mod or the optional Dynastic Priority addon.
 
@@ -9,11 +9,11 @@ Any-Gender Parenthook (AGP) is a Windows x64 native hook for Crusader Kings III.
 Download the package for your preferred installation method and extract the
 whole archive:
 
-- `AGP v1.1.0 EXE Installer.zip` provides the graphical installer and
+- `AGP v1.1.1 EXE Installer.zip` provides the graphical installer and
   uninstaller that can search Steam libraries or browse to Steam/GOG `ck3.exe`;
-- `AGP v1.1.0 Batch File Installer.zip` provides the readable batch/PowerShell
+- `AGP v1.1.1 Batch File Installer.zip` provides the readable batch/PowerShell
   installer and uninstaller with a standard Steam default and a `-TargetRoot` override for other installations;
-- `AGP v1.1.0 Base Files (Manual Install).zip` contains only the native files
+- `AGP v1.1.1 Base Files (Manual Install).zip` contains only the native files
   and manual instructions for advanced users with a clean matching game layout.
 
 Close CK3 before installing. The installer renames the verified original `dxcompiler.dll` to `dxcompiler_original.dll`, installs AGP's proxy as `dxcompiler.dll`, and installs `AGP Native Hook\agp_parenthook.dll`. Exact hashes and persistent state—not file size—identify files that AGP owns.
@@ -61,13 +61,13 @@ preserved rather than silently deleted.
 The repository's `release` folder is maintainer tooling, not the folder users
 copy into CK3. Run `release\build-release.ps1` from PowerShell on Windows with
 the exact toolchain in `Native Hook\toolchain.json` and the Python build
-requirements installed. The script builds or verifies the native x64 DLLs,
+requirements installed. The 1.1.1 script reuses and verifies the pinned published 1.1.0 native DLLs,
 assembles the three method-specific ZIPs, rejects cross-package and
 development-only content, and writes checksums plus local provenance metadata.
 Local output is for smoke testing; the GitHub Actions build from `main` is the
 canonical release artifact.
 
-Version 1.1.0 is intentionally unsigned and auditable. The planned SignPath process for a future signed release is documented in [SIGNING.md](SIGNING.md).
+Version 1.1.1 is intentionally unsigned and auditable. The planned SignPath process for a future signed release is documented in [SIGNING.md](SIGNING.md).
 
 ## Project policies
 

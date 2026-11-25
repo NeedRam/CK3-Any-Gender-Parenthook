@@ -4,7 +4,7 @@ This directory is the shared interface for the independent BAT/PowerShell and Py
 
 ## Canonical files
 
-- `../release-manifest.json` is the package manifest. It identifies the Windows x64 target, supported CK3 build, payload hashes, preserved game file, package exclusions, and safety confirmations.
+- `../release-manifest.json` is the package manifest. It identifies the Windows x64 target, supported CK3 build, package release, pinned native release provenance, payload hashes, preserved game file, package exclusions, and safety confirmations.
 - `release-manifest.schema.json` validates that manifest.
 - `install-state.schema.json` validates the committed state at `AGP Native Hook/agp-install-state.json`.
 - `install-journal.schema.json` validates the in-flight journal under `AGP Native Hook/.agp-journal/`.
@@ -23,12 +23,12 @@ The target is the selected Steam or GOG CK3 `binaries` directory. The new native
 
 ## Classification precedence
 
-Classify only after the preflight guards and before any stage/mutation. A valid schema-v2 state with matching managed hashes wins over static compatibility seeds. Then use exact-hash clean/legacy seeds, the exact AWOW UFG hash/path seed, and the exact game-updated seed. Anything else is `unknown_conflicting`.
+Classify only after the preflight guards and before any stage/mutation. A valid AGP schema-v2 state with matching managed hashes wins over static compatibility seeds; then exact UFG v2 state/native relationships and manual UFG seeds are evaluated before clean/legacy and game-updated layouts. Anything else is `unknown_conflicting`.
 
 - `known_clean`: the game executable and active compiler match a clean seed; no AGP state/payload is present.
 - `managed_agp`: state is valid and every managed path has the recorded hash and ownership.
 - `legacy_agp`: a known manual/older AGP layout is present without a valid state.
-- `recognized_ufg`: the current AWOW UFG chained-loader proxy hash, canonical original hash, exact `AWOW Universal Female Generation/awow_ufg.dll` hash, and coexisting AGP payload hash all match. A generic foreign folder is not UFG.
+- `recognized_ufg`: the canonical AWOW UFG chained-loader proxy/original/payload plus AGP dependency hashes match, or a valid UFG v2 state proves the same relationship for active or proxy-only UFG. A generic foreign folder is not UFG.
 - `game_updated`: the exact state-plus-supported-game hash layout identifies a newly supported active original replacing a stale state-recorded backup.
 - `unknown_conflicting`: fallback for all unrecognized or contradictory layouts.
 
@@ -49,12 +49,12 @@ Both engines implement the same six observable boundaries:
 
 - A legacy AGP install requires an explicit OK/Cancel confirmation; decline is a zero-write abort.
 - An unknown layout requires an explicit OK/Cancel confirmation for both install and uninstall. Every displaced or mismatched unknown file/directory is quarantined losslessly with its original relative path, SHA-256, size, and restore metadata. Unknown files are never silently deleted.
-- Recognized AWOW UFG conversion requires an explicit warning and confirmation. Quarantine the exact recognized UFG proxy, `AWOW Universal Female Generation` directory, and exact `awow_ufg.log` and `awow_ufg_dxcompiler_loader.log`, install and verify AGP, then remove that quarantine after AGP commit. If AGP fails, restore the quarantine.
-- Uninstalling a recognized UFG layout requires confirmation, then transactionally removes the recognized UFG proxy, payload directory, logs, and coexisting AGP payload before restoring the hash-checked game compiler. A cancelled confirmation performs no writes.
+- Recognized AWOW UFG conversion requires an explicit warning and confirmation. Quarantine only the exact recognized UFG proxy, payload, state file, and named runtime logs, install and verify AGP, then remove that quarantine after AGP commit. Unknown files under `AWOW Universal Female Generation` remain in place; the directory is removed only when empty. If AGP fails, restore the quarantine.
+- Uninstalling a recognized UFG layout requires confirmation, then transactionally removes the recognized UFG proxy, payload/state files, named logs, and coexisting AGP payload before restoring the hash-checked game compiler. A cancelled confirmation performs no writes.
 - Managed uninstall is allowed only when state-owned hashes still match. It restores the hash-checked game compiler to `dxcompiler.dll`, removes the two managed AGP artifacts, the exact `agp_dxcompiler_loader.log` and `agp_parenthook.log`, and state (state last), while preserving unknown contents under `AGP Native Hook`, unknown quarantine, and all other unmanaged paths. A mismatched unknown file requires confirmation and quarantine before removal.
 
 No transition in `state-transitions.json` has an implicit destructive action: every mutating transition names its confirmation, scope, preservation/quarantine policy, and rollback result.
 
 ## Version 2 migration
 
-New manifests, committed state, and journals use schema version 2, `ck3_game_binaries`, original ownership `game`, and explicit `profile_id` / `distribution` (`steam` or `gog`). Both engines select exactly one executable SHA-256 profile, independently of array order or installation path. Version-1 managed state remains readable and is replaced only at successful commit, with the original snapshot available for rollback. Incomplete old journals are never resumed automatically. A verified game update can replace the executable without forfeiting hash-verified ownership of the old AGP files.
+New manifests, committed state, and journals use schema version 2, `ck3_game_binaries`, original ownership `game`, and explicit `profile_id` / `distribution` (`steam` or `gog`). The package release is 1.1.1 while `native_release.version` and native profile `release_version` remain the pinned published 1.1.0 bytes. Both engines select exactly one executable SHA-256 profile, independently of array order or installation path. Version-1 managed state remains readable and is replaced only at successful commit, with the original snapshot available for rollback. Incomplete AGP or UFG journals/recovery directories are never resumed automatically. A verified game update can replace the executable without forfeiting hash-verified ownership of the old AGP files.

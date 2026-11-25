@@ -314,7 +314,7 @@
     },
     {
       "id": "recognized-awow-ufg-conversion",
-      "description": "Recognized AWOW UFG is converted only after warning/confirmation; the exact foreign folder and two named logs are quarantined then removed after AGP commit.",
+      "description": "Recognized AWOW UFG is converted only after warning/confirmation; the exact foreign payload and two named logs are quarantined then removed after AGP commit while unknown folder contents remain.",
       "operation": "install",
       "initial": {
         "target_root_kind": "fixture_binaries",
@@ -350,6 +350,13 @@
             "sha256": "466295aa3dc8bf345864b847728bd300b54c66a433d6bc886774d1ed66d39188",
             "size_bytes": 131584,
             "owner": "ufg"
+          },
+          {
+            "relative_path": "AWOW Universal Female Generation/user-owned-note.txt",
+            "kind": "file",
+            "sha256": "abababababababababababababababababababababababababababababababab",
+            "size_bytes": 24,
+            "owner": "unknown"
           },
           {
             "relative_path": "AGP Native Hook/agp_parenthook.dll",
@@ -398,11 +405,15 @@
           {
             "relative_path": "dxcompiler_original.dll",
             "action": "preserve"
+          },
+          {
+            "relative_path": "AWOW Universal Female Generation/user-owned-note.txt",
+            "action": "preserve"
           }
         ],
         "quarantines": [
           {
-            "relative_path": "AWOW Universal Female Generation",
+            "relative_path": "AWOW Universal Female Generation/awow_ufg.dll",
             "action": "quarantine"
           },
           {
@@ -416,7 +427,7 @@
         ],
         "removes": [
           {
-            "relative_path": "AWOW Universal Female Generation",
+            "relative_path": "AWOW Universal Female Generation/awow_ufg.dll",
             "action": "remove"
           },
           {
@@ -432,13 +443,13 @@
           "required": true,
           "committed_state": false,
           "restores": [
-            "AWOW Universal Female Generation",
+            "AWOW Universal Female Generation/awow_ufg.dll",
             "awow_ufg_dxcompiler_loader.log",
             "awow_ufg.log",
             "dxcompiler.dll"
           ]
         },
-        "reason": "Foreign recursive removal is authorized only for the recognized AWOW UFG seed and occurs after AGP verification/commit."
+        "reason": "Only the recognized AWOW UFG payload and named logs are removed after AGP verification/commit; unknown folder contents remain in place."
       }
     },
     {

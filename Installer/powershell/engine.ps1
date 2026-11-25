@@ -178,6 +178,106 @@ function Test-StateShape($State) {
     catch { return $false }
 }
 
+function Test-UfgStateShape($State) {
+    if ($null -eq $State) { return $false }
+    try {
+        if ($State.schema_version -ne 2 -or $State.kind -ne 'ufg_install_state' -or $State.status -notin @('managed_ufg','ufg_proxy_only')) { return $false }
+        if ([string]$State.transaction_id -notmatch '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$') { return $false }
+        if ($State.release.id -ne 'awow-ufg' -or $State.release.version -notin @('1.1.0','1.1.1') -or -not (Test-Sha $State.release.manifest_sha256)) { return $false }
+        if ($State.target.game_id -ne 'crusader_kings_iii' -or $State.target.build_id -ne '1.21.0.3' -or $State.target.binaries_relative_path -ne 'binaries' -or $State.target.executable_relative_path -ne 'ck3.exe' -or $State.target.target_root_kind -ne 'ck3_game_binaries' -or $State.target.profile_id -ne 'ck3-1.21.0.3-x64') { return $false }
+        foreach ($base in @($State.baseline.original_dxcompiler, $State.baseline.executable)) {
+            if (-not (Test-Sha $base.sha256) -or [int64]$base.size_bytes -lt 0 -or $base.ownership -ne 'game') { return $false }
+        }
+        if ($State.baseline.original_dxcompiler.relative_path -ne 'dxcompiler_original.dll' -or $State.baseline.executable.relative_path -ne 'ck3.exe') { return $false }
+        $dependency = $State.agp_dependency
+        if ($dependency.build_id -notin @('agp-v1.1.0','agp-v1.1.1') -or $dependency.version -ne ([string]$dependency.build_id).Substring(5)) { return $false }
+        if ($dependency.proxy_relative_path -ne 'dxcompiler.dll' -or $dependency.payload_relative_path -ne 'AGP Native Hook/agp_parenthook.dll' -or $dependency.state_relative_path -ne 'AGP Native Hook/agp-install-state.json' -or -not (Test-Sha $dependency.proxy_sha256) -or -not (Test-Sha $dependency.payload_sha256) -or -not (Test-Sha $dependency.original_dxcompiler_sha256)) { return $false }
+        if ($dependency.state_sha256 -ne 'absent' -and -not (Test-Sha $dependency.state_sha256)) { return $false }
+        if (@($State.managed_files).Count -ne 2) { return $false }
+        $proxy = @($State.managed_files | Where-Object { $_.relative_path -eq 'dxcompiler.dll' }) | Select-Object -First 1
+        $payload = @($State.managed_files | Where-Object { $_.relative_path -eq 'AWOW Universal Female Generation/awow_ufg.dll' }) | Select-Object -First 1
+        if ($null -eq $proxy -or $null -eq $payload -or $proxy.role -ne 'ufg_proxy' -or $payload.role -ne 'ufg_payload') { return $false }
+        foreach ($managed in @($proxy,$payload)) {
+            if ($managed.ownership -ne 'managed' -or -not (Test-Sha $managed.installed_sha256) -or [int64]$managed.installed_size_bytes -lt 0 -or $managed.present -isnot [bool]) { return $false }
+        }
+        if (-not $proxy.present -or $payload.present -ne ($State.status -eq 'managed_ufg') -or $proxy.restore.action -ne 'leave_managed_file' -or $payload.restore.action -ne 'remove_managed_file') { return $false }
+        if ($State.foreign_cleanup.kind -ne 'none' -or @($State.foreign_cleanup.removed_paths).Count -ne 0 -or $State.foreign_cleanup.uninstall_policy -ne 'none' -or -not (Test-ValidRelative $State.foreign_cleanup.quarantine_relative_path)) { return $false }
+        if ($null -eq $State.quarantined_files -or $State.created_utc -isnot [string] -or $State.updated_utc -isnot [string]) { return $false }
+        return $true
+    }
+    catch { return $false }
+}
+
+function Get-UfgPairs([hashtable]$Context) {
+    $pairs = New-Object Collections.Generic.List[object]
+    foreach ($seed in @($Context.Manifest.compatibility.seeds | Where-Object { $_.state -eq 'recognized_ufg' })) {
+        $files = @($seed.match.required_files)
+        $proxy = $files | Where-Object { $_.relative_path -eq 'dxcompiler.dll' } | Select-Object -First 1
+        $original = $files | Where-Object { $_.relative_path -eq 'dxcompiler_original.dll' } | Select-Object -First 1
+        $payload = $files | Where-Object { $_.relative_path -eq 'AWOW Universal Female Generation/awow_ufg.dll' } | Select-Object -First 1
+        $agpPayload = $files | Where-Object { $_.relative_path -eq 'AGP Native Hook/agp_parenthook.dll' } | Select-Object -First 1
+        if ($proxy -and $original -and $payload -and $agpPayload) {
+            $agpArtifact = @($Context.Manifest.artifacts | Where-Object { $_.id -eq 'agp-proxy' }) | Select-Object -First 1
+            if ($agpArtifact) { [void]$pairs.Add([ordered]@{ proxy = ([string]$proxy.sha256).ToLowerInvariant(); original = ([string]$original.sha256).ToLowerInvariant(); payload = ([string]$payload.sha256).ToLowerInvariant(); agp_payload = ([string]$agpPayload.sha256).ToLowerInvariant(); agp_proxy = ([string]$agpArtifact.sha256).ToLowerInvariant() }) }
+        }
+    }
+    [void]$pairs.Add([ordered]@{ proxy = '6406c83ce1d31415e6e2c013e222d9098219ea912fa541ce4ece8f7b23f07c44'; original = '40e381d1d0ccf3bd725e30914b07d3d0cdaa907900e4d194da0e9cbd41d06e65'; payload = '796afce9e724b3ec48cfa31e08469335b895b8dc661de7974660676e776d276e'; agp_payload = 'e6bb03805e7caa4392210fa45e3253de769d082ccd59087475a50c24b420071c'; agp_proxy = 'e8365d61ffd80b4d8fcaf4d6d79ac00c8373831a0a86e66647a4fc1e4cef2e58' })
+    return $pairs.ToArray()
+}
+
+function Get-UfgClassification([hashtable]$Context) {
+    $Context.UfgBlocked = $false
+    $Context.UfgReason = ''
+    $statePath = Get-ContainedPath $Context 'AWOW Universal Female Generation/ufg-install-state.json'
+    $statePresent = Test-Path -LiteralPath $statePath
+    $state = if ($statePresent) { Get-JsonObject $statePath } else { $null }
+    if ($statePresent -and -not (Test-UfgStateShape $state)) { $Context.UfgBlocked = $true; $Context.UfgReason = 'UFG state is malformed; manual recovery is required'; return 'unknown_conflicting' }
+    $pairs = @(Get-UfgPairs $Context)
+    if ($statePresent) {
+        foreach ($pair in $pairs) {
+            $dependency = $state.agp_dependency
+            if ($dependency.proxy_sha256.ToLowerInvariant() -ne $pair.agp_proxy -or $dependency.payload_sha256.ToLowerInvariant() -ne $pair.agp_payload -or $dependency.original_dxcompiler_sha256.ToLowerInvariant() -ne $pair.original) { continue }
+            $active = Get-Observation $Context 'dxcompiler.dll'
+            $original = Get-Observation $Context 'dxcompiler_original.dll'
+            $exe = Get-Observation $Context 'ck3.exe'
+            $proxyItem = @($state.managed_files | Where-Object { $_.relative_path -eq 'dxcompiler.dll' }) | Select-Object -First 1
+            $payloadItem = @($state.managed_files | Where-Object { $_.relative_path -eq 'AWOW Universal Female Generation/awow_ufg.dll' }) | Select-Object -First 1
+            $payloadObs = Get-Observation $Context 'AWOW Universal Female Generation/awow_ufg.dll'
+            $agpPayloadObs = Get-Observation $Context 'AGP Native Hook/agp_parenthook.dll'
+            $agpStateObs = Get-Observation $Context $Context.Manifest.target.state_relative_path
+            $actualStateSha = if ($agpStateObs.exists) { $agpStateObs.sha256 } else { 'absent' }
+            if ($active.sha256 -ne $pair.proxy -or $original.sha256 -ne $state.baseline.original_dxcompiler.sha256 -or $original.sha256 -ne $pair.original -or $exe.sha256 -ne $state.baseline.executable.sha256 -or $agpPayloadObs.sha256 -ne $pair.agp_payload -or $proxyItem.installed_sha256.ToLowerInvariant() -ne $pair.proxy -or $payloadItem.installed_sha256.ToLowerInvariant() -ne $pair.payload -or $payloadItem.present -ne ($state.status -eq 'managed_ufg') -or $dependency.state_sha256.ToLowerInvariant() -ne $actualStateSha) { continue }
+            if ($state.status -eq 'managed_ufg' -and $payloadObs.sha256 -ne $pair.payload) { continue }
+            if ($state.status -eq 'ufg_proxy_only' -and $payloadObs.exists) { continue }
+            if ($agpStateObs.exists) {
+                $agpState = Get-JsonObject (Get-ContainedPath $Context $Context.Manifest.target.state_relative_path)
+                if (-not (Test-StateShape $agpState)) { continue }
+                if ($agpState.release.id -ne 'agp' -or $agpState.release.version -notin @('1.1.0','1.1.1') -or
+                    $agpState.target.game_id -ne 'crusader_kings_iii' -or $agpState.target.build_id -ne [string]$Context.Build.id -or
+                    $agpState.target.profile_id -ne [string]$Context.Build.profile_id -or $agpState.target.distribution -ne [string]$Context.Build.distribution) { continue }
+                $agpPayload = @($agpState.managed_files | Where-Object { $_.role -eq 'agp_payload' }) | Select-Object -First 1
+                if ($agpState.baseline.original_dxcompiler.sha256 -ne $pair.original -or $null -eq $agpPayload -or $agpPayload.installed_sha256.ToLowerInvariant() -ne $pair.agp_payload -or $agpPayloadObs.sha256 -ne $agpPayload.installed_sha256.ToLowerInvariant()) { continue }
+            }
+            $Context.UfgReason = "valid UFG v2 $($state.status) layout; UFG is $(if($state.status -eq 'managed_ufg'){'active'}else{'disabled'})"
+            $Context.UfgState = $state
+            return 'recognized_ufg'
+        }
+        $Context.UfgBlocked = $true; $Context.UfgReason = 'UFG state or its native dependency drifted; manual recovery is required'; return 'unknown_conflicting'
+    }
+    $active = Get-Observation $Context 'dxcompiler.dll'
+    $original = Get-Observation $Context 'dxcompiler_original.dll'
+    $payloadObs = Get-Observation $Context 'AWOW Universal Female Generation/awow_ufg.dll'
+    $agpPayloadObs = Get-Observation $Context 'AGP Native Hook/agp_parenthook.dll'
+    foreach ($pair in $pairs) {
+        if ($active.sha256 -eq $pair.proxy -and $original.sha256 -eq $pair.original -and $agpPayloadObs.sha256 -eq $pair.agp_payload -and ($payloadObs.sha256 -eq $pair.payload -or -not $payloadObs.exists)) {
+            $Context.UfgReason = if ($payloadObs.exists) { 'exact manual UFG active layout without UFG state' } else { 'exact manual UFG disabled proxy without UFG state' }
+            return 'recognized_ufg'
+        }
+    }
+    if ($payloadObs.exists) { $Context.UfgBlocked = $true; $Context.UfgReason = 'UFG files are present but do not match a canonical native pair; manual recovery is required'; return 'unknown_conflicting' }
+    return $null
+}
+
 function Test-ManagedHashes([hashtable]$Context, $State) {
     if (-not (Test-StateShape $State)) { return $false }
     foreach ($managed in @($State.managed_files)) {
@@ -238,6 +338,11 @@ function Get-Classification([hashtable]$Context) {
             }
         }
     }
+    $ufg = Get-UfgClassification $Context
+    if ($null -ne $ufg) {
+        $Context.Classification = $ufg
+        return $Context.Classification
+    }
     if (-not $statePresent) {
         $active = Get-Observation $Context $Context.Manifest.target.active_dxcompiler_relative_path
         $original = Get-Observation $Context $Context.Manifest.target.original_dxcompiler_relative_path
@@ -289,6 +394,46 @@ function Add-Snapshot([hashtable]$Context, [string]$RelativePath) {
         }
     }
     $Context.Snapshots[$RelativePath] = $snapshot
+}
+
+function Get-LayoutFingerprint([hashtable]$Context) {
+    $paths = @(
+        'ck3.exe',
+        [string]$Context.Manifest.target.active_dxcompiler_relative_path,
+        [string]$Context.Manifest.target.original_dxcompiler_relative_path,
+        [string]$Context.Manifest.target.state_relative_path,
+        'AGP Native Hook/agp_parenthook.dll',
+        'AWOW Universal Female Generation/awow_ufg.dll',
+        'AWOW Universal Female Generation/ufg-install-state.json',
+        'awow_ufg.log',
+        'awow_ufg_dxcompiler_loader.log',
+        'agp_dxcompiler_loader.log',
+        'agp_parenthook.log'
+    )
+    $fingerprint = [ordered]@{}
+    foreach ($relative in ($paths | Select-Object -Unique)) { $fingerprint[$relative] = Get-Observation $Context $relative }
+    return $fingerprint
+}
+
+function Test-LayoutUnchanged([hashtable]$Context) {
+    $before = $Context.LayoutFingerprint | ConvertTo-Json -Depth 16 -Compress
+    $after = Get-LayoutFingerprint $Context | ConvertTo-Json -Depth 16 -Compress
+    return $before -eq $after
+}
+
+function Test-SnapshotsUnchanged([hashtable]$Context) {
+    foreach ($snapshot in $Context.Snapshots.Values) {
+        $before = $snapshot.before | ConvertTo-Json -Depth 16 -Compress
+        $after = Get-Observation $Context ([string]$snapshot.relative_path) | ConvertTo-Json -Depth 16 -Compress
+        if ($before -ne $after) { return $false }
+    }
+    return $true
+}
+
+function Remove-StagedTransaction([hashtable]$Context) {
+    $journalDir = Split-Path -Parent $Context.JournalPath
+    if (Test-Path -LiteralPath $journalDir) { Remove-Item -LiteralPath $journalDir -Recurse -Force }
+    if (Test-Path -LiteralPath $Context.JournalPath) { Remove-Item -LiteralPath $Context.JournalPath -Force }
 }
 
 function Add-Quarantine([hashtable]$Context, [string]$RelativePath, [string]$Kind, [string]$Owner, [string]$Policy) {
@@ -351,7 +496,11 @@ function New-Context {
         State = $null
         StateValid = $false
         StatePresent = $false
+        UfgBlocked = $false
+        UfgReason = ''
+        UfgState = $null
         Classification = $null
+        LayoutFingerprint = $null
         TransactionId = [Guid]::NewGuid().ToString()
         StageRelative = ''
         QuarantineRelative = ''
@@ -392,9 +541,18 @@ function Test-Preflight([hashtable]$Context) {
     $profiles = @($Context.Manifest.target.supported_builds | Where-Object { ([string]$_.executable_sha256).ToLowerInvariant() -eq $exeObs.sha256 })
     if ($profiles.Count -ne 1) { Fail 'Executable must match exactly one supported CK3 profile.' }
     $Context.Build = $profiles[0]
+    foreach ($relative in @('AWOW Universal Female Generation/ufg-install-state.json', 'AWOW Universal Female Generation/.ufg-journal', 'AWOW Universal Female Generation/.ufg-quarantine', 'AWOW Universal Female Generation/awow_ufg.dll', 'awow_ufg.log', 'awow_ufg_dxcompiler_loader.log')) { [void](Get-ContainedPath $Context $relative) }
     $statePath = Get-ContainedPath $Context $Context.Manifest.target.state_relative_path
     if ((Test-Path -LiteralPath $statePath) -and -not (Test-StateShape (Get-JsonObject $statePath))) {
         Fail 'Install state is invalid or unreadable; manual recovery is required.'
+    }
+    $ufgStatePath = Get-ContainedPath $Context 'AWOW Universal Female Generation/ufg-install-state.json'
+    if ((Test-Path -LiteralPath $ufgStatePath) -and -not (Test-UfgStateShape (Get-JsonObject $ufgStatePath))) { Fail 'UFG install state is invalid or unreadable; manual recovery is required.' }
+    foreach ($recovery in @('AWOW Universal Female Generation/.ufg-journal', 'AWOW Universal Female Generation/.ufg-quarantine')) {
+        $recoveryPath = Get-ContainedPath $Context $recovery
+        if (Test-Path -LiteralPath $recoveryPath) {
+            if (-not (Get-Item -LiteralPath $recoveryPath -Force).PSIsContainer -or @(Get-ChildItem -LiteralPath $recoveryPath -Force).Count -gt 0) { Fail 'An incomplete UFG recovery transaction exists; manual recovery is required.' }
+        }
     }
     $active = Get-Observation $Context $Context.Manifest.target.active_dxcompiler_relative_path
     if ($Operation -eq 'install' -and (-not $active.exists -or $active.kind -ne 'file')) { Fail 'Active dxcompiler.dll is missing.' }
@@ -453,6 +611,10 @@ function Show-ConfirmationDialog([hashtable]$Context) {
 }
 
 function Confirm-Transition([hashtable]$Context) {
+    if ($Context.UfgBlocked) {
+        $Context.Result = [ordered]@{ operation = $Operation; classification = $Context.Classification; decision = 'reject'; next_state = $Context.Classification; message = $Context.UfgReason }
+        return $false
+    }
     $expected = Get-ExpectedConfirmation $Context
     if ($null -eq $expected) { return $true }
     $answer = $Confirmation
@@ -471,7 +633,7 @@ function Add-InstallPlan([hashtable]$Context) {
     $originalRel = $Context.Manifest.target.original_dxcompiler_relative_path
     $payloadRel = 'AGP Native Hook/agp_parenthook.dll'
     $stateRel = $Context.Manifest.target.state_relative_path
-    foreach ($rel in @($activeRel, $originalRel, $payloadRel, $stateRel)) { Add-Snapshot $Context $rel }
+    foreach ($rel in @($activeRel, $originalRel, $payloadRel, $stateRel, 'AWOW Universal Female Generation/awow_ufg.dll', 'AWOW Universal Female Generation/ufg-install-state.json', 'awow_ufg.log', 'awow_ufg_dxcompiler_loader.log')) { Add-Snapshot $Context $rel }
     foreach ($log in @($Context.Manifest.target.logs)) {
         if ([string]$log.owner -eq 'agp_runtime') { Add-Snapshot $Context $log.relative_path }
     }
@@ -488,11 +650,13 @@ function Add-InstallPlan([hashtable]$Context) {
         }
         'recognized_ufg' {
             if ((Get-Observation $Context $activeRel).exists) { Add-Quarantine $Context $activeRel 'file' 'recognized_awow_ufg' 'do_not_restore_after_awow_ufg_commit' }
-            $ufgDir = [string]$Context.Manifest.safety.ufg_cleanup.foreign_payload_directory
-            if ((Get-Observation $Context $ufgDir).exists) { Add-Quarantine $Context $ufgDir 'directory_manifest' 'recognized_awow_ufg' 'do_not_restore_after_awow_ufg_commit' }
+            foreach ($relative in @('AWOW Universal Female Generation/awow_ufg.dll', 'AWOW Universal Female Generation/ufg-install-state.json')) {
+                if ((Get-Observation $Context $relative).exists) { Add-Quarantine $Context $relative 'file' 'recognized_awow_ufg' 'do_not_restore_after_awow_ufg_commit' }
+            }
             foreach ($log in @($Context.Manifest.safety.ufg_cleanup.foreign_logs)) {
                 if ((Get-Observation $Context $log).exists) { Add-Quarantine $Context $log 'file' 'recognized_awow_ufg' 'do_not_restore_after_awow_ufg_commit' }
             }
+            if ((Get-Observation $Context $payloadRel).exists) { Add-Quarantine $Context $payloadRel 'file' 'recognized_awow_ufg' 'do_not_restore_after_awow_ufg_commit' }
         }
         'game_updated' {
             Add-Quarantine $Context $originalRel 'file' 'unknown_displaced' 'preserve_for_uninstall'
@@ -585,7 +749,7 @@ function New-State([hashtable]$Context, [string]$CreatedUtc) {
     }
     $foreign = [ordered]@{ kind = 'none'; quarantine_relative_path = $Context.QuarantineRelative; removed_paths = @(); uninstall_policy = 'none' }
     if ($Context.Classification -eq 'recognized_ufg') {
-        $foreign = [ordered]@{ kind = 'recognized_awow_ufg'; quarantine_relative_path = $Context.QuarantineRelative; removed_paths = @('AWOW Universal Female Generation', 'awow_ufg.log', 'awow_ufg_dxcompiler_loader.log'); uninstall_policy = 'do_not_restore_awow_ufg' }
+        $foreign = [ordered]@{ kind = 'recognized_awow_ufg'; quarantine_relative_path = $Context.QuarantineRelative; removed_paths = @('AWOW Universal Female Generation/awow_ufg.dll', 'AWOW Universal Female Generation/ufg-install-state.json', 'awow_ufg.log', 'awow_ufg_dxcompiler_loader.log'); uninstall_policy = 'do_not_restore_awow_ufg' }
     }
     $state = [ordered]@{
         '$schema' = 'https://any-gender-parenthook.invalid/schema/install-state-v2.json'
@@ -630,6 +794,8 @@ function Remove-Exact([hashtable]$Context, [string]$RelativePath, [bool]$Recursi
 function Commit-Install([hashtable]$Context) {
     if ($Context.Classification -eq 'recognized_ufg') {
         Remove-Exact $Context $Context.QuarantineRelative $true
+        $ufgDir = Get-ContainedPath $Context 'AWOW Universal Female Generation'
+        if ((Test-Path -LiteralPath $ufgDir -PathType Container) -and @(Get-ChildItem -LiteralPath $ufgDir -Force).Count -eq 0) { Remove-Item -LiteralPath $ufgDir -Force }
     }
     $journalDir = Split-Path -Parent $Context.JournalPath
     if (Test-Path -LiteralPath $journalDir) { Remove-Item -LiteralPath $journalDir -Recurse -Force }
@@ -659,7 +825,17 @@ function Restore-Snapshots([hashtable]$Context) {
 function Invoke-Install([hashtable]$Context) {
     Add-InstallPlan $Context
     Stage-Install $Context
+    if (-not (Test-SnapshotsUnchanged $Context)) {
+        Remove-StagedTransaction $Context
+        $Context.Result = [ordered]@{ operation = 'install'; classification = $Context.Classification; decision = 'reject'; next_state = $Context.Classification; transaction_id = $Context.TransactionId; message = 'Target changed during transaction planning; no files were changed.' }
+        return
+    }
     New-InstallJournal $Context
+    if (-not (Test-SnapshotsUnchanged $Context)) {
+        Remove-StagedTransaction $Context
+        $Context.Result = [ordered]@{ operation = 'install'; classification = $Context.Classification; decision = 'reject'; next_state = $Context.Classification; transaction_id = $Context.TransactionId; message = 'Target changed after journaling; no files were changed.' }
+        return
+    }
     $createdUtc = [DateTime]::UtcNow.ToString('o')
     try {
         $activeRel = $Context.Manifest.target.active_dxcompiler_relative_path
@@ -695,7 +871,7 @@ function Add-UninstallPlan([hashtable]$Context) {
     $originalRel = $Context.Manifest.target.original_dxcompiler_relative_path
     $payloadRel = 'AGP Native Hook/agp_parenthook.dll'
     $stateRel = $Context.Manifest.target.state_relative_path
-    foreach ($rel in @($activeRel, $originalRel, $payloadRel, $stateRel)) { Add-Snapshot $Context $rel }
+    foreach ($rel in @($activeRel, $originalRel, $payloadRel, $stateRel, 'AWOW Universal Female Generation/awow_ufg.dll', 'AWOW Universal Female Generation/ufg-install-state.json')) { Add-Snapshot $Context $rel }
     foreach ($log in @($Context.Manifest.target.logs)) {
         if ([string]$log.owner -eq 'agp_runtime') { Add-Snapshot $Context $log.relative_path }
     }
@@ -705,9 +881,8 @@ function Add-UninstallPlan([hashtable]$Context) {
                 Add-Quarantine $Context $relative 'file' 'recognized_awow_ufg' 'remove_after_uninstall_commit'
             }
         }
-        $ufgDir = [string]$Context.Manifest.safety.ufg_cleanup.foreign_payload_directory
-        if ((Get-Observation $Context $ufgDir).exists) {
-            Add-Quarantine $Context $ufgDir 'directory_manifest' 'recognized_awow_ufg' 'remove_after_uninstall_commit'
+        foreach ($relative in @('AWOW Universal Female Generation/awow_ufg.dll', 'AWOW Universal Female Generation/ufg-install-state.json')) {
+            if ((Get-Observation $Context $relative).exists) { Add-Quarantine $Context $relative 'file' 'recognized_awow_ufg' 'remove_after_uninstall_commit' }
         }
         foreach ($log in @($Context.Manifest.safety.ufg_cleanup.foreign_logs)) {
             if ((Get-Observation $Context $log).exists) {
@@ -786,7 +961,17 @@ function New-UninstallJournal([hashtable]$Context) {
 function Invoke-Uninstall([hashtable]$Context) {
     Add-UninstallPlan $Context
     New-Item -ItemType Directory -Path (Get-ContainedPath $Context $Context.StageRelative) -Force | Out-Null
+    if (-not (Test-SnapshotsUnchanged $Context)) {
+        Remove-StagedTransaction $Context
+        $Context.Result = [ordered]@{ operation = 'uninstall'; classification = $Context.Classification; decision = 'reject'; next_state = $Context.Classification; transaction_id = $Context.TransactionId; message = 'Target changed during transaction planning; no files were changed.' }
+        return
+    }
     New-UninstallJournal $Context
+    if (-not (Test-SnapshotsUnchanged $Context)) {
+        Remove-StagedTransaction $Context
+        $Context.Result = [ordered]@{ operation = 'uninstall'; classification = $Context.Classification; decision = 'reject'; next_state = $Context.Classification; transaction_id = $Context.TransactionId; message = 'Target changed after journaling; no files were changed.' }
+        return
+    }
     try {
         Invoke-PlannedQuarantine $Context
         $activeRel = $Context.Manifest.target.active_dxcompiler_relative_path
@@ -803,7 +988,11 @@ function Invoke-Uninstall([hashtable]$Context) {
         Move-Item -LiteralPath (Get-ContainedPath $Context $originalRel) -Destination (Get-ContainedPath $Context $activeRel)
         $stateRel = $Context.Manifest.target.state_relative_path
         Remove-Exact $Context $stateRel $false
-        if ($Context.Classification -eq 'recognized_ufg') { Remove-Exact $Context $Context.QuarantineRelative $true }
+        if ($Context.Classification -eq 'recognized_ufg') {
+            Remove-Exact $Context $Context.QuarantineRelative $true
+            $ufgDir = Get-ContainedPath $Context 'AWOW Universal Female Generation'
+            if ((Test-Path -LiteralPath $ufgDir -PathType Container) -and @(Get-ChildItem -LiteralPath $ufgDir -Force).Count -eq 0) { Remove-Item -LiteralPath $ufgDir -Force }
+        }
         $journalDir = Split-Path -Parent $Context.JournalPath
         if (Test-Path -LiteralPath $journalDir) { Remove-Item -LiteralPath $journalDir -Recurse -Force }
         $Context.Result = [ordered]@{ operation = 'uninstall'; classification = $Context.Classification; decision = 'proceed'; next_state = 'known_clean'; transaction_id = $Context.TransactionId }
@@ -840,7 +1029,18 @@ try {
     $ctx = New-Context
     Test-Preflight $ctx
     Get-Classification $ctx | Out-Null
+    $ctx.LayoutFingerprint = Get-LayoutFingerprint $ctx
     if (-not (Confirm-Transition $ctx)) { exit (Write-Result $ctx) }
+    try {
+        if (-not (Test-LayoutUnchanged $ctx)) {
+            $ctx.Result = [ordered]@{ operation = $Operation; classification = $ctx.Classification; decision = 'reject'; next_state = $ctx.Classification; message = 'Target changed after recognition or confirmation; no files were changed.' }
+            exit (Write-Result $ctx)
+        }
+    }
+    catch {
+        $ctx.Result = [ordered]@{ operation = $Operation; classification = $ctx.Classification; decision = 'reject'; next_state = $ctx.Classification; message = 'Target changed after recognition or confirmation; no files were changed.' }
+        exit (Write-Result $ctx)
+    }
     if ($Operation -eq 'uninstall' -and $ctx.Classification -eq 'known_clean') {
         $ctx.Result = [ordered]@{ operation = 'uninstall'; classification = 'known_clean'; decision = 'no_op'; next_state = 'known_clean' }
         exit (Write-Result $ctx)

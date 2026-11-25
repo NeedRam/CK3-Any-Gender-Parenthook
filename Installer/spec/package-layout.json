@@ -2,16 +2,16 @@
   "$schema": "https://any-gender-parenthook.invalid/schema/package-layout-v2.json",
   "schema_version": 2,
   "kind": "agp_package_layout",
-  "package_id": "agp-v1.0.2-win-x64",
+  "package_id": "agp-v1.1.1-win-x64",
   "package_variants": [
     {
       "id": "manual",
-      "archive_name": "AGP v1.0.2 Base Files (Manual Install).zip",
+      "archive_name": "AGP v1.1.1 Base Files (Manual Install).zip",
       "entrypoints": []
     },
     {
       "id": "batch",
-      "archive_name": "AGP v1.0.2 Batch File Installer.zip",
+      "archive_name": "AGP v1.1.1 Batch File Installer.zip",
       "entrypoints": [
         "Install AGP.bat",
         "Uninstall AGP.bat"
@@ -19,7 +19,7 @@
     },
     {
       "id": "exe",
-      "archive_name": "AGP v1.0.2 EXE Installer.zip",
+      "archive_name": "AGP v1.1.1 EXE Installer.zip",
       "entrypoints": [
         "AGP-Installer.exe",
         "AGP-Uninstaller.exe"

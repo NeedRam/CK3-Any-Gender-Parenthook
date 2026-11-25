@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-	[string]$Version = '1.1.0',
+	[string]$Version = '1.1.1',
 	[string]$OutputDirectory,
 	[switch]$SkipNativeBuild,
 	[switch]$AllowIncompleteValidation,
@@ -96,11 +96,40 @@ if (-not $manifest.release.unsigned) {
 }
 
 if (-not $SkipNativeBuild) {
-	& (Join-Path $repositoryRoot 'Native Hook\build.ps1')
-	if ($LASTEXITCODE -ne 0) { throw 'Native build failed.' }
+	throw 'Native rebuilds are forbidden for the 1.1.1 compatibility patch; use the verified published 1.1.0 archive.'
 }
 
 New-Item -ItemType Directory -Force -Path $OutputDirectory | Out-Null
+$nativeRelease = $manifest.native_release
+if ($null -eq $nativeRelease -or $nativeRelease.version -ne '1.1.0') { throw 'The pinned native release metadata is missing or unsupported.' }
+$nativeCache = Join-Path $repositoryRoot ("Native Hook\build\published-v{0}\AGP.v{0}.Base.Files.Manual.Install.zip" -f $nativeRelease.version)
+if (-not (Test-Path -LiteralPath $nativeCache -PathType Leaf)) {
+	$nativeCache = Join-Path $OutputDirectory ".native-$($nativeRelease.version).zip"
+	Invoke-WebRequest -Uri ([string]$nativeRelease.archive_url) -OutFile $nativeCache
+}
+Assert-Hash $nativeCache ([string]$nativeRelease.archive_sha256) 'Pinned native archive' | Out-Null
+$nativeStage = Join-Path $OutputDirectory ".native-$($nativeRelease.version)-stage"
+function Assert-ContainedPath {
+	param(
+		[string]$BaseDirectory,
+		[string]$Candidate,
+		[string]$Label
+	)
+	$baseResolved = [IO.Path]::GetFullPath($BaseDirectory).TrimEnd('\') + '\'
+	$candidateResolved = [IO.Path]::GetFullPath($Candidate)
+	if (-not $candidateResolved.StartsWith($baseResolved, [StringComparison]::OrdinalIgnoreCase)) {
+		throw "$Label resolved outside its allowed directory: $candidateResolved"
+	}
+}
+Assert-ContainedPath -BaseDirectory $OutputDirectory -Candidate $nativeStage -Label 'Native archive staging directory'
+if (Test-Path -LiteralPath $nativeStage) { Remove-Item -LiteralPath $nativeStage -Recurse -Force }
+Expand-Archive -LiteralPath $nativeCache -DestinationPath $nativeStage -Force
+$nativeProxy = Get-ChildItem -LiteralPath $nativeStage -Recurse -File -Filter 'dxcompiler.dll' | Select-Object -First 1
+$nativePayload = Get-ChildItem -LiteralPath $nativeStage -Recurse -File -Filter 'agp_parenthook.dll' | Select-Object -First 1
+if ($null -eq $nativeProxy -or $null -eq $nativePayload) { throw 'Pinned native archive does not contain both required DLLs.' }
+Assert-Hash $nativeProxy.FullName ([string]$manifest.artifacts[0].sha256) 'Pinned AGP proxy' | Out-Null
+Assert-Hash $nativePayload.FullName ([string]$manifest.artifacts[1].sha256) 'Pinned AGP payload' | Out-Null
+if ($nativeProxy.Length -ne [int64]$manifest.artifacts[0].size_bytes -or $nativePayload.Length -ne [int64]$manifest.artifacts[1].size_bytes) { throw 'Pinned native DLL size mismatch.' }
 $legacyOutputs = @(
 	"Any-Gender-Parenthook-v$Version-win64.zip",
 	"Any-Gender-Parenthook-v$Version-win64.zip.sha256",
@@ -112,8 +141,8 @@ foreach ($legacyName in $legacyOutputs) {
 		Remove-Item -LiteralPath $legacyPath -Force
 	}
 }
-$nativeProxy = Join-Path $repositoryRoot 'Native Hook\build\dxcompiler.dll'
-$nativePayload = Join-Path $repositoryRoot 'Native Hook\build\AGP Native Hook\agp_parenthook.dll'
+$nativeProxy = $nativeProxy.FullName
+$nativePayload = $nativePayload.FullName
 $forbiddenNames = @('native_test_mod', 'AGP Dynastic Priority', 'Lunacy', '.git', '.venv', 'venv', 'reference_files', 'profiles')
 $commit = 'unavailable'
 try {
@@ -267,7 +296,7 @@ foreach ($definition in $packageDefinitions) {
 		'kind' = 'agp_release_provenance'
 		'release' = [ordered]@{ 'id' = $manifest.release.id; 'version' = $Version; 'channel' = $manifest.release.channel; 'unsigned' = $true; 'signing' = 'not_performed' }
 		'validation' = [ordered]@{ acceptance_complete = (-not $AllowIncompleteValidation); status = $(if ($AllowIncompleteValidation) { 'incomplete_local_candidate' } else { 'accepted' }) }
-		'source' = [ordered]@{ repository = $manifest.release.source_repo; commit = $commit; workflow = 'release/build-release.ps1' }
+		'source' = [ordered]@{ package_repository = $manifest.release.source_repo; package_commit = $commit; native_repository = $nativeRelease.repository; native_tag = $nativeRelease.tag; native_source_commit = $nativeRelease.source_commit; native_archive_url = $nativeRelease.archive_url; native_archive_sha256 = $nativeRelease.archive_sha256; workflow = 'release/build-release.ps1' }
 		'build' = [ordered]@{ authority = $(if ($isCanonicalCi) { 'canonical_github_actions' } else { 'local_smoke_test' }); canonical_release_artifact = $isCanonicalCi; github_actions_runner = $toolchain.github_actions_runner; vc_tools_version = $toolchain.vc_tools_version; windows_sdk_version = $toolchain.windows_sdk_version; host_architecture = $toolchain.host_architecture; target_architecture = $toolchain.target_architecture; toolchain_contract = 'Native Hook/toolchain.json' }
 		'artifact' = [ordered]@{ file = (Split-Path -Leaf $zipPath); sha256 = $zipHash; package_id = "$($manifest.package.id)-$($definition.Id)"; package_kind = $definition.Id; file_count = $fileCount }
 		'safety' = [ordered]@{ excluded = @('Native Hook/native_test_mod', 'AGP Dynastic Priority', '.git', 'Lunacy'); credentials_used = $false }
