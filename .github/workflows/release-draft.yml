@@ -68,6 +68,10 @@ jobs:
             python -m pip install --disable-pip-version-check pyinstaller
           }
 
+      - name: Stage pinned native artifacts for installer tests
+        shell: pwsh
+        run: .\release\prepare-native-test-artifacts.ps1 -RepositoryRoot $PWD
+
       - name: Run installer contract and transition tests
         shell: cmd
         run: python -m unittest discover -s Installer/python/tests -v
